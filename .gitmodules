@@ -1,0 +1,4 @@
+[submodule "themes/default"]
+	path = themes/default
+	url = https://github.com/edofic/hugo-theme-diary.git
+	branch = master
