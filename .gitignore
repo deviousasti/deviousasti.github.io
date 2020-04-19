@@ -30,4 +30,3 @@ _ReSharper*/
 node_modules/
 public/
 .vs/
-vendor/js/
