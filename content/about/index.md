@@ -9,7 +9,7 @@ This is Asti.
 
 ## About
 
-This is mostly a bunch of notes, how-tos, internet wisdom, and gotchas, which originally were kept in Trello and Dropbox.  Some of the things are notes to myself, or future intrepid explorers.
+This is mostly a bunch of notes, how-tos, internet wisdom, and gotchas, which originally were kept in Trello and Dropbox.  Some of them are notes to myself, or future intrepid explorers.
 
 And hopefully some of the trouble I went through will help a future engineer.
 
