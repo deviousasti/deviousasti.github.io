@@ -1,1 +1,1 @@
-hugo -t default
+hugo -t default -d ../Output

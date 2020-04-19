@@ -1,0 +1,1 @@
+hugo -t default -d ..\Output
