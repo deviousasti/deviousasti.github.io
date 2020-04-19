@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>eda on Asti&#39;s Notes</title>
+    <link>/categories/eda/</link>
+    <description>Recent content in eda on Asti&#39;s Notes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>CC by Attribution</copyright>
+    <lastBuildDate>Sat, 21 Dec 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/eda/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Boost beware</title>
+      <link>/post/boost-beware/</link>
+      <pubDate>Sat, 21 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/boost-beware/</guid>
+      <description>There are a lot of new small-form factor, low part count boost converters being released for battery boost applications. These typically switch at high frequencies to reduce component sizes.
+The Symptoms  Devices sometimes brownout with no pattern Heisenbugs Weird disconnections and readings  Possible Causes   Long path between output caps and output pin - these could act as parasitic inductances, causing output spikes when load changes
+  High impedance path between IC ground and output ground - this should be obvious, but is most often overlooked because of layout constraints</description>
+    </item>
+    
+    <item>
+      <title>Datasheet to symbol</title>
+      <link>/post/fast-part-altium/</link>
+      <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/fast-part-altium/</guid>
+      <description>Don&#39;t want to spend 20 minutes copy-pasting bits and pieces of the datasheet into a schematic symbol? This is for you.
+Step 1 Open the datasheet PDF in a word processor. See image.
+T	his is optional, but highly recommended, because PDFs don&#39;t have a flowing layout, and it is important that we have flow in this situation. If you&#39;re using a web datasheet, you can skip this step. You could also use something like Tabula.</description>
+    </item>
+    
+    <item>
+      <title>Create high quality renders of your Altium boards</title>
+      <link>/post/render-altium/</link>
+      <pubDate>Tue, 19 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/render-altium/</guid>
+      <description>Create a realistic model Although this should be very straightforward, and while the 3D view in Altium is very accurate, getting it out of there is an entirely different story.
+Step 1 This is, as you&#39;d expect to export a STEP file from Altium.
+Use File &amp;gt; Export &amp;gt; STEP 3D
+  Remember to export all 3D bodies as well. But you get no traces, silkscreen or pads in a STEP file.</description>
+    </item>
+    
+    <item>
+      <title>Daisy chains in Altium</title>
+      <link>/post/daisychain-altium/</link>
+      <pubDate>Fri, 21 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/daisychain-altium/</guid>
+      <description>Why a way to daisy-chain? If you wanted to daisy chain any component the conventional way, say a bunch of WS2812s on your board, you&#39;d be making multiple instances and manually wiring them to each other.
+  Steps  Make a sub-sheet out of the components you want to daisy chain (unless it&#39;s not in one already). Change the designator of the sheet to Repeat(name, 1, N) where N is the number of items you want.</description>
+    </item>
+    
+    <item>
+      <title>Combine your Bill of Materials</title>
+      <link>/post/bom-merge/</link>
+      <pubDate>Fri, 02 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/bom-merge/</guid>
+      <description>Sometimes, you have a small run of boards, and you need to combine the BOM for them, to know how much to order or check against your inventory. This is especially needed when a lot of designs share parts, and it is tedious to combine them by hand.
+Get csv-merge
+Step 1 Export your BOM files as CSV (Comma Separated Values).
+Check if most of your BOMs have the same header - the order does not matter, just the name.</description>
+    </item>
+    
+  </channel>
+</rss>

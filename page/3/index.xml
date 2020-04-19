@@ -1,0 +1,76 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Asti&#39;s Notes</title>
+    <link>/</link>
+    <description>Recent content on Asti&#39;s Notes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>CC by Attribution</copyright>
+    <lastBuildDate>Mon, 30 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    
+        <item>
+        <title>Web Workers and Typescript constraints</title>
+        <link>/post/ts-worker-constraints/</link>
+        <pubDate>Tue, 02 Oct 2018 00:00:00 +0000</pubDate>
+        
+        <guid>/post/ts-worker-constraints/</guid>
+        <description>Asti&#39;s Notes /post/ts-worker-constraints/ -&lt;p&gt;Now there are a million web-worker libraries out there, but what&#39;s the harm in having more interesting implementations?&lt;/p&gt;
+&lt;h2 id=&#34;the-proxy&#34;&gt;The Proxy&lt;/h2&gt;
+&lt;p&gt;The simplest way to start using a worker would be something that can drop in and sub for a regular class with methods and state.&lt;/p&gt;
+&lt;p&gt;We can do that by creating a proxy for the class - you call the methods on the proxy - the calls are intercepted and run in the worker, and the results are passed to you as a &lt;code&gt;Promise&lt;/code&gt;. If the results in the original class were a promise in the first place, you can&#39;t return a &lt;code&gt;Promise&amp;lt;Promise&amp;gt;&amp;gt;&lt;/code&gt; - that would be bad - so we need type unwrapping.&lt;/p&gt;
+&lt;p&gt;The type function is:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Proxy(f(x) -&amp;gt; y) = f(x) -&amp;gt; Promise&amp;lt;y&amp;gt;
+Proxy(f(x) -&amp;gt; Promise&amp;lt;y&amp;gt;) = f(x) -&amp;gt; Promise&amp;lt;y&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;building-the-type-function&#34;&gt;Building the type function&lt;/h2&gt;
+&lt;p&gt;Let&#39;s define what a method is&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;type Method = (...args: any[]) =&amp;gt; any;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We need to unwrap any promises types:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;type UnwrapPromise&amp;lt;P&amp;gt; = P extends Promise&amp;lt;infer V&amp;gt; ? V : P;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The proxy function:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;type ProxiedFunction&amp;lt;F extends Method&amp;gt; = 
+        (...params: Parameters&amp;lt;F&amp;gt;) =&amp;gt; Promise&amp;lt;UnwrapPromise&amp;lt;ReturnType&amp;lt;F&amp;gt;&amp;gt;&amp;gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now let&#39;s assemble it  together:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;export type Proxy&amp;lt;T&amp;gt; = 
+{
+	[P in keyof T]: T[P] extends Method ?
+	ProxiedFunction&amp;lt;T[P]&amp;gt;       
+	:
+	never
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The type enumerates all members of a given type &lt;code&gt;T&lt;/code&gt;,
+and returns a proxied function for every method.&lt;/p&gt;
+&lt;h2 id=&#34;example&#34;&gt;Example&lt;/h2&gt;
+&lt;p&gt;To illustrate with an example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Calc&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;add&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;;
+    }
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;addAsync&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We expect the signature of the &lt;code&gt;add&lt;/code&gt; method on the proxy to be&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;add&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Promise&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;addAsync&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Promise&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And that is exactly what we see:&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/ts-web-workers-vscode.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
+&lt;p&gt;The full  implementation of the web-worker proxy can be found at:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/deviousasti/workers.ts&#34;&gt;https://github.com/deviousasti/workers.ts&lt;/a&gt;&lt;/p&gt;
+- /post/ts-worker-constraints/ - CC by Attribution</description>
+        </item>
+    
+    
+    
+    
+    
+    
+  </channel>
+</rss> 

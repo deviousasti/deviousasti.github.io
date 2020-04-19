@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html><head>
+	<meta name="generator" content="Hugo 0.62.2" />
+<title>Asti&#39;s Notes</title>
+
+<meta charset="utf-8">
+<meta name="X-UA-Compatible" content="IE=edge">
+<meta name="google-site-verification" content="">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta content="telephone=no" name="format-detection">
+<meta name="description" content="">
+<meta name="renderer" content="webkit">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content=""> 
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/scss/journal.min.47374e99c1427cff46cede2374de5841d19c38cc7f45ab08c42226981e5342b3.css" integrity="sha256-RzdOmcFCfP9Gzt4jdN5YQdGcOMx/RasIxCImmB5TQrM=" media="screen">
+
+
+
+<link rel="stylesheet" href="/scss/dark-mode.min.576bcff8d624ba89c1bf4058f77a6b2d52960e98ab927464231bf52e65a6ce59.css" integrity="sha256-V2vP&#43;NYkuonBv0BY93prLVKWDpirknRkIxv1LmWmzlk=" media="screen">
+
+
+<script src="/vendor/js/vue.min.js" ></script>
+
+
+
+
+<style>
+  .toc{
+    display: none !important;
+  }
+</style>
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Noto+Serif+SC|Material+Icons" />
+
+
+
+
+
+
+
+</head><body>
+    	<div id="app"><div ref="sideContainer" class="side-container">
+    
+    <a class="a-block nav-head active" href="/">
+    
+        <div class="nav-title">
+            Asti&#39;s Notes
+        </div>
+        
+        <div class="nav-subtitle">
+            FP, Rx, EDA
+        </div>
+        
+    </a>
+
+    <div class="nav-link-list">
+        
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/projects">
+                Projects
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/categories">
+                Categories
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/tags">
+                Tags
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/about">
+                About
+            </a>
+            
+        
+    </div>
+
+    
+
+    <div class="nav-footer">
+        
+<br />
+
+
+
+CC by Attribution
+
+    </div>
+    
+</div><div ref="extraContainer" class="extra-container">
+    
+    <div class="pagination">
+        <a id="globalBackToTop" class="pagination-action animated-visibility" href="#top" :class="{ invisible: scrollY == 0 }">
+            <i class="material-icons pagination-action-icon">
+                keyboard_arrow_up
+            </i>
+        </a>
+        
+        <a class="pagination-action" v-on:click="toggleDarkMode">
+            <i class="material-icons pagination-action-icon" v-if="isDarkMode">
+                brightness_4
+            </i>
+            <i class="material-icons pagination-action-icon" v-else="isDarkMode">
+                brightness_7
+            </i>
+        </a>
+        
+        
+        
+            <div class="pagination-indicator">
+                <span style="text-align: center">
+                    2<br><div style="display: inline-block; transform: rotate(-28deg)">-</div><br>3
+                </span>
+            </div>
+            
+            
+            <a class="pagination-action" href="/">
+                <i class="material-icons pagination-action-icon">
+                    chevron_left
+                </i>
+            </a>
+            
+
+            
+            <a class="pagination-action" href="/page/3/">
+                <i class="material-icons pagination-action-icon">
+                    chevron_right
+                </i>
+            </a>
+            
+        
+        
+    </div>
+</div><div class="single-column-drawer-container" ref="drawer"
+     v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }">
+    <div class="drawer-content">
+        <div class="drawer-menu">
+            
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/projects">
+                    Projects
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/categories">
+                    Categories
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/tags">
+                    Tags
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/about">
+                    About
+                </a>
+                
+            
+            
+        </div>
+    </div>
+</div>
+<transition name="fade">
+    <div v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if="isDrawerOpen" v-on:click="toggleDrawer"></div>
+</transition>
+<nav ref="navBar" class="navbar sticky-top navbar-light single-column-nav-container">
+    <div ref="navBackground" class="nav-background"></div>
+    <div class="container container-narrow nav-content">
+        <button id="nav_dropdown_btn" class="nav-dropdown-toggle" type="button" v-on:click="toggleDrawer">
+            <i class="material-icons">
+                menu
+            </i>
+        </button>
+        <a ref="navTitle" class="navbar-brand" href="/">
+            Asti&#39;s Notes
+        </a>
+        
+        <button type="button" class="nav-darkmode-toggle" v-on:click="toggleDarkMode">
+            <i class="material-icons" v-if="isDarkMode">
+                brightness_4
+            </i>
+            <i class="material-icons" v-else="isDarkMode">
+                brightness_7
+            </i>
+        </button>
+        
+    </div>
+</nav>
+<div class="single-column-header-container" ref="pageHead"
+     v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
+    <a href="/">
+        <div class="single-column-header-title">Asti&#39;s Notes</div>
+        
+        <div class="single-column-header-subtitle">FP, Rx, EDA</div>
+        
+
+    </a>
+</div>
+            <div id="content">
+
+<div ref="streamContainer" class="stream-container">
+    <div class="post-list-container post-list-container-no-background">
+        
+            
+            <a href="/post/rx-last-value/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                Getting the last value from an Observable when it fails
+                            </div>
+                            <div class="post-item-summary">
+                                Wait, is that allowed?
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/rx.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/rx-schedulers/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                The various Schedulers in Rx
+                            </div>
+                            <div class="post-item-summary">
+                                Does concurrency leak?
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/rx.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/wpf-icon-font/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                Material Icons in WPF
+                            </div>
+                            <div class="post-item-summary">
+                                A straightforward way to use icons
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/wpf-add-font.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/powershell-tasks/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                Run a PowerShell script for every .NET application crash
+                            </div>
+                            <div class="post-item-summary">
+                                Track application crashes on the cheap
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/powershell.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/fast-part-altium/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                Datasheet to symbol
+                            </div>
+                            <div class="post-item-summary">
+                                Go straight from datasheet to symbol as fast as possible
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/fastsymbol-step3.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/visibility-fsharp/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                Visibility in F#
+                            </div>
+                            <div class="post-item-summary">
+                                How does F# map visibility levels to the assembly
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/fsharp-visibility.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/render-altium/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                Create high quality renders of your Altium boards
+                            </div>
+                            <div class="post-item-summary">
+                                Create realistic renders of PCBs for model shots
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/render-altium.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/fs-sets/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                A purely functional definition of Sets
+                            </div>
+                            <div class="post-item-summary">
+                                ...without any data structures
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/fsharp.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/daisychain-altium/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                Daisy chains in Altium
+                            </div>
+                            <div class="post-item-summary">
+                                Easily daisy chain any number of sub-circuits
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/literal-daisychain.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/bom-merge/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                Combine your Bill of Materials
+                            </div>
+                            <div class="post-item-summary">
+                                Figure out which parts are in common, and how many to order
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/bom-merge.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+        </a>
+    </div>
+</div>
+
+            </div>
+
+<div class="pagination">
+    
+    <a class="pagination-action" href="/" style="opacity:1">
+    
+        <i class="material-icons pagination-action-icon">
+            chevron_left
+        </i>
+    </a>
+
+        <div class="pagination-indicator">
+            <span>2/3</span>
+        </div>
+
+        
+        <a class="pagination-action" href="/page/3/"
+           style="opacity:1">
+        
+                <i class="material-icons pagination-action-icon">
+                    chevron_right
+                </i>
+            </a>
+</div>
+
+
+<div id="single-column-footer">
+<br />
+
+
+
+CC by Attribution
+</div>
+            </div>    
+            <script src="/js/journal.js"></script>
+    </body>
+</html>

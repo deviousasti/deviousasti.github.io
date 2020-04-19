@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html><head>
+<title>Daisy chains in Altium</title>
+
+<meta charset="utf-8">
+<meta name="X-UA-Compatible" content="IE=edge">
+<meta name="google-site-verification" content="">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta content="telephone=no" name="format-detection">
+<meta name="description" content="Easily daisy chain any number of sub-circuits">
+<meta name="renderer" content="webkit">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Easily daisy chain any number of sub-circuits">
+<meta name="keywords" content="[eda altium]">
+<meta name="author" content=""> 
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/scss/journal.min.47374e99c1427cff46cede2374de5841d19c38cc7f45ab08c42226981e5342b3.css" integrity="sha256-RzdOmcFCfP9Gzt4jdN5YQdGcOMx/RasIxCImmB5TQrM=" media="screen">
+
+
+
+<link rel="stylesheet" href="/scss/dark-mode.min.576bcff8d624ba89c1bf4058f77a6b2d52960e98ab927464231bf52e65a6ce59.css" integrity="sha256-V2vP&#43;NYkuonBv0BY93prLVKWDpirknRkIxv1LmWmzlk=" media="screen">
+
+
+<script src="/vendor/js/vue.min.js" ></script>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Noto+Serif+SC|Material+Icons" />
+
+
+
+
+
+
+
+</head><body>
+    	<div id="app"><div ref="sideContainer" class="side-container">
+    
+    <a class="a-block nav-head false" href="/">
+    
+        <div class="nav-title">
+            Asti&#39;s Notes
+        </div>
+        
+        <div class="nav-subtitle">
+            FP, Rx, EDA
+        </div>
+        
+    </a>
+
+    <div class="nav-link-list">
+        
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/projects">
+                Projects
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/categories">
+                Categories
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/tags">
+                Tags
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/about">
+                About
+            </a>
+            
+        
+    </div>
+
+    
+
+    <div class="nav-footer">
+        
+<br />
+
+
+
+CC by Attribution
+
+    </div>
+    
+</div><div ref="extraContainer" class="extra-container">
+    
+    <div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }">
+
+
+	<div class="toc-content">
+	
+		
+		
+		
+		<h3>Contents</h3>
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#why-a-way-to-daisy-chain" v-on:click="closeDrawer" id="why-a-way-to-daisy-chain-nav">
+										 Why a way to daisy-chain?
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#steps" v-on:click="closeDrawer" id="steps-nav">
+										 Steps
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#example" v-on:click="closeDrawer" id="example-nav">
+										 Example
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+	</div>
+
+</div>
+    
+    <div class="pagination">
+        <a id="globalBackToTop" class="pagination-action animated-visibility" href="#top" :class="{ invisible: scrollY == 0 }">
+            <i class="material-icons pagination-action-icon">
+                keyboard_arrow_up
+            </i>
+        </a>
+        
+        <a class="pagination-action" v-on:click="toggleDarkMode">
+            <i class="material-icons pagination-action-icon" v-if="isDarkMode">
+                brightness_4
+            </i>
+            <i class="material-icons pagination-action-icon" v-else="isDarkMode">
+                brightness_7
+            </i>
+        </a>
+        
+        
+    </div>
+</div><div class="single-column-drawer-container" ref="drawer"
+     v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }">
+    <div class="drawer-content">
+        <div class="drawer-menu">
+            
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/projects">
+                    Projects
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/categories">
+                    Categories
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/tags">
+                    Tags
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/about">
+                    About
+                </a>
+                
+            
+            
+            <div class="toc">
+
+
+	<div class="toc-content">
+	
+		
+		
+		
+		<h3>Contents</h3>
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#why-a-way-to-daisy-chain" v-on:click="closeDrawer" id="why-a-way-to-daisy-chain-nav">
+										 Why a way to daisy-chain?
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#steps" v-on:click="closeDrawer" id="steps-nav">
+										 Steps
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#example" v-on:click="closeDrawer" id="example-nav">
+										 Example
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+	</div>
+
+</div>
+            
+        </div>
+    </div>
+</div>
+<transition name="fade">
+    <div v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if="isDrawerOpen" v-on:click="toggleDrawer"></div>
+</transition>
+<nav ref="navBar" class="navbar sticky-top navbar-light single-column-nav-container">
+    <div ref="navBackground" class="nav-background"></div>
+    <div class="container container-narrow nav-content">
+        <button id="nav_dropdown_btn" class="nav-dropdown-toggle" type="button" v-on:click="toggleDrawer">
+            <i class="material-icons">
+                menu
+            </i>
+        </button>
+        <a ref="navTitle" class="navbar-brand" href="/">
+            Asti&#39;s Notes
+        </a>
+        
+        <button type="button" class="nav-darkmode-toggle" v-on:click="toggleDarkMode">
+            <i class="material-icons" v-if="isDarkMode">
+                brightness_4
+            </i>
+            <i class="material-icons" v-else="isDarkMode">
+                brightness_7
+            </i>
+        </button>
+        
+    </div>
+</nav>
+<div class="single-column-header-container" ref="pageHead"
+     v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
+    <a href="/">
+        <div class="single-column-header-title">Asti&#39;s Notes</div>
+        
+        <div class="single-column-header-subtitle">FP, Rx, EDA</div>
+        
+
+    </a>
+</div>
+            <div id="content">
+<div ref="streamContainer" class="stream-container">
+    <div class="post-list-container post-list-container-shadow">
+        <div class="post">
+            
+            
+            
+                
+            
+
+            <div class="post-head-wrapper"
+                 style="background-image: url('/images/literal-daisychain.jpg')">
+                <div class="post-title">
+                    Daisy chains in Altium
+                    
+                    <div class="post-subtitle">
+                        Easily daisy chain any number of sub-circuits
+                    </div>
+                    
+                    <div class="post-meta">
+                        
+                            <i class="material-icons" style="">folder</i>
+                                <a href="/categories/eda">/eda</a>
+                                &nbsp;
+                        
+
+                        
+                            <i class="material-icons" style="">label</i>
+                            
+                                <a href="/tags/eda">#eda</a>
+                                &nbsp;
+                            
+                                <a href="/tags/altium">#altium</a>
+                                &nbsp;
+                            
+                        
+
+                                                
+                        <i class="material-icons" style="">schedule</i>
+                        <time itemprop="datePublished">
+                            2018-12-21
+                        </time>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="post-body-wrapper">
+                <div class="post-body">
+                    <h2 id="why-a-way-to-daisy-chain">Why a way to daisy-chain?</h2>
+<p>If you wanted to daisy chain any component the conventional way, say a bunch of WS2812s on your board, you'd be making multiple instances and manually wiring them to each other.</p>
+<figure>
+    <img src="/images/notimefordat.jfif"/> 
+</figure>
+
+<h2 id="steps">Steps</h2>
+<ol>
+<li>Make a sub-sheet out of the components you want to daisy chain (unless it's not in one already).</li>
+<li>Change the designator of the sheet to <code>Repeat(name, 1, N)</code> where <code>N</code> is the number of items you want. E.g., <code>Repeat(SW, 1, 8)</code></li>
+<li>Change the daisy chain input port to <code>Repeat(DIN)</code>and output to <code>Repeat(DOUT)</code> - the usual</li>
+<li>Connect <code>DIN</code> to a bus with net label <code>DIN[2..N]</code>. E.g., <code>DOUT[2..8]</code></li>
+<li>Connect <code>DOUT</code> to a bus with net label <code>DOUT[1..N-1]</code>. E.g., <code>DOUT[1..7]</code></li>
+<li>That's it. Just connect the two buses together and you're done.</li>
+</ol>
+<p>Your daisy chain's input will be <code>DIN1</code> and the output should be <code>DOUT&lt;N&gt;</code>. (i.e., <code>DIN1</code> and <code>DOUT8</code>)</p>
+<h2 id="example">Example</h2>
+<p>The final schematic should look something like this:
+<figure>
+    <img src="/images/altium-daisychain.jpg"/> 
+</figure>
+</p>
+<ul>
+<li>It's not too much effort to set this up.</li>
+<li>You can simply change the values for <code>N=16</code> or <code>N=100</code> and the daisy chaining will be set up correctly</li>
+<li>Since the sheet is repeated, you can use room commands for laying out and ordering all of them - and you only need to route one of them</li>
+<li>Automation <a href="https://xkcd.com/1319/">caveats apply</a>.</li>
+</ul>
+<p><strong>Note</strong></p>
+<p>You might need to place a <code>NOERC</code> on the output with &ldquo;nets containing multiple names&rdquo;, because technically <code>DIN(N)</code> is connected to <code>DOUT(N+1)</code></p>
+
+                    
+                    <HR width="100%" id="EOF">
+                    <p style="color:#777;">Last modified on 2018-12-21</p>
+                    
+                </div>
+            </div>
+            
+            
+            <nav class="post-pagination">
+
+                
+                <a class="newer-posts" href="/post/fs-sets/">
+                    Next<br>A purely functional definition of Sets
+                </a>
+                
+                
+                
+                <a class="older-posts" href="/post/bom-merge/">
+                    Previous<br>Combine your Bill of Materials
+                </a>
+                
+            </nav>
+            <div class="post-comment-wrapper">
+                
+                <p style="opacity: 0.6" align="center">
+                    <small>Comments Disabled.</small>
+                </p>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+            </div><div id="single-column-footer">
+<br />
+
+
+
+CC by Attribution
+</div>
+            </div>    
+            <script src="/js/journal.js"></script>
+    </body>
+</html>

@@ -8,33 +8,52 @@
 <meta name="google-site-verification" content="">
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
 <meta content="telephone=no" name="format-detection">
+<meta name="description" content="">
 <meta name="renderer" content="webkit">
 <meta name="theme-color" content="#ffffff">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content=""> 
 
 
 
 
-<script src="/vendor/js/jquery.min.js" ></script>
-<script src="/vendor/js/popper.min.js" ></script>
-<script src="/vendor/js/bootstrap.min.js" ></script>
-<script src="/vendor/js/smooth-scroll.polyfills.min.js" ></script>
-<link type="text/css" rel="stylesheet" href="/vendor/css/bootstrap.min.css">
+
+
+
+
+
+<link rel="stylesheet" href="/scss/journal.min.47374e99c1427cff46cede2374de5841d19c38cc7f45ab08c42226981e5342b3.css" integrity="sha256-RzdOmcFCfP9Gzt4jdN5YQdGcOMx/RasIxCImmB5TQrM=" media="screen">
+
+
+
+<link rel="stylesheet" href="/scss/dark-mode.min.576bcff8d624ba89c1bf4058f77a6b2d52960e98ab927464231bf52e65a6ce59.css" integrity="sha256-V2vP&#43;NYkuonBv0BY93prLVKWDpirknRkIxv1LmWmzlk=" media="screen">
+
+
 <script src="/vendor/js/vue.min.js" ></script>
 
 
 
 
-<link rel="stylesheet" href="https://deviousasti.github.io/scss/journal.min.c9d8d7104e35224d533639f6936f8462be5363606cbb8f2bac9cb129149615fd.css" integrity="sha256-ydjXEE41Ik1TNjn2k2&#43;EYr5TY2Bsu48rrJyxKRSWFf0=" media="screen">
+<style>
+  .toc{
+    display: none !important;
+  }
+</style>
 
-<script src="https://deviousasti.github.io//js/loadCSS.js"></script>
-<script>
-    loadCSS("https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Noto+Serif+SC|Material+Icons");
-</script>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Noto+Serif+SC|Material+Icons" />
+
+
+
+
+
+
 
 </head><body>
     	<div id="app"><div ref="sideContainer" class="side-container">
     
-    <a class="a-block nav-head active" href="https://deviousasti.github.io/">
+    <a class="a-block nav-head active" href="/">
     
         <div class="nav-title">
             Asti&#39;s Notes
@@ -50,29 +69,56 @@
         
         
             
-                
-                
-                <a class="a-block nav-link-item false" href="/tags">
-                    Tags
-                </a>
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/projects">
+                Projects
+            </a>
+            
         
             
-                
-                
-                <a class="a-block nav-link-item false" href="/categories">
-                    Categories
-                </a>
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/categories">
+                Categories
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/tags">
+                Tags
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/about">
+                About
+            </a>
+            
         
     </div>
 
     
 
     <div class="nav-footer">
-        &copy;
-    1
-	
-	Copyright CC by Attribution
-	
+        
+<br />
+
+
+
+CC by Attribution
 
     </div>
     
@@ -85,6 +131,32 @@
             </i>
         </a>
         
+        <a class="pagination-action" v-on:click="toggleDarkMode">
+            <i class="material-icons pagination-action-icon" v-if="isDarkMode">
+                brightness_4
+            </i>
+            <i class="material-icons pagination-action-icon" v-else="isDarkMode">
+                brightness_7
+            </i>
+        </a>
+        
+        
+        
+            <div class="pagination-indicator">
+                <span style="text-align: center">
+                    1<br><div style="display: inline-block; transform: rotate(-28deg)">-</div><br>3
+                </span>
+            </div>
+            
+            
+
+            
+            <a class="pagination-action" href="/page/2/">
+                <i class="material-icons pagination-action-icon">
+                    chevron_right
+                </i>
+            </a>
+            
         
         
     </div>
@@ -92,22 +164,49 @@
      v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }">
     <div class="drawer-content">
         <div class="drawer-menu">
-        
-        
+            
             
                 
                 
-                <a class="a-block drawer-menu-item false" href="/tags">
-                    Tags
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/projects">
+                    Projects
                 </a>
-        
+                
             
+                
+                
+                
                 
                 
                 <a class="a-block drawer-menu-item false" href="/categories">
                     Categories
                 </a>
-        
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/tags">
+                    Tags
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/about">
+                    About
+                </a>
+                
+            
+            
         </div>
     </div>
 </div>
@@ -122,14 +221,24 @@
                 menu
             </i>
         </button>
-        <a ref="navTitle" class="navbar-brand" href="https://deviousasti.github.io/">
+        <a ref="navTitle" class="navbar-brand" href="/">
             Asti&#39;s Notes
         </a>
+        
+        <button type="button" class="nav-darkmode-toggle" v-on:click="toggleDarkMode">
+            <i class="material-icons" v-if="isDarkMode">
+                brightness_4
+            </i>
+            <i class="material-icons" v-else="isDarkMode">
+                brightness_7
+            </i>
+        </button>
+        
     </div>
 </nav>
 <div class="single-column-header-container" ref="pageHead"
      v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
-    <a href="https://deviousasti.github.io/">
+    <a href="/">
         <div class="single-column-header-title">Asti&#39;s Notes</div>
         
         <div class="single-column-header-subtitle">FP, Rx, EDA</div>
@@ -143,21 +252,230 @@
     <div class="post-list-container post-list-container-no-background">
         
             
-            <a href="https://deviousasti.github.io/post/intro/" class="a-block">
+            <a href="/post/fs-incorrect-gc/" class="a-block">
                 <div class="post-item-wrapper">
                     <div class="post-item post-item-no-divider">
                         <div class="post-item-info-wrapper">
                             <div class="post-item-title">
-                                
+                                Invalid GC results in F# tests
                             </div>
                             <div class="post-item-summary">
-                                Test Post The standard Lorem Ipsum passage, used since the 1500s &ldquo;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </div>
-                            <div class="post-item-meta">
-                                0001-01-01
+                                Why some objects seem not to be collected
                             </div>
                         </div>
                         
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/fsharp.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/fsc-stacktrace/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                Incorrect stack traces in F#
+                            </div>
+                            <div class="post-item-summary">
+                                The stack trace missing a few calls?
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/fsharp.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/recreate-dos/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                A DOS-like shell in .Net
+                            </div>
+                            <div class="post-item-summary">
+                                And a simple tutorial for NetShell
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/msdos.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/boost-beware/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                Boost beware
+                            </div>
+                            <div class="post-item-summary">
+                                Be careful while designing boost converters
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/explosion.jfif')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/semihosting/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                How to get rid of Semihosting
+                            </div>
+                            <div class="post-item-summary">
+                                Most guides tell you how to set up ARM Semihosting. This is about how to get rid of it.
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/semihosting.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/git-config-parser/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                A git-config parser
+                            </div>
+                            <div class="post-item-summary">
+                                A line-by-line parser in F#
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/fsharp.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/powershell-sfv/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                A better SFV
+                            </div>
+                            <div class="post-item-summary">
+                                A file integrity checking Powershell module
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/powershell.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/nanopb-value/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                Decoding a oneof case in nanopb
+                            </div>
+                            <div class="post-item-summary">
+                                Working around callback limitations
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/nanopb.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/powershell-git-sync/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                Sync git modules to .gitmodules
+                            </div>
+                            <div class="post-item-summary">
+                                And a tale of git in Powershell
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/powershell.jpg')"></div>
+                            </div>
+                        
+                    </div>
+                </div>
+            
+        
+            
+            <a href="/post/html-imports/" class="a-block">
+                <div class="post-item-wrapper">
+                    <div class="post-item post-item-no-divider">
+                        <div class="post-item-info-wrapper">
+                            <div class="post-item-title">
+                                An Html Imports Bundler
+                            </div>
+                            <div class="post-item-summary">
+                                There&#39;s no replacement yet, so might as well make one
+                            </div>
+                        </div>
+                        
+                        
+                            <div class="post-item-image-wrapper">
+                            <div class="post-item-image"
+                                 style="background-image: url('/images/rip-html-imports.jpg')"></div>
+                            </div>
                         
                     </div>
                 </div>
@@ -167,13 +485,40 @@
     </div>
 </div>
 
-            </div><div id="single-column-footer">&copy;
-    1
-	
-	Copyright CC by Attribution
-	
+            </div>
+
+<div class="pagination">
+    
+    <a class="pagination-action" style="opacity:0">
+    
+        <i class="material-icons pagination-action-icon">
+            chevron_left
+        </i>
+    </a>
+
+        <div class="pagination-indicator">
+            <span>1/3</span>
+        </div>
+
+        
+        <a class="pagination-action" href="/page/2/"
+           style="opacity:1">
+        
+                <i class="material-icons pagination-action-icon">
+                    chevron_right
+                </i>
+            </a>
 </div>
-    	</div>
-    <script src="https://deviousasti.github.io//js/journal.js"></script>
+
+
+<div id="single-column-footer">
+<br />
+
+
+
+CC by Attribution
+</div>
+            </div>    
+            <script src="/js/journal.js"></script>
     </body>
 </html>

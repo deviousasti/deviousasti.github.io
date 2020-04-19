@@ -7,6 +7,7 @@ app = new Vue({
         navOpacity: 0,
         isDrawerOpen: false,
         mounted: false,
+        isDarkMode: false
     },
     methods: {
             sgn(t, x) {
@@ -44,6 +45,20 @@ app = new Vue({
                 this.isDrawerOpen = !this.isDrawerOpen;
                 document.getElementsByTagName('html')[0].style.overflow = this.isDrawerOpen ? 'hidden' : 'unset';
             },
+            closeDrawer() {
+                this.isDrawerOpen = false;
+                document.getElementsByTagName('html')[0].style.overflow = this.isDrawerOpen ? 'hidden' : 'unset';
+            },
+            toggleDarkMode() {
+                this.isDarkMode = !this.isDarkMode;
+                if (this.isDarkMode==true){
+                    document.cookie = "night=1;path=/";
+                    document.body.classList.add("night");
+                } else {
+                    document.cookie = "night=0;path=/";
+                    document.body.classList.remove("night");
+                }
+            }
     },
     created() {
         window.addEventListener('scroll', this.handleScroll);
@@ -55,6 +70,20 @@ app = new Vue({
             })(navigator.userAgent || navigator.vendor || window.opera);
             return check;
         };
+        
+        // From https://www.jdeal.cn/archives/Dark.html
+        var night = document.cookie.replace(/(?:(?:^|.*;\s*)night\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        if (night==""){
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                //this.toggleDarkMode();
+            }
+        }else{
+            // If night is not empty
+            if (night=="1") {
+                this.toggleDarkMode();
+            }
+        }
+        
     },
     mounted() {
         this.handleScroll();
@@ -67,4 +96,21 @@ app = new Vue({
     }
 });
 
-new SmoothScroll('a#globalBackToTop');
+//new SmoothScroll('a#globalBackToTop');
+
+Vue.component('parent',{
+    props:['name','type'],
+    data: function () {
+        return {
+            isHidden: true
+        }
+    },
+    template: `
+    <div class="a-block" :class="type" v-on:click="isHidden = !isHidden">
+        {{ name }}
+        <div class="nav-link-subitem" v-if="!isHidden">
+            <slot></slot>
+        </div>
+    </div>
+    `
+});

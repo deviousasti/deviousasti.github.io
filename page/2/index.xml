@@ -1,0 +1,615 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Asti&#39;s Notes</title>
+    <link>/</link>
+    <description>Recent content on Asti&#39;s Notes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>CC by Attribution</copyright>
+    <lastBuildDate>Mon, 30 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    
+        <item>
+        <title>Getting the last value from an Observable when it fails</title>
+        <link>/post/rx-last-value/</link>
+        <pubDate>Sun, 05 May 2019 00:00:00 +0000</pubDate>
+        
+        <guid>/post/rx-last-value/</guid>
+        <description>Asti&#39;s Notes /post/rx-last-value/ -&lt;h2 id=&#34;the-rx-contract&#34;&gt;The Rx Contract&lt;/h2&gt;
+&lt;p&gt;The Rx contract is:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;OnNext* (OnError(e)|OnCompleted)+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Unfortunately, an &lt;code&gt;OnError&lt;/code&gt; signals the pipeline to be torn down immediately - throwing away that last, possibly useful result.&lt;/p&gt;
+&lt;h2 id=&#34;the-problem&#34;&gt;The problem&lt;/h2&gt;
+&lt;p&gt;Let&#39;s have a simple source which produces:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;OnNext(1), OnNext(2), ... OnNext(10), OnError(ex)
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; source = 
+    Observable.Range(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;).Concat(Observable.Throw&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Exception()));
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now if we use an accumulating operator like &lt;code&gt;Buffer&lt;/code&gt;, or &lt;code&gt;ToArray&lt;/code&gt; we lose any values accumulated just before the error occured.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;source
+.Buffer(&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;)
+.Subscribe(list =&amp;gt; Console.WriteLine(String.Join(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;,&amp;#34;&lt;/span&gt;, list)));
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Before the inevitable error, this prints&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1,2,3,4
+5,6,7,8
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We&#39;re missing the last two values. And if we try&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;source.LastAsync().Subscribe(Console.WriteLine);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We get absolutely nothing.&lt;/p&gt;
+&lt;h2 id=&#34;how-to-turn-around-an-error&#34;&gt;How to turn around an error&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Buffer&lt;/code&gt; and &lt;code&gt;Last&lt;/code&gt;, and &lt;code&gt;ToArray&lt;/code&gt; would work with the last values, if they got an &lt;code&gt;OnCompleted&lt;/code&gt; instead. As it turns out, there is an Rx operator which can let us know if there&#39;s an&lt;code&gt;OnError&lt;/code&gt; on the way without tearing down the pipeline.&lt;/p&gt;
+&lt;p&gt;Enter &lt;code&gt;Materialize&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Materialize&lt;/code&gt; transforms a sequence into a sequence of notifications of the original sequence. And when the sequence has an error, the materialized sequence completes normally - because the error is also materialized.&lt;/p&gt;
+&lt;p&gt;So now we can transform our earlier example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;source
+.Materialize()
+.Buffer(&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;)
+.Subscribe(list =&amp;gt; Console.WriteLine(String.Join(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;,&amp;#34;&lt;/span&gt;, list)));
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And we get:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;OnNext(1),OnNext(2),OnNext(3),OnNext(4)
+OnNext(5),OnNext(6),OnNext(7),OnNext(8)
+OnNext(9),OnNext(10),OnError(System.Exception)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Much better. We didn&#39;t drop anything. If we just want the values, we can clean it up:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;source
+.Materialize()
+.Buffer(&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;)
+.Select(list =&amp;gt; list.Where(l =&amp;gt; l.HasValue).Select(l =&amp;gt; l.Value))
+.Subscribe(list =&amp;gt; Console.WriteLine(String.Join(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;,&amp;#34;&lt;/span&gt;, list)));
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This gives us&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1,2,3,4
+5,6,7,8
+9,10
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The same solution works for &lt;code&gt;ToArray&lt;/code&gt;.&lt;/p&gt;
+- /post/rx-last-value/ - CC by Attribution</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>The various Schedulers in Rx</title>
+        <link>/post/rx-schedulers/</link>
+        <pubDate>Fri, 19 Apr 2019 00:00:00 +0000</pubDate>
+        
+        <guid>/post/rx-schedulers/</guid>
+        <description>Asti&#39;s Notes /post/rx-schedulers/ -&lt;h2 id=&#34;schedulers-in-rx&#34;&gt;Schedulers in Rx&lt;/h2&gt;
+&lt;p&gt;Schedulers abstract away concurrency from operators.
+A scheduler decides what order &amp;ldquo;thunks&amp;rdquo; (a unit of work) execute in, and how time &lt;em&gt;flows&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;There are a number of scheduler implementations for doing work on diverse models of concurrency.
+Rx is very preferential to single-threadedness, and opposed to being multi-threaded out of the box.&lt;/p&gt;
+&lt;p&gt;Most of the time, you don&#39;t need to worry about it, and you can go with the reasonable defaults. But very rarely, (and especially if you break the Observable contract), you end up with out-of-order notifications, &lt;a href=&#34;http://en.wikipedia.org/wiki/Deadlock&#34;&gt;deadlocks&lt;/a&gt;, &lt;a href=&#34;http://en.wikipedia.org/wiki/Deadlock#Livelock&#34;&gt;livelocks&lt;/a&gt; or things lost to the void.&lt;/p&gt;
+&lt;h2 id=&#34;immediatescheduler&#34;&gt;ImmediateScheduler&lt;/h2&gt;
+&lt;p&gt;This is the simplest of the lot. It&#39;s essentially:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Schedule(action) =&amp;gt; action()
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;That&#39;s why it&#39;s&amp;hellip; immediate. This is one of the most used schedulers, because there can be context switch, and the more reasonable everything behaves.&lt;/p&gt;
+&lt;h2 id=&#34;currentthreadscheduler&#34;&gt;CurrentThreadScheduler&lt;/h2&gt;
+&lt;p&gt;This is similar to `Immediate with a not-so-subtle difference:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Schedule(action, delay) =&amp;gt; 
+	if (delay &amp;gt; 0 )
+		sleep(delay)
+		
+	if (nothing is running) 
+		action() 
+		dequeue()
+     else 
+     	enqueue(action)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To be more exact, it will:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Run a thunk immediately&lt;/li&gt;
+&lt;li&gt;If a thunk is scheduled for &lt;code&gt;t&lt;/code&gt; seconds later, it will sleep for &lt;code&gt;t&lt;/code&gt; seconds&lt;/li&gt;
+&lt;li&gt;If a thunk is already running, it will be added to a queue.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As can be seen from this example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;CurrentThreadScheduler.Instance.Schedule(() =&amp;gt;
+{
+	CurrentThreadScheduler.Instance.Schedule(() =&amp;gt; Console.WriteLine(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+    Console.WriteLine(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This prints &lt;code&gt;2 1&lt;/code&gt;. Using &lt;code&gt;ImmediateScheduler&lt;/code&gt; here would give you &lt;code&gt;1 2&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;eventloopscheduler&#34;&gt;EventLoopScheduler&lt;/h2&gt;
+&lt;p&gt;Units of work are scheduled in an event-loop running on a single dedicated thread. Internally, it&#39;s a priority queue dispatched by the worker thread. Technically, it&#39;s two queues - one for immediate, and one for time-scheduled items.&lt;/p&gt;
+&lt;p&gt;As with other event loops, this has the strongest guarantee of serialized notifications.
+If encounter heisenbugs related to the order of execution, this is the way to go. The caveat is that it&#39;s single threaded, so any blocking work locks up the scheduler.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Schedule(action, duetime) =&amp;gt; 
+	if (duetime &amp;gt; 0) 
+		time_enqueue(action, duetime)
+     else 
+		ready_enqueue(action)
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;newthreadscheduler&#34;&gt;NewThreadScheduler&lt;/h2&gt;
+&lt;p&gt;This is conceptually easy to understand - it creates a new thread for every item of work.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Schedule(action) =&amp;gt; new Thread(action).Start()
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Threads aren&#39;t &lt;em&gt;that&lt;/em&gt; expensive for modern machines, but why would you need this scheduler?
+If you have a really long running work function, on the order of minutes to hours, this is better than locking up a thread in one of the thread pools.&lt;/p&gt;
+&lt;p&gt;If you happen to pass in an item scheduled in the future though, it creates an &lt;code&gt;EventLoopScheduler&lt;/code&gt; and uses that.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Schedule(action, delay) =&amp;gt; new EventLoopScheduler().Schedule(action, delay)
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;threadpoolscheduler&#34;&gt;ThreadPoolScheduler&lt;/h2&gt;
+&lt;p&gt;As its name implies. each unit of work is scheduled on the &lt;code&gt;ThreadPool&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Schedule(action) =&amp;gt; ThreadPool.QueueUserWorkItem(action)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is mostly to support platforms where only the thread pool is available - if your platform has support for tasks, (it almost certainly does) - prefer the &lt;code&gt;TaskPoolScheduler&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If you are debugging tasks, and want to isolate some portion of your pipeline, this is useful.&lt;/p&gt;
+&lt;h2 id=&#34;taskpoolscheduler&#34;&gt;TaskPoolScheduler&lt;/h2&gt;
+&lt;p&gt;Schedules an unit of work on the task pool, using the Tasks API.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Schedule(action) =&amp;gt; TaskFactory.StartNew(action)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is one of the more optimized schedulers given its frequent use, and as with tasks, prefer it for short units of work.
+Still don&#39;t arbitrarily use it for everything - &lt;code&gt;Immediate&lt;/code&gt; is orders of magnitude faster with much less GC.&lt;/p&gt;
+&lt;h2 id=&#34;defaultscheduler&#34;&gt;DefaultScheduler&lt;/h2&gt;
+&lt;p&gt;This is a platform specific scheduler implementation which calls uses the platform&#39;s implementation of &lt;code&gt;IConcurrencyAbstractionLayer&lt;/code&gt;. The implementation is defined in &lt;code&gt;System.Reactive.PlatformServices&lt;/code&gt;, which might vary depending on the target.&lt;/p&gt;
+&lt;p&gt;For almost all platforms, the abstraction layer in use is based on the &lt;code&gt;ThreadPool&lt;/code&gt;.
+&lt;code&gt;Scheduler.Default&lt;/code&gt; returns the singleton instance of this.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;DefaultScheduler Default =&amp;gt; DefaultScheduler.Instance;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;As before, prefer &lt;code&gt;TaskPoolScheduler&lt;/code&gt;.&lt;/p&gt;
+- /post/rx-schedulers/ - CC by Attribution</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>Material Icons in WPF</title>
+        <link>/post/wpf-icon-font/</link>
+        <pubDate>Tue, 16 Apr 2019 00:00:00 +0000</pubDate>
+        
+        <guid>/post/wpf-icon-font/</guid>
+        <description>Asti&#39;s Notes /post/wpf-icon-font/ -&lt;h2 id=&#34;icon--fonts-with-ligatures&#34;&gt;Icon  Fonts with ligatures&lt;/h2&gt;
+&lt;p&gt;The key is using icon fonts with &lt;a href=&#34;https://en.wikipedia.org/wiki/Orthographic_ligature&#34; title=&#34;Orthographic ligature&#34;&gt;ligatures&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This makes usage incredibly easy because you can directly use a sensible &lt;em&gt;name&lt;/em&gt; instead of adding an extra resource for indirection of Unicode characters.&lt;/p&gt;
+&lt;h2 id=&#34;step--1&#34;&gt;Step  1&lt;/h2&gt;
+&lt;p&gt;Download the icon font from &lt;a href=&#34;https://material.io/resources/icons/&#34;&gt;https://material.io/resources/icons/&lt;/a&gt; (or another resource)&lt;/p&gt;
+&lt;p&gt;WPF supports both True Type Fonts (TTF) and Open Type Fonts (OTF).&lt;/p&gt;
+&lt;p&gt;Extract the included &lt;code&gt;ttf&lt;/code&gt; file from the archive. You can also download it &lt;a href=&#34;/fonts/MaterialIcons-Regular.ttf&#34; title=&#34;Download MaterialIcons-Regular.ttf from here&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;step-2&#34;&gt;Step 2&lt;/h2&gt;
+&lt;p&gt;Add to your project under any subfolder. Here I&#39;m calling it &lt;code&gt;/Fonts&lt;/code&gt;.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/wpf-add-font1.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;In the file properties, set the build action to &lt;code&gt;Resource&lt;/code&gt;, and Copy to &lt;code&gt;Copy if newer&lt;/code&gt;.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/wpf-add-font2.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;step-3&#34;&gt;Step 3&lt;/h2&gt;
+&lt;p&gt;You can now reference your font using &lt;code&gt;./Fonts/#&amp;lt;font name&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;In your &lt;code&gt;App.xaml&lt;/code&gt;, add a resource - this makes it easy to swap out fonts later.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-xaml&#34; data-lang=&#34;xaml&#34;&gt;&amp;lt;Application x:Class=&amp;quot;my.App&amp;quot;
+             xmlns=&amp;quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&amp;quot;
+             xmlns:x=&amp;quot;http://schemas.microsoft.com/winfx/2006/xaml&amp;quot;
+             xmlns:local=&amp;quot;clr-namespace:my&amp;quot;
+             StartupUri=&amp;quot;MainWindow.xaml&amp;quot;&amp;gt;
+    &amp;lt;Application.Resources&amp;gt;
+        &amp;lt;FontFamily x:Key=&amp;quot;IconFont&amp;quot;&amp;gt;./Fonts/#Material Icons&amp;lt;/FontFamily&amp;gt;        
+    &amp;lt;/Application.Resources&amp;gt;
+&amp;lt;/Application&amp;gt;		
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;:&lt;/p&gt;
+&lt;p&gt;The build tool treats it as an embedded font, so use the font family name, and not the font&#39;s file name.&lt;/p&gt;
+&lt;h2 id=&#34;step-3-1&#34;&gt;Step 3&lt;/h2&gt;
+&lt;p&gt;Use it any where by setting &lt;code&gt;FontFamily&lt;/code&gt;, and the &lt;code&gt;Content&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;FontFamily=&amp;quot;{StaticResource IconFont}&amp;quot; Content=&amp;quot;icon_name&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Pick any icon from the set.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/wpf-add-font3.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-xaml&#34; data-lang=&#34;xaml&#34;&gt;&amp;lt;Button FontFamily=&amp;quot;{StaticResource IconFont}&amp;quot; Foreground=&amp;quot;Red&amp;quot;&amp;gt;favorite&amp;lt;/Button&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;
+    &lt;img src=&#34;/images/wpf-add-font4.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;And that&#39;s it!&lt;/p&gt;
+- /post/wpf-icon-font/ - CC by Attribution</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>Run a PowerShell script for every .NET application crash</title>
+        <link>/post/powershell-tasks/</link>
+        <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
+        
+        <guid>/post/powershell-tasks/</guid>
+        <description>Asti&#39;s Notes /post/powershell-tasks/ -&lt;p&gt;How do you run a script for every application crash without attaching the debugger or some complicated mess? It&#39;s easy enough to write a simple script which checks for the life of the process.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt;($(ps taskmgr*) &lt;span style=&#34;color:#f92672&#34;&gt;-ne&lt;/span&gt; $null) 
+{
+  sleep 1  
+}
+
+echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;It&amp;#39;s dead, Jim!&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;But that doesn&#39;t give us the stack-trace, plus this script has to have a longer life-time than the process you&#39;re monitoring.&lt;/p&gt;
+&lt;h2 id=&#34;enter-the-event-log&#34;&gt;Enter The Event Log&lt;/h2&gt;
+&lt;p&gt;An application crash with an unhandled exception always writes to the Application event log. If we could run a task for that, we&#39;re half-way done.&lt;/p&gt;
+&lt;p&gt;And it turns out you can have a scheduled task for exactly that, triggered by an event log item. But adding one is a little involved, since we need some extra query variables to get us the name and stack-trace.&lt;/p&gt;
+&lt;h3 id=&#34;scheduled-task&#34;&gt;Scheduled Task&lt;/h3&gt;
+&lt;p&gt;If you&#39;re interested, the query is:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;QueryList&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;Query&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Id=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Path=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Application&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;Select&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Path=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Application&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+            *[System[Provider[@Name=&amp;#39;.NET Runtime&amp;#39;] and EventID=1026]]	             &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/Select&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/Query&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/QueryList&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We additionally need a set of &lt;code&gt;ValueQueries&lt;/code&gt; (see lines 7-11).&lt;/p&gt;
+&lt;p&gt;It&#39;s much easier to download the Scheduled Task Xml, and import it in.&lt;/p&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/deviousasti/03c735687bb076a4f8e214073868958c.js&#34;&gt;&lt;/script&gt;
+
+&lt;h2 id=&#34;the-powershell-side-of-things&#34;&gt;The PowerShell side of things&lt;/h2&gt;
+&lt;p&gt;The task trigger can be called with named variables we set up in the &lt;code&gt;ValueQueries&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;powershell Trigger.ps1 -eventRecordID $(eventRecordID) -eventChannel $(eventChannel)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now that we have the event id in our script, we can query the log to get back our stack-trace.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;param&lt;/span&gt;($eventRecordID, $eventChannel = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;Application&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+
+$event = Get-WinEvent -LogName $eventChannel -FilterXPath &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;QueryList&amp;gt;&amp;lt;Query Id=&amp;#39;0&amp;#39; Path=&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;$&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;eventChannel&amp;#39;&amp;gt;&amp;lt;Select Path=&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;$&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;eventChannel&amp;#39;&amp;gt;*[System[(EventRecordID=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;$&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;eventRecordID)]]&amp;lt;/Select&amp;gt;&amp;lt;/Query&amp;gt;&amp;lt;/QueryList&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+
+$stackTrace = $event.Message
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;($stackTrace &lt;span style=&#34;color:#f92672&#34;&gt;-match&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;Exception&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+{
+    echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;Error Thrown in Application&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; 
+    $stackTrace &amp;gt; trace.txt
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above example will just log the stack-trace to &lt;code&gt;trace.txt&lt;/code&gt; every time an application crashes. Of course, you can take any action, such as even mailing you when there&#39;s a crash with &lt;code&gt;Send-MailMessage&lt;/code&gt;.&lt;/p&gt;
+- /post/powershell-tasks/ - CC by Attribution</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>Datasheet to symbol</title>
+        <link>/post/fast-part-altium/</link>
+        <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
+        
+        <guid>/post/fast-part-altium/</guid>
+        <description>Asti&#39;s Notes /post/fast-part-altium/ -&lt;p&gt;Don&#39;t want to spend 20 minutes copy-pasting bits and pieces of the datasheet into a schematic symbol? This is for you.&lt;/p&gt;
+&lt;h3 id=&#34;step-1&#34;&gt;Step 1&lt;/h3&gt;
+&lt;p&gt;Open the datasheet PDF in a word processor. &lt;a href=&#34;/images/fastsymbol-step1.jpg&#34;&gt;See image&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;T	his is optional, but highly recommended, because PDFs don&#39;t have a flowing layout, and it is important that we have flow in this situation. If you&#39;re using a web datasheet, you can skip this step. You could also use something like &lt;a href=&#34;https://tabula.technology&#34;&gt;Tabula&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I&#39;ll be using the &lt;a href=&#34;http://www.ti.com/lit/ds/symlink/tpa3137d2.pdf&#34;&gt;TPA3137D2&lt;/a&gt; (6-W Inductor Free Stereo (BTL) Class-D Audio Amplifier) as an example here.&lt;/p&gt;
+&lt;h3 id=&#34;step-2&#34;&gt;Step 2&lt;/h3&gt;
+&lt;p&gt;Copy the pin function table to a spreadsheet.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/fastsymbol-step2.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Split out the rows for the common pins, and extra numbers for thermal pads:&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/fastsymbol-step21.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;If you want pin direction, change the IO column to one of &lt;code&gt;Input&lt;/code&gt;, &lt;code&gt;Output&lt;/code&gt; or &lt;code&gt;Power&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;=IF(C1 = &amp;quot;I&amp;quot;, &amp;quot;Input&amp;quot;, IF(C1 = &amp;quot;O&amp;quot;, &amp;quot;Output&amp;quot;, IF(C1 = &amp;quot;P&amp;quot;, &amp;quot;Power&amp;quot;, &amp;quot;Passive&amp;quot;)))
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;step-3&#34;&gt;Step 3&lt;/h3&gt;
+&lt;p&gt;With a schematic library open, open &lt;strong&gt;Tools &amp;gt; Symbol Wizard&lt;/strong&gt;
+Copy the entire sheet from the spreadsheet, and &lt;em&gt;Smart Paste&lt;/em&gt; (&lt;code&gt;Ctrl + Shift + V&lt;/code&gt;) into the Wizard&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/fastsymbol-step3.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Select the corresponding column for Display Name, Designator, Electrical Type (optional), and Description&lt;/p&gt;
+&lt;p&gt;Click &lt;code&gt;Paste&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Since this is a dual in-line Package (SSOP-28), I will choose the layout style to be dual in-line (see below)&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/fastsymbol-step31.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Hit &lt;code&gt;Place&lt;/code&gt;. And that&#39;s it. The final result should look like this:
+&lt;figure&gt;
+    &lt;img src=&#34;/images/fastsymbol-step4.jpg&#34;/&gt; 
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;Each pin should have the correct electrical type and the description.&lt;/p&gt;
+- /post/fast-part-altium/ - CC by Attribution</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>Visibility in F#</title>
+        <link>/post/visibility-fsharp/</link>
+        <pubDate>Fri, 22 Feb 2019 00:00:00 +0000</pubDate>
+        
+        <guid>/post/visibility-fsharp/</guid>
+        <description>Asti&#39;s Notes /post/visibility-fsharp/ -&lt;h2 id=&#34;let-vs-member-assignments&#34;&gt;let vs. member assignments&lt;/h2&gt;
+&lt;p&gt;What&#39;s the difference between writing &lt;code&gt;let&lt;/code&gt; in a type vs. writing &lt;code&gt;member&lt;/code&gt;?&lt;/p&gt;
+&lt;p&gt;For starters, there&#39;s not a huge difference.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Test&lt;/span&gt; () &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; mutable lastTime &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; DateTime.MinValue
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;is equivalent to:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Test&lt;/span&gt;
+{
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;internal&lt;/span&gt; DateTime lastTime = DateTime.MinValue;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;let mutable&lt;/code&gt; resolves to an internal field.&lt;/p&gt;
+&lt;p&gt;As you may already know,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Test&lt;/span&gt; () &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; firstTime &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; DateTime.MinValue
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;always stays in the scope of the constructor, unless referenced outside.
+Equivalent to:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Test&lt;/span&gt;
+	{
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; Test()
+		{
+			&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; firstTime = DateTime.MinValue;
+		}
+	}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Referencing it in a member lifts it to be a field.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Test&lt;/span&gt; () &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; firstTime &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; DateTime.MinValue
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;member&lt;/span&gt; this.&lt;span style=&#34;color:#a6e22e&#34;&gt;getFirst&lt;/span&gt;() &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; firstTime
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;is equivalent to:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Test&lt;/span&gt;
+{
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;internal&lt;/span&gt; DateTime firstTime = DateTime.MinValue;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; DateTime getFirst() =&amp;gt; firstTime;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;let-vs-member-functions&#34;&gt;let vs. member functions&lt;/h2&gt;
+&lt;p&gt;For functions, the behavior is similar, except using &lt;code&gt;member&lt;/code&gt; makes it public by default.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; getFirst() &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; firstTime
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;becomes&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;internal&lt;/span&gt; DateTime getFirst() =&amp;gt; firstTime;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;member&lt;/span&gt; this.&lt;span style=&#34;color:#a6e22e&#34;&gt;getFirst&lt;/span&gt;() &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; firstTime
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;becomes&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; DateTime getFirst() =&amp;gt; firstTime;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Using &lt;code&gt;member private&lt;/code&gt; changes visibility back to &lt;code&gt;internal&lt;/code&gt; (not &lt;code&gt;private&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;These two statements are generated IL-wise, identical:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; firstTime &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; DateTime.MinValue
+&lt;span style=&#34;color:#66d9ef&#34;&gt;member&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; this&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;firstTime &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; DateTime.MinValue
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;there-is-no-protected&#34;&gt;There is no protected&lt;/h2&gt;
+&lt;p&gt;If you have a protected virtual method, the IL method attributes would be:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;PrivateScope, Family, Virtual, HideBySig
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;F# has no concept of &lt;code&gt;family&lt;/code&gt; or &lt;code&gt;protected&lt;/code&gt;. The CLI compiled form of all non-public entities is &lt;em&gt;internal&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;If you override a member which was &lt;code&gt;protecte&lt;/code&gt;, it becomes &lt;code&gt;public&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;In the F# 4.1 Spec, section 10.5:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h3 id=&#34;accessibility-annotations&#34;&gt;Accessibility Annotations&lt;/h3&gt;
+&lt;p&gt;The table lists the accessibilities that can appear in user code:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;public&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;No restrictions on access.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;private&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Access is permitted only from the enclosing type, module, or namespace
+declaration group.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;internal&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Access is permitted only from within the enclosing assembly, or from assemblies whose name is listed using the
+InternalsVisibleTo attribute in the current assembly.&lt;/p&gt;
+&lt;p&gt;&amp;hellip;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; The family and protected specifications are not supported in this version of the F# language.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;member-or-let&#34;&gt;member or let?&lt;/h2&gt;
+&lt;p&gt;For using F# in an idiomatic way, &lt;code&gt;let&lt;/code&gt; is the way to go.
+If cross-language compatibility is important to you, use &lt;code&gt;member&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;member&lt;/code&gt; also lets you use functions out of order, if that is important to you.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Test&lt;/span&gt; () &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; mutable firstTime &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; DateTime.MinValue
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;member&lt;/span&gt; this.&lt;span style=&#34;color:#a6e22e&#34;&gt;isValidDate&lt;/span&gt; () &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 
+    	this&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;getFirst() &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; DateTime.MinValue &lt;span style=&#34;color:#75715e&#34;&gt;//getFirst isn&amp;#39;t declared yet
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;member&lt;/span&gt; this.&lt;span style=&#34;color:#a6e22e&#34;&gt;getFirst&lt;/span&gt;() &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; firstTime
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- /post/visibility-fsharp/ - CC by Attribution</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>Create high quality renders of your Altium boards</title>
+        <link>/post/render-altium/</link>
+        <pubDate>Tue, 19 Feb 2019 00:00:00 +0000</pubDate>
+        
+        <guid>/post/render-altium/</guid>
+        <description>Asti&#39;s Notes /post/render-altium/ -&lt;h2 id=&#34;create-a-realistic-model&#34;&gt;Create a realistic model&lt;/h2&gt;
+&lt;p&gt;Although this should be very straightforward, and while the 3D view in Altium is very accurate, getting it out of there is an entirely different story.&lt;/p&gt;
+&lt;h2 id=&#34;step-1&#34;&gt;Step 1&lt;/h2&gt;
+&lt;p&gt;This is, as you&#39;d expect to export a STEP file from Altium.&lt;/p&gt;
+&lt;p&gt;Use &lt;code&gt;File &amp;gt; Export &amp;gt; STEP 3D&lt;/code&gt;&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/render-altium1.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Remember to export all 3D bodies as well. But you get no traces, silkscreen or pads in a STEP file.&lt;/p&gt;
+&lt;p&gt;So on to the next step.&lt;/p&gt;
+&lt;h2 id=&#34;step-2&#34;&gt;Step 2&lt;/h2&gt;
+&lt;p&gt;Open the STEP file in Fusion 360 (or Keyshot - the process is similar)&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/render-altium2.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Make sure the main solids are free from errors, and there&#39;s no z-fighting.&lt;/p&gt;
+&lt;h2 id=&#34;step-3&#34;&gt;Step 3&lt;/h2&gt;
+&lt;p&gt;In Altium, open &lt;code&gt;Page Setup&lt;/code&gt; and &lt;code&gt;Print Properties&lt;/code&gt;.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/render-altium31.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Right click any item and select &lt;code&gt;Preferences&lt;/code&gt;&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/render-altium32.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Set the Top Paste layer colour to gold, tin&lt;/li&gt;
+&lt;li&gt;Set the Top Overlay colour to white&lt;/li&gt;
+&lt;li&gt;Set the Top Solder colour to black or a darker colour&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Remove the other layers, and set up a composite image in this order:&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/render-altium33.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Print as a PDF. Convert to PNG or TIF.&lt;/p&gt;
+&lt;h2 id=&#34;step-4&#34;&gt;Step 4&lt;/h2&gt;
+&lt;p&gt;Import the image into Fusion 360 as a decal:&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/render-altium4.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Select the top face. Make sure &lt;code&gt;Chain Faces&lt;/code&gt; is unchecked.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/render-altium41.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Move the decal into position.&lt;/p&gt;
+&lt;h2 id=&#34;step-5&#34;&gt;Step 5&lt;/h2&gt;
+&lt;p&gt;Open the Appearance tab, and map more accurate to the existing materials.&lt;/p&gt;
+&lt;p&gt;You can do this by selecting a material, selecting all instances of it, and dragging a new material.&lt;/p&gt;
+&lt;p&gt;Here I&#39;m adding a polished gold material for the castellations.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/render-altium51.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Now set up some soft lighting , a solid environment color, and hit Render!&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/render-altium5.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;And you should have something like this.&lt;/p&gt;
+- /post/render-altium/ - CC by Attribution</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>A purely functional definition of Sets</title>
+        <link>/post/fs-sets/</link>
+        <pubDate>Thu, 31 Jan 2019 00:00:00 +0000</pubDate>
+        
+        <guid>/post/fs-sets/</guid>
+        <description>Asti&#39;s Notes /post/fs-sets/ -&lt;p&gt;What would a defintion of classic sets in F# look like. These would just be composed of functions, without any underlying data types.&lt;/p&gt;
+&lt;p&gt;The simplesy defintion of a &lt;code&gt;Set&lt;/code&gt; is a boundary - everything inside it belongs to the set, everything outside it does not. We can define that membership using a simple function type.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-ocaml&#34; data-lang=&#34;ocaml&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt;a &lt;span style=&#34;color:#a6e22e&#34;&gt;Set&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt;a &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;true&lt;/code&gt; for a value that belongs to the set and &lt;code&gt;false&lt;/code&gt; otherwise.&lt;/p&gt;
+&lt;p&gt;For example. the set of natural numbers is:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; nat x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;contains&#34;&gt;contains&lt;/h2&gt;
+&lt;p&gt;Contains just calls our function, but constrains its value to &lt;code&gt;bool&lt;/code&gt;- which will help out type inference down the line.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; contains value set &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; set value
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;empty&#34;&gt;empty&lt;/h2&gt;
+&lt;p&gt;A set that contains nothing could never return &lt;code&gt;true&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; empty &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fun&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;_&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;universal&#34;&gt;universal&lt;/h2&gt;
+&lt;p&gt;A universal set is a set which contains all objects, including itself. 
+For now, our definition does not care about Russel&#39;s paradox.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; universal &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fun&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;_&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;zip&#34;&gt;zip&lt;/h2&gt;
+&lt;p&gt;A zip combines two sets with a combinator function.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; zip set1 set2 fn &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fun&lt;/span&gt; v &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; fn &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;set1 &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; contains v&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;set2 &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; contains v&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;union&#34;&gt;union&lt;/h2&gt;
+&lt;p&gt;A set union combines the elements of both sets. We can express this with &lt;code&gt;zip&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; union set1 set2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; zip set1 set2 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;intersect&#34;&gt;intersect&lt;/h2&gt;
+&lt;p&gt;An intersection of two sets only has members which belong in both the sets, or, ANDing.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; intersect set1 set2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; zip set1 set2 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;filter&#34;&gt;filter&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; filter fn set1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; zip set1 fn &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and moving on to constructing sets.&lt;/p&gt;
+&lt;h2 id=&#34;singleton&#34;&gt;singleton&lt;/h2&gt;
+&lt;p&gt;A singleton set has only one element.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; singleton value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fun&lt;/span&gt; v &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;oflist&#34;&gt;ofList&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; ofList &lt;span style=&#34;color:#66d9ef&#34;&gt;list&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fun&lt;/span&gt; v &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;list&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; List.contains v
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;tests&#34;&gt;Tests&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;1 &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.singleton &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.contains 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;1 &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.singleton &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.contains 0 &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;not&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;1&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 2&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 3&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.ofList &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.contains 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;1&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 2&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 3&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.ofList &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.union &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;FSet.singleton 4&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.contains 4&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;1&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 2&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 3&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.ofList &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.intersect &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;FSet.singleton 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.contains 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;1&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 2&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 3&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.ofList &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.intersect &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;FSet.singleton 4&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; FSet.contains 4 &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;not&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- /post/fs-sets/ - CC by Attribution</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>Daisy chains in Altium</title>
+        <link>/post/daisychain-altium/</link>
+        <pubDate>Fri, 21 Dec 2018 00:00:00 +0000</pubDate>
+        
+        <guid>/post/daisychain-altium/</guid>
+        <description>Asti&#39;s Notes /post/daisychain-altium/ -&lt;h2 id=&#34;why-a-way-to-daisy-chain&#34;&gt;Why a way to daisy-chain?&lt;/h2&gt;
+&lt;p&gt;If you wanted to daisy chain any component the conventional way, say a bunch of WS2812s on your board, you&#39;d be making multiple instances and manually wiring them to each other.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/notimefordat.jfif&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;steps&#34;&gt;Steps&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Make a sub-sheet out of the components you want to daisy chain (unless it&#39;s not in one already).&lt;/li&gt;
+&lt;li&gt;Change the designator of the sheet to &lt;code&gt;Repeat(name, 1, N)&lt;/code&gt; where &lt;code&gt;N&lt;/code&gt; is the number of items you want. E.g., &lt;code&gt;Repeat(SW, 1, 8)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Change the daisy chain input port to &lt;code&gt;Repeat(DIN)&lt;/code&gt;and output to &lt;code&gt;Repeat(DOUT)&lt;/code&gt; - the usual&lt;/li&gt;
+&lt;li&gt;Connect &lt;code&gt;DIN&lt;/code&gt; to a bus with net label &lt;code&gt;DIN[2..N]&lt;/code&gt;. E.g., &lt;code&gt;DOUT[2..8]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Connect &lt;code&gt;DOUT&lt;/code&gt; to a bus with net label &lt;code&gt;DOUT[1..N-1]&lt;/code&gt;. E.g., &lt;code&gt;DOUT[1..7]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;That&#39;s it. Just connect the two buses together and you&#39;re done.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Your daisy chain&#39;s input will be &lt;code&gt;DIN1&lt;/code&gt; and the output should be &lt;code&gt;DOUT&amp;lt;N&amp;gt;&lt;/code&gt;. (i.e., &lt;code&gt;DIN1&lt;/code&gt; and &lt;code&gt;DOUT8&lt;/code&gt;)&lt;/p&gt;
+&lt;h2 id=&#34;example&#34;&gt;Example&lt;/h2&gt;
+&lt;p&gt;The final schematic should look something like this:
+&lt;figure&gt;
+    &lt;img src=&#34;/images/altium-daisychain.jpg&#34;/&gt; 
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It&#39;s not too much effort to set this up.&lt;/li&gt;
+&lt;li&gt;You can simply change the values for &lt;code&gt;N=16&lt;/code&gt; or &lt;code&gt;N=100&lt;/code&gt; and the daisy chaining will be set up correctly&lt;/li&gt;
+&lt;li&gt;Since the sheet is repeated, you can use room commands for laying out and ordering all of them - and you only need to route one of them&lt;/li&gt;
+&lt;li&gt;Automation &lt;a href=&#34;https://xkcd.com/1319/&#34;&gt;caveats apply&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;You might need to place a &lt;code&gt;NOERC&lt;/code&gt; on the output with &amp;ldquo;nets containing multiple names&amp;rdquo;, because technically &lt;code&gt;DIN(N)&lt;/code&gt; is connected to &lt;code&gt;DOUT(N+1)&lt;/code&gt;&lt;/p&gt;
+- /post/daisychain-altium/ - CC by Attribution</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>Combine your Bill of Materials</title>
+        <link>/post/bom-merge/</link>
+        <pubDate>Fri, 02 Nov 2018 00:00:00 +0000</pubDate>
+        
+        <guid>/post/bom-merge/</guid>
+        <description>Asti&#39;s Notes /post/bom-merge/ -&lt;p&gt;Sometimes, you have a small run of boards, and you need to combine the BOM for them, to know how much to order or check against your inventory. This is especially needed when a lot of designs share parts, and it is tedious to combine them by hand.&lt;/p&gt;
+&lt;p&gt;Get &lt;a href=&#34;https://github.com/deviousasti/csv-merge&#34;&gt;csv-merge&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;step-1&#34;&gt;Step 1&lt;/h2&gt;
+&lt;p&gt;Export your BOM files as CSV (Comma Separated Values).&lt;/p&gt;
+&lt;p&gt;Check if most of your BOMs have the same header - the order does not matter, just the name.&lt;/p&gt;
+&lt;h2 id=&#34;step-2&#34;&gt;Step 2&lt;/h2&gt;
+&lt;p&gt;Drag and drop your BOM files onto the window. You can also drag folders onto it - they will be searched recursively for all &lt;code&gt;csv&lt;/code&gt; files.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/csv-merge1.gif&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;You can remove any files you don&#39;t want by selecting it, and &lt;a href=&#34;/images/csv-merge2.gif&#34;&gt;hitting delete&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;You can drag folders or files onto the window again to bring in new files, or ones you&#39;ve removed.&lt;/p&gt;
+&lt;p&gt;No duplicates will be added.&lt;/p&gt;
+&lt;h2 id=&#34;step-3&#34;&gt;Step 3&lt;/h2&gt;
+&lt;p&gt;Whichever entry you select will be the one that&#39;s used for.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/csv-merge3.gif&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Click merge when you&#39;re done.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/csv-merge4.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;All of the rows in these sheets are appended one after another, irrespective or column ordering.&lt;/p&gt;
+&lt;p&gt;The first column will be the file name of where these rows were taken from.&lt;/p&gt;
+&lt;h2 id=&#34;step-4&#34;&gt;Step 4&lt;/h2&gt;
+&lt;p&gt;Choose a set of keys - these are what identifies a component uniquely.&lt;/p&gt;
+&lt;p&gt;Usually, the value column does that. In case the values are not descriptive enough, check Footprint as well.&lt;/p&gt;
+&lt;p&gt;That way, &lt;code&gt;10k 1%, 0805&lt;/code&gt; will be how a part is declared unique.&lt;/p&gt;
+&lt;p&gt;You can set the &lt;code&gt;Quantity&lt;/code&gt; column to Total. This will cause the values in each cell to be summed up.&lt;/p&gt;
+&lt;p&gt;Usually, this is already done using reasonable defaults.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/csv-merge5.gif&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;When you&#39;re done, hit Consolidate.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;/images/csv-merge6.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;The first column will be a list of which sheets the parts were taken from.&lt;/p&gt;
+&lt;p&gt;The designators column has been joined with &lt;code&gt;;&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The quantity has been summed - leaving us with the total number of parts.&lt;/p&gt;
+- /post/bom-merge/ - CC by Attribution</description>
+        </item>
+    
+    
+  </channel>
+</rss> 

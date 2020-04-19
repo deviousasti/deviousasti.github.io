@@ -2,14 +2,51 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Asti&#39;s Notes</title>
-    <link>https://deviousasti.github.io/categories/</link>
+    <link>/categories/</link>
     <description>Recent content in Categories on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright CC by Attribution</copyright>
+    <copyright>CC by Attribution</copyright>
+    <lastBuildDate>Mon, 30 Mar 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://deviousasti.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>dev</title>
+      <link>/categories/dev/</link>
+      <pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/dev/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>eda</title>
+      <link>/categories/eda/</link>
+      <pubDate>Sat, 21 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/eda/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>embedded</title>
+      <link>/categories/embedded/</link>
+      <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/embedded/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>automation</title>
+      <link>/categories/automation/</link>
+      <pubDate>Sun, 11 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/automation/</guid>
+      <description></description>
+    </item>
     
   </channel>
 </rss>

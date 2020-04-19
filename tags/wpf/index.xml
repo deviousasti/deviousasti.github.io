@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>wpf on Asti&#39;s Notes</title>
+    <link>/tags/wpf/</link>
+    <description>Recent content in wpf on Asti&#39;s Notes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>CC by Attribution</copyright>
+    <lastBuildDate>Tue, 16 Apr 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/wpf/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Material Icons in WPF</title>
+      <link>/post/wpf-icon-font/</link>
+      <pubDate>Tue, 16 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/wpf-icon-font/</guid>
+      <description>Icon Fonts with ligatures The key is using icon fonts with ligatures.
+This makes usage incredibly easy because you can directly use a sensible name instead of adding an extra resource for indirection of Unicode characters.
+Step 1 Download the icon font from https://material.io/resources/icons/ (or another resource)
+WPF supports both True Type Fonts (TTF) and Open Type Fonts (OTF).
+Extract the included ttf file from the archive. You can also download it here.</description>
+    </item>
+    
+  </channel>
+</rss>

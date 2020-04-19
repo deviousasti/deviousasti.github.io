@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>dotnet on Asti&#39;s Notes</title>
+    <link>/tags/dotnet/</link>
+    <description>Recent content in dotnet on Asti&#39;s Notes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>CC by Attribution</copyright>
+    <lastBuildDate>Mon, 30 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/dotnet/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Invalid GC results in F# tests</title>
+      <link>/post/fs-incorrect-gc/</link>
+      <pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/fs-incorrect-gc/</guid>
+      <description>When running tests which check if something is GC&#39;d, it might fail.
+The test Consider the following test:
+[&amp;lt;TestMethod&amp;gt;]member _.TestGC() =let mutable obj = new Object()let weak = new WeakReference(obj);GC.Collect()Assert.IsTrue(obj &amp;lt;&amp;gt; null)Assert.IsTrue(weak.IsAlive) obj &amp;lt;- nullGC.Collect()Assert.IsTrue((obj = null))Assert.IsTrue(not weak.IsAlive)This will fail in DEBUG.
+Sub-expression elaboration This happens because of elaboration to new locals for every subexpression. For example,
+let list1 = [1; 2; 3]let list2 = [1; 2; 3]assert (list1 = list2)This elaborates every sub-expression to:</description>
+    </item>
+    
+    <item>
+      <title>Incorrect stack traces in F#</title>
+      <link>/post/fsc-stacktrace/</link>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/fsc-stacktrace/</guid>
+      <description>Consider the following simple program:
+let foo () =failwithf &amp;#34;foo&amp;#34;[&amp;lt;EntryPoint&amp;gt;]let main argv =foo ()0Pretty straightforward. But depending on the circumstances, you may never see that foo in the stack trace.
+Unhandled Exception: System.Exception: fooat Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1639.Invoke(String message)at Program.main(String[] argv) in Program.fs:line 13And the reason for that is optimizations. For fsc, optimizations are turned on by default.
+Inlining This is the most common thing you&#39;re likely to see.</description>
+    </item>
+    
+    <item>
+      <title>A DOS-like shell in .Net</title>
+      <link>/post/recreate-dos/</link>
+      <pubDate>Tue, 18 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/recreate-dos/</guid>
+      <description>Setup Add a reference to NetShell, create a new DOS.cs file. The main file just calls NetShell&#39;s RpcShell with an instance of DOS.
+static int Main(string[] args){var shell = new RpcShell(new DOS()) { Prompt = Environment.CurrentDirectory, FlagPrefix = &amp;#34;/&amp;#34; };return shell.Run();}With that out of the way, let&#39;s implement the first command.
+echo This is trivial. Add a Command attribute with the (optional) name and help-text.</description>
+    </item>
+    
+    <item>
+      <title>A git-config parser</title>
+      <link>/post/git-config-parser/</link>
+      <pubDate>Tue, 24 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/git-config-parser/</guid>
+      <description>Reading .git/config is the fastest way of getting info on a repository and its dependencies.
+The Spec Let&#39;s start by going through the spec from https://git-scm.com/docs/git-config#_syntax
+An example config:
+# Core variables[core]; Don&#39;t trust file modesfilemode = false# Our diff algorithm[branch &amp;quot;master&amp;quot;]	use = trueThe basics:
+ The # and ; characters begin comments to the end of line, blank lines are ignored.
+ let isComment (line:string) = line.</description>
+    </item>
+    
+    <item>
+      <title>Getting the last value from an Observable when it fails</title>
+      <link>/post/rx-last-value/</link>
+      <pubDate>Sun, 05 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/rx-last-value/</guid>
+      <description>The Rx Contract The Rx contract is:
+OnNext* (OnError(e)|OnCompleted)+Unfortunately, an OnError signals the pipeline to be torn down immediately - throwing away that last, possibly useful result.
+The problem Let&#39;s have a simple source which produces:
+OnNext(1), OnNext(2), ... OnNext(10), OnError(ex)var source = Observable.Range(1, 10).Concat(Observable.Throw&amp;lt;int&amp;gt;(new Exception()));Now if we use an accumulating operator like Buffer, or ToArray we lose any values accumulated just before the error occured.
+source.</description>
+    </item>
+    
+    <item>
+      <title>The various Schedulers in Rx</title>
+      <link>/post/rx-schedulers/</link>
+      <pubDate>Fri, 19 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/rx-schedulers/</guid>
+      <description>Schedulers in Rx Schedulers abstract away concurrency from operators. A scheduler decides what order &amp;ldquo;thunks&amp;rdquo; (a unit of work) execute in, and how time flows.
+There are a number of scheduler implementations for doing work on diverse models of concurrency. Rx is very preferential to single-threadedness, and opposed to being multi-threaded out of the box.
+Most of the time, you don&#39;t need to worry about it, and you can go with the reasonable defaults.</description>
+    </item>
+    
+    <item>
+      <title>Material Icons in WPF</title>
+      <link>/post/wpf-icon-font/</link>
+      <pubDate>Tue, 16 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/wpf-icon-font/</guid>
+      <description>Icon Fonts with ligatures The key is using icon fonts with ligatures.
+This makes usage incredibly easy because you can directly use a sensible name instead of adding an extra resource for indirection of Unicode characters.
+Step 1 Download the icon font from https://material.io/resources/icons/ (or another resource)
+WPF supports both True Type Fonts (TTF) and Open Type Fonts (OTF).
+Extract the included ttf file from the archive. You can also download it here.</description>
+    </item>
+    
+    <item>
+      <title>Visibility in F#</title>
+      <link>/post/visibility-fsharp/</link>
+      <pubDate>Fri, 22 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/visibility-fsharp/</guid>
+      <description>let vs. member assignments What&#39;s the difference between writing let in a type vs. writing member?
+For starters, there&#39;s not a huge difference.
+type Test () =let mutable lastTime = DateTime.MinValueis equivalent to:
+public class Test{internal DateTime lastTime = DateTime.MinValue;}let mutable resolves to an internal field.
+As you may already know,
+type Test () =let firstTime = DateTime.MinValuealways stays in the scope of the constructor, unless referenced outside.</description>
+    </item>
+    
+  </channel>
+</rss>

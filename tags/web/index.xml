@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>web on Asti&#39;s Notes</title>
+    <link>/tags/web/</link>
+    <description>Recent content in web on Asti&#39;s Notes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>CC by Attribution</copyright>
+    <lastBuildDate>Tue, 02 Oct 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/web/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Web Workers and Typescript constraints</title>
+      <link>/post/ts-worker-constraints/</link>
+      <pubDate>Tue, 02 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/ts-worker-constraints/</guid>
+      <description>Now there are a million web-worker libraries out there, but what&#39;s the harm in having more interesting implementations?
+The Proxy The simplest way to start using a worker would be something that can drop in and sub for a regular class with methods and state.
+We can do that by creating a proxy for the class - you call the methods on the proxy - the calls are intercepted and run in the worker, and the results are passed to you as a Promise.</description>
+    </item>
+    
+  </channel>
+</rss>
