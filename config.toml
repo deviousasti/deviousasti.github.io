@@ -1,7 +1,7 @@
 baseURL = "https://deviousasti.github.io/"
 languageCode = "en-us"
 title = "Asti's Notes"
-copyright = "Copyright CC by Attribution"
+copyright = "CC by Attribution"
 disableKinds = ["section"]
 theme = "diary"
 # googleAnalytics = "UA-123-45"
@@ -23,9 +23,19 @@ enableGitalk = false
 [[menu.main]]
 url = "/categories"
 name = "Categories"
-weight = 2
+weight = 3
 
 [[menu.main]]
 url = "/tags"
 name = "Tags"
+weight = 3
+
+[[menu.main]]
+url = "/about"
+name = "About"
+weight = 4
+
+[[menu.main]]
+url = "/projects"
+name = "Projects"
 weight = 1
