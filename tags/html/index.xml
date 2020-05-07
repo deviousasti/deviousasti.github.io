@@ -18,7 +18,7 @@
       <pubDate>Mon, 06 May 2019 00:00:00 +0000</pubDate>
       
       <guid>/post/html-imports/</guid>
-      <description>Once upon a time HTML imports was marketed at #include for the web and the best thing ever invented. And it was a great idea.
+      <description>Once upon a time HTML imports was marketed as #include for the web and the best thing ever invented. And it was a great idea.
  HTML Imports is a way to include HTML documents in other HTML documents. You&#39;re not limited to markup either. An import can also include CSS, JavaScript, or anything else an .html file can contain. In other words, this makes imports a fantastic tool for loading related HTML/CSS/JS</description>
     </item>
     

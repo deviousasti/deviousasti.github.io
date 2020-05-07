@@ -601,7 +601,7 @@ Even if we redirect &lt;code&gt;stderr&lt;/code&gt;, the &lt;code&gt;stderr&lt;/
         <pubDate>Mon, 06 May 2019 00:00:00 +0000</pubDate>
         
         <guid>/post/html-imports/</guid>
-        <description>Asti&#39;s Notes /post/html-imports/ -&lt;p&gt;Once upon a time HTML imports was marketed at #include for the web and the best thing ever invented.
+        <description>Asti&#39;s Notes /post/html-imports/ -&lt;p&gt;Once upon a time HTML imports was marketed as #include for the web and the best thing ever invented.
 And it was a great idea.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;HTML Imports is a way to include HTML documents in other HTML documents. You&#39;re not limited to markup either. An import can also include CSS, JavaScript, or anything else an .html file can contain. In other words, this makes imports a fantastic tool for loading related HTML/CSS/JS&lt;/p&gt;
@@ -706,6 +706,9 @@ Additionally, we must rewrite &lt;code&gt;script&lt;/code&gt; and &lt;code&gt;st
     replaceImports root
     root&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;document&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Save&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;output&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And that&#39;s all there is to it.&lt;/p&gt;
+&lt;p&gt;Here&#39;s the full source. The main bits are in &lt;code&gt;Program.fs&lt;/code&gt;, the &lt;code&gt;Html.fs&lt;/code&gt; is just a small wrapper to make &lt;code&gt;AgilityPack&lt;/code&gt; more like &lt;code&gt;FSharp.Data&lt;/code&gt;.&lt;/p&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/deviousasti/b63f98b66401676511f00148ae38ce8f.js&#34;&gt;&lt;/script&gt;
+
 - /post/html-imports/ - CC by Attribution</description>
         </item>
     
