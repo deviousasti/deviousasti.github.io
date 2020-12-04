@@ -30,9 +30,9 @@ It turns out we can!
 
 # How does it work?
 
-In a language like F#, declarations can only make references in compile order- this coupled with referentially transparent code get us the building blocks of cells.
+In a language like F#, declarations can only make references in compile order- this, coupled with referentially transparent code, serve as the building blocks of cells.
 
-The central idea intuition here is that the nature of functional programs should allow them to be modeled as a directed acyclic graph (a DAG). The graph is acyclic because unlike pure OO languages, forward references are not possible - structure flows *downward*.
+The central intuition here is that the nature of functional programs should allow them to be modeled as a directed acyclic graph (a DAG). The graph is acyclic because unlike pure OO languages, forward references are not possible - structure flows *downward*.
 
 ### Criteria for nodes
 
@@ -130,7 +130,7 @@ This builds and installs it as a dotnet tool. You can make it watch any script f
 PS> fsw program.fsx
 ```
 
-and it evaluates changes every time you save.
+and it evaluates changes every time you save changes.
 
 {{< figure src="/images/fswatch.gif" >}}
 
