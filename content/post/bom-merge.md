@@ -1,11 +1,12 @@
 ---
 title: "Combine your Bill of Materials"
 date: 2018-11-02
-description: "Figure out which parts are in common, and how many to order"
+description: "Figure out which parts are common, and how many to order"
 tags: [tools, altium]
 featured_image: "/images/bom-merge.jpg"
 categories: eda
 comment : false
+author: Asti
 ---
 
 Sometimes, you have a small run of boards, and you need to combine the BOM for them, to know how much to order or check against your inventory. This is especially needed when a lot of designs share parts, and it is tedious to combine them by hand.

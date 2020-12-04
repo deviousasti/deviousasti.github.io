@@ -6,6 +6,7 @@ tags: [types, dotnet]
 featured_image: "/images/msdos.jpg"
 categories: dev
 comment : false
+author: Asti
 ---
 
 ## Setup

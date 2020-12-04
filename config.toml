@@ -1,14 +1,16 @@
-baseURL = "/"
+baseURL = "https://asti.dynz.net"
 languageCode = "en-us"
 title = "Asti's Notes"
 copyright = "CC by Attribution"
 disableKinds = ["section"]
 theme = "diary"
+author = "Asti"
 # googleAnalytics = "UA-123-45"
 
 [params]
 subtitle = "FP, Rx, EDA"
 enableGitalk = false
+disqusShortname = "deviousasti"
 
 [params.gitalk]
   owner = "user"

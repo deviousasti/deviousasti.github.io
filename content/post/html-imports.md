@@ -8,7 +8,7 @@ categories: dev
 comment : false
 ---
 
-Once upon a time HTML imports was marketed at #include for the web and the best thing ever invented.
+Once upon a time HTML imports was marketed as #include for the web and the best thing ever invented.
 And it was a great idea.
 
 > HTML Imports is a way to include HTML documents in other HTML documents. You're not limited to markup either. An import can also include CSS, JavaScript, or anything else an .html file can contain. In other words, this makes imports a fantastic tool for loading related HTML/CSS/JS
@@ -152,3 +152,6 @@ match scanFile input with
 ```
 And that's all there is to it.
 
+Here's the full source. The main bits are in `Program.fs`, the `Html.fs` is just a small wrapper to make `AgilityPack` more like `FSharp.Data`.
+
+{{< gist deviousasti b63f98b66401676511f00148ae38ce8f >}}
