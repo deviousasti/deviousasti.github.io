@@ -616,8 +616,8 @@ CC by Attribution
 </figure>
 
 <h1 id="how-does-it-work">How does it work?</h1>
-<p>In a language like F#, declarations can only make references in compile order- this coupled with referentially transparent code get us the building blocks of cells.</p>
-<p>The central idea intuition here is that the nature of functional programs should allow them to be modeled as a directed acyclic graph (a DAG). The graph is acyclic because unlike pure OO languages, forward references are not possible - structure flows <em>downward</em>.</p>
+<p>In a language like F#, declarations can only make references in compile order- this, coupled with referentially transparent code, serve as the building blocks of cells.</p>
+<p>The central intuition here is that the nature of functional programs should allow them to be modeled as a directed acyclic graph (a DAG). The graph is acyclic because unlike pure OO languages, forward references are not possible - structure flows <em>downward</em>.</p>
 <h3 id="criteria-for-nodes">Criteria for nodes</h3>
 <p>Picking graph nodes is important - we require a node to be at least a top-level declaration. To qualify to be a declaration, it must be one of the following:</p>
 <table>
@@ -758,7 +758,7 @@ There&rsquo;s some additional infrastructure around the evaluator, so things wor
 <p>You can use it today by <a href="https://github.com/deviousasti/fsharp-worksheet">cloning the repo</a> and running <code>install.ps1</code>.</p>
 <p>This builds and installs it as a dotnet tool. You can make it watch any script file with:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">PS&gt; fsw program.fsx
-</code></pre></div><p>and it evaluates changes every time you save.</p>
+</code></pre></div><p>and it evaluates changes every time you save changes.</p>
 <figure>
     <img src="/images/fswatch.gif"/> 
 </figure>

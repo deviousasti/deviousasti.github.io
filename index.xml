@@ -38,8 +38,8 @@
 &lt;/figure&gt;
 
 &lt;h1 id=&#34;how-does-it-work&#34;&gt;How does it work?&lt;/h1&gt;
-&lt;p&gt;In a language like F#, declarations can only make references in compile order- this coupled with referentially transparent code get us the building blocks of cells.&lt;/p&gt;
-&lt;p&gt;The central idea intuition here is that the nature of functional programs should allow them to be modeled as a directed acyclic graph (a DAG). The graph is acyclic because unlike pure OO languages, forward references are not possible - structure flows &lt;em&gt;downward&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;In a language like F#, declarations can only make references in compile order- this, coupled with referentially transparent code, serve as the building blocks of cells.&lt;/p&gt;
+&lt;p&gt;The central intuition here is that the nature of functional programs should allow them to be modeled as a directed acyclic graph (a DAG). The graph is acyclic because unlike pure OO languages, forward references are not possible - structure flows &lt;em&gt;downward&lt;/em&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;criteria-for-nodes&#34;&gt;Criteria for nodes&lt;/h3&gt;
 &lt;p&gt;Picking graph nodes is important - we require a node to be at least a top-level declaration. To qualify to be a declaration, it must be one of the following:&lt;/p&gt;
 &lt;table&gt;
@@ -180,7 +180,7 @@ There&amp;rsquo;s some additional infrastructure around the evaluator, so things
 &lt;p&gt;You can use it today by &lt;a href=&#34;https://github.com/deviousasti/fsharp-worksheet&#34;&gt;cloning the repo&lt;/a&gt; and running &lt;code&gt;install.ps1&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;This builds and installs it as a dotnet tool. You can make it watch any script file with:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;PS&amp;gt; fsw program.fsx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and it evaluates changes every time you save.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and it evaluates changes every time you save changes.&lt;/p&gt;
 &lt;figure&gt;
     &lt;img src=&#34;https://asti.dynz.net/images/fswatch.gif&#34;/&gt; 
 &lt;/figure&gt;
