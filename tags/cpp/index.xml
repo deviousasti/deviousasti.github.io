@@ -2,38 +2,43 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>cpp on Asti&#39;s Notes</title>
-    <link>/tags/cpp/</link>
+    <link>https://asti.dynz.net/tags/cpp/</link>
     <description>Recent content in cpp on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Sat, 12 Oct 2019 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/tags/cpp/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 12 Oct 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://asti.dynz.net/tags/cpp/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>How to get rid of Semihosting</title>
-      <link>/post/semihosting/</link>
+      <link>https://asti.dynz.net/post/semihosting/</link>
       <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/semihosting/</guid>
+      <guid>https://asti.dynz.net/post/semihosting/</guid>
       <description>&amp;hellip;or why my application stops when disconnected from the debugger.
-As you can tell from the image, I&#39;ve been bitten badly by semihosting before.
+As you can tell from the image, I&amp;rsquo;ve been bitten badly by semihosting before.
 What is ARM Semihosting? Semihosting is a mechanism that enables code running on an ARM target to communicate and use the Input/Output facilities on a host computer running a debugger.
 To put it simply, it lets you use printf, scanf and other syscalls on a target where the host acts as the &amp;lsquo;system&amp;rsquo; in those calls.</description>
     </item>
     
     <item>
+      <title>Ain&#39;t nobody got time for that</title>
+      <link>https://asti.dynz.net/post/posix-time-micro/</link>
+      <pubDate>Tue, 24 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://asti.dynz.net/post/posix-time-micro/</guid>
+      <description>1&amp;gt; ------------------- Memory utilization report -------------------1&amp;gt; Used FLASH: 23KB out of 64KB (36%) [+10K]1&amp;gt; Used SRAM: 6244 bytes out of 8192 bytes (76%) [+1688]</description>
+    </item>
+    
+    <item>
       <title>Decoding a oneof case in nanopb</title>
-      <link>/post/nanopb-value/</link>
+      <link>https://asti.dynz.net/post/nanopb-value/</link>
       <pubDate>Sat, 03 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/nanopb-value/</guid>
+      <guid>https://asti.dynz.net/post/nanopb-value/</guid>
       <description>Decoding callbacks Say you have a message type with variable fields:
 message KeyValue { string key = 1; string value = 2;}This generates:
-typedef struct _KeyValue {pb_callback_t key;pb_callback_t value;} KeyValue;Decoding this in nanopb isn&#39;t so bad -
-KeyValue decodeKV(char* key, char* value){KeyValue kv;kv.key = readStringCallback(key);kv.value = readStringCallback(value);return kv;}Call pb_decode and you&#39;re done.
+typedef struct _KeyValue { pb_callback_t key; pb_callback_t value; } KeyValue; Decoding this in nanopb isn&amp;rsquo;t so bad -
+KeyValue decodeKV(char* key, char* value) { KeyValue kv; kv.key = readStringCallback(key); kv.value = readStringCallback(value); return kv; } Call pb_decode and you&amp;rsquo;re done.
 The callback and the union If your type happens to be inside a oneof like so:</description>
     </item>
     

@@ -23,11 +23,11 @@
 
 
 
-<link rel="stylesheet" href="/scss/journal.min.074c04b896e4e9ec7e517f88eefd59e62ffd212b8c923ac219f7bc81825b28bd.css" integrity="sha256-B0wEuJbk6ex&#43;UX&#43;I7v1Z5i/9ISuMkjrCGfe8gYJbKL0=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/journal.min.8335a975ef7e2ae409c16107534604caf6426d51ba9776b9b017b2c1d908c2bc.css" integrity="sha256-gzWpde9&#43;KuQJwWEHU0YEyvZCbVG6l3a5sBeywdkIwrw=" media="screen">
 
 
 
-<link rel="stylesheet" href="/scss/dark-mode.min.5d4554809a1a12cbf28366c9a81376c1681cdefc525a37617a9741c19b85f22f.css" integrity="sha256-XUVUgJoaEsvyg2bJqBN2wWgc3vxSWjdhepdBwZuF8i8=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/dark-mode.min.114f186b6cd522a64502e49572cbcc70d7ead986a36668413a7e0d977ffd6fff.css" integrity="sha256-EU8Ya2zVIqZFAuSVcsvMcNfq2YajZmhBOn4Nl3/9b/8=" media="screen">
 
 
 <script src="/vendor/js/vue.min.js" ></script>
@@ -49,7 +49,7 @@
 </head><body>
     	<div id="app"><div ref="sideContainer" class="side-container">
     
-    <a class="a-block nav-head false" href="/">
+    <a class="a-block nav-head false" href="https://asti.dynz.net">
     
         <div class="nav-title">
             Asti&#39;s Notes
@@ -365,7 +365,7 @@ CC by Attribution
                 menu
             </i>
         </button>
-        <a ref="navTitle" class="navbar-brand" href="/">
+        <a ref="navTitle" class="navbar-brand" href="https://asti.dynz.net">
             Asti&#39;s Notes
         </a>
         
@@ -382,7 +382,7 @@ CC by Attribution
 </nav>
 <div class="single-column-header-container" ref="pageHead"
      v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
-    <a href="/">
+    <a href="https://asti.dynz.net">
         <div class="single-column-header-title">Asti&#39;s Notes</div>
         
         <div class="single-column-header-subtitle">FP, Rx, EDA</div>
@@ -444,7 +444,7 @@ CC by Attribution
                 <div class="post-body">
                     <p>Consider the following simple program:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> foo () <span style="color:#f92672">=</span>
-    failwithf <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">foo</span><span style="color:#e6db74">&#34;</span>
+    failwithf <span style="color:#e6db74">&#34;foo&#34;</span>
 
 <span style="color:#f92672">[&lt;</span>EntryPoint<span style="color:#f92672">&gt;]</span>
 <span style="color:#66d9ef">let</span> main argv <span style="color:#f92672">=</span>
@@ -456,7 +456,7 @@ CC by Attribution
    at Program.main(String[] argv) in Program.fs:line 13
 </code></pre><p>And the reason for that is optimizations. For <code>fsc</code>, optimizations are <a href="https://github.com/dotnet/fsharp/blob/0f514efe25899ba59778b5bb522e2724aec44a3d/src/fsharp/FSharp.Build/Fsc.fs#L120">turned on by default</a>.</p>
 <h2 id="inlining">Inlining</h2>
-<p>This is the most common thing you're likely to see. <code>foo()</code> isn't even called - if the method body is small enough, <code>fsc</code> will easily inline it. 
+<p>This is the most common thing you&rsquo;re likely to see. <code>foo()</code> isn&rsquo;t even called - if the method body is small enough, <code>fsc</code> will easily inline it. 
 The resulting IL is equivalent to (all inlined):</p>
 <pre><code>let main argv =
     PrintfModule.PrintFormatToStringThenFail(new PrintfFormat&lt;_&gt;(&quot;foo&quot;));
@@ -466,7 +466,7 @@ The resulting IL is equivalent to (all inlined):</p>
 <pre><code>fsc -g --optimize- Program.fs
 </code></pre>
 <h2 id="tail-call-optimization">Tail-call optimization</h2>
-<p>A tail-call optimization avoids allocating a new stack frame for a function call. Tail call optimizations can be applied for functions whose <em>return value</em> is the call to another function (or itself). And since it works by the elimination of stack-frames, you don't see it in the stack trace.</p>
+<p>A tail-call optimization avoids allocating a new stack frame for a function call. Tail call optimizations can be applied for functions whose <em>return value</em> is the call to another function (or itself). And since it works by the elimination of stack-frames, you don&rsquo;t see it in the stack trace.</p>
 <p><code>foo</code> meets this criteria as it shorts <code>main</code>.</p>
 <p>Tail calls can be turned off this off with <code>--tailcalls-</code>.</p>
 <h2 id="turning-off-optimizations">Turning off optimizations</h2>
@@ -491,13 +491,13 @@ The resulting IL is equivalent to (all inlined):</p>
             <nav class="post-pagination">
 
                 
-                <a class="newer-posts" href="/post/fs-incorrect-gc/">
+                <a class="newer-posts" href="https://asti.dynz.net/post/fs-incorrect-gc/">
                     Next<br>Invalid GC results in F# tests
                 </a>
                 
                 
                 
-                <a class="older-posts" href="/post/recreate-dos/">
+                <a class="older-posts" href="https://asti.dynz.net/post/recreate-dos/">
                     Previous<br>A DOS-like shell in .Net
                 </a>
                 
@@ -521,6 +521,6 @@ The resulting IL is equivalent to (all inlined):</p>
 CC by Attribution
 </div>
             </div>    
-            <script src="/js/journal.js"></script>
+            <script src="https://asti.dynz.netjs/journal.js"></script>
     </body>
 </html>

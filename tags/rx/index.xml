@@ -2,38 +2,34 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>rx on Asti&#39;s Notes</title>
-    <link>/tags/rx/</link>
+    <link>https://asti.dynz.net/tags/rx/</link>
     <description>Recent content in rx on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Sun, 05 May 2019 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/tags/rx/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 05 May 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://asti.dynz.net/tags/rx/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Getting the last value from an Observable when it fails</title>
-      <link>/post/rx-last-value/</link>
+      <link>https://asti.dynz.net/post/rx-last-value/</link>
       <pubDate>Sun, 05 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/rx-last-value/</guid>
+      <guid>https://asti.dynz.net/post/rx-last-value/</guid>
       <description>The Rx Contract The Rx contract is:
 OnNext* (OnError(e)|OnCompleted)+Unfortunately, an OnError signals the pipeline to be torn down immediately - throwing away that last, possibly useful result.
-The problem Let&#39;s have a simple source which produces:
-OnNext(1), OnNext(2), ... OnNext(10), OnError(ex)var source = Observable.Range(1, 10).Concat(Observable.Throw&amp;lt;int&amp;gt;(new Exception()));Now if we use an accumulating operator like Buffer, or ToArray we lose any values accumulated just before the error occured.
-source.</description>
+The problem Let&amp;rsquo;s have a simple source which produces:
+OnNext(1), OnNext(2), ... OnNext(10), OnError(ex)var source = Observable.Range(1, 10).Concat(Observable.Throw&amp;lt;int&amp;gt;(new Exception())); Now if we use an accumulating operator like Buffer, or ToArray we lose any values accumulated just before the error occured.
+source .</description>
     </item>
     
     <item>
       <title>The various Schedulers in Rx</title>
-      <link>/post/rx-schedulers/</link>
+      <link>https://asti.dynz.net/post/rx-schedulers/</link>
       <pubDate>Fri, 19 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/rx-schedulers/</guid>
+      <guid>https://asti.dynz.net/post/rx-schedulers/</guid>
       <description>Schedulers in Rx Schedulers abstract away concurrency from operators. A scheduler decides what order &amp;ldquo;thunks&amp;rdquo; (a unit of work) execute in, and how time flows.
 There are a number of scheduler implementations for doing work on diverse models of concurrency. Rx is very preferential to single-threadedness, and opposed to being multi-threaded out of the box.
-Most of the time, you don&#39;t need to worry about it, and you can go with the reasonable defaults.</description>
+Most of the time, you don&amp;rsquo;t need to worry about it, and you can go with the reasonable defaults.</description>
     </item>
     
   </channel>

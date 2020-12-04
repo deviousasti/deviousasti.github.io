@@ -2,24 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>eda on Asti&#39;s Notes</title>
-    <link>/tags/eda/</link>
+    <link>https://asti.dynz.net/tags/eda/</link>
     <description>Recent content in eda on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Fri, 21 Dec 2018 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/tags/eda/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 21 Dec 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://asti.dynz.net/tags/eda/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Daisy chains in Altium</title>
-      <link>/post/daisychain-altium/</link>
+      <link>https://asti.dynz.net/post/daisychain-altium/</link>
       <pubDate>Fri, 21 Dec 2018 00:00:00 +0000</pubDate>
       
-      <guid>/post/daisychain-altium/</guid>
-      <description>Why a way to daisy-chain? If you wanted to daisy chain any component the conventional way, say a bunch of WS2812s on your board, you&#39;d be making multiple instances and manually wiring them to each other.
-  Steps  Make a sub-sheet out of the components you want to daisy chain (unless it&#39;s not in one already). Change the designator of the sheet to Repeat(name, 1, N) where N is the number of items you want.</description>
+      <guid>https://asti.dynz.net/post/daisychain-altium/</guid>
+      <description>Why a way to daisy-chain? If you wanted to daisy chain any component the conventional way, say a bunch of WS2812s on your board, you&amp;rsquo;d be making multiple instances and manually wiring them to each other.
+  Steps  Make a sub-sheet out of the components you want to daisy chain (unless it&amp;rsquo;s not in one already). Change the designator of the sheet to Repeat(name, 1, N) where N is the number of items you want.</description>
     </item>
     
   </channel>

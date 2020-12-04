@@ -2,202 +2,207 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Asti&#39;s Notes</title>
-    <link>/tags/</link>
+    <link>https://asti.dynz.net/tags/</link>
     <description>Recent content in Tags on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Mon, 30 Mar 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 04 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://asti.dynz.net/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>dotnet</title>
-      <link>/tags/dotnet/</link>
-      <pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
+      <title>fsharp</title>
+      <link>https://asti.dynz.net/tags/fsharp/</link>
+      <pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/dotnet/</guid>
+      <guid>https://asti.dynz.net/tags/fsharp/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>fsharp</title>
-      <link>/tags/fsharp/</link>
+      <title>dotnet</title>
+      <link>https://asti.dynz.net/tags/dotnet/</link>
       <pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/fsharp/</guid>
+      <guid>https://asti.dynz.net/tags/dotnet/</guid>
       <description></description>
     </item>
     
     <item>
       <title>optimization</title>
-      <link>/tags/optimization/</link>
+      <link>https://asti.dynz.net/tags/optimization/</link>
       <pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/optimization/</guid>
+      <guid>https://asti.dynz.net/tags/optimization/</guid>
       <description></description>
     </item>
     
     <item>
       <title>types</title>
-      <link>/tags/types/</link>
+      <link>https://asti.dynz.net/tags/types/</link>
       <pubDate>Tue, 18 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/types/</guid>
+      <guid>https://asti.dynz.net/tags/types/</guid>
       <description></description>
     </item>
     
     <item>
       <title>circuits</title>
-      <link>/tags/circuits/</link>
+      <link>https://asti.dynz.net/tags/circuits/</link>
       <pubDate>Sat, 21 Dec 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/circuits/</guid>
+      <guid>https://asti.dynz.net/tags/circuits/</guid>
       <description></description>
     </item>
     
     <item>
       <title>arm</title>
-      <link>/tags/arm/</link>
+      <link>https://asti.dynz.net/tags/arm/</link>
       <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/arm/</guid>
+      <guid>https://asti.dynz.net/tags/arm/</guid>
       <description></description>
     </item>
     
     <item>
       <title>assembly</title>
-      <link>/tags/assembly/</link>
+      <link>https://asti.dynz.net/tags/assembly/</link>
       <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/assembly/</guid>
+      <guid>https://asti.dynz.net/tags/assembly/</guid>
       <description></description>
     </item>
     
     <item>
       <title>cpp</title>
-      <link>/tags/cpp/</link>
+      <link>https://asti.dynz.net/tags/cpp/</link>
       <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/cpp/</guid>
+      <guid>https://asti.dynz.net/tags/cpp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>posix</title>
+      <link>https://asti.dynz.net/tags/posix/</link>
+      <pubDate>Tue, 24 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://asti.dynz.net/tags/posix/</guid>
       <description></description>
     </item>
     
     <item>
       <title>powershell</title>
-      <link>/tags/powershell/</link>
+      <link>https://asti.dynz.net/tags/powershell/</link>
       <pubDate>Sun, 11 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/powershell/</guid>
+      <guid>https://asti.dynz.net/tags/powershell/</guid>
       <description></description>
     </item>
     
     <item>
       <title>protobuf</title>
-      <link>/tags/protobuf/</link>
+      <link>https://asti.dynz.net/tags/protobuf/</link>
       <pubDate>Sat, 03 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/protobuf/</guid>
+      <guid>https://asti.dynz.net/tags/protobuf/</guid>
       <description></description>
     </item>
     
     <item>
       <title>git</title>
-      <link>/tags/git/</link>
+      <link>https://asti.dynz.net/tags/git/</link>
       <pubDate>Mon, 17 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/git/</guid>
+      <guid>https://asti.dynz.net/tags/git/</guid>
       <description></description>
     </item>
     
     <item>
       <title>html</title>
-      <link>/tags/html/</link>
+      <link>https://asti.dynz.net/tags/html/</link>
       <pubDate>Mon, 06 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/html/</guid>
+      <guid>https://asti.dynz.net/tags/html/</guid>
       <description></description>
     </item>
     
     <item>
       <title>rx</title>
-      <link>/tags/rx/</link>
+      <link>https://asti.dynz.net/tags/rx/</link>
       <pubDate>Sun, 05 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/rx/</guid>
+      <guid>https://asti.dynz.net/tags/rx/</guid>
       <description></description>
     </item>
     
     <item>
       <title>wpf</title>
-      <link>/tags/wpf/</link>
+      <link>https://asti.dynz.net/tags/wpf/</link>
       <pubDate>Tue, 16 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/wpf/</guid>
+      <guid>https://asti.dynz.net/tags/wpf/</guid>
       <description></description>
     </item>
     
     <item>
       <title>xaml</title>
-      <link>/tags/xaml/</link>
+      <link>https://asti.dynz.net/tags/xaml/</link>
       <pubDate>Tue, 16 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/xaml/</guid>
+      <guid>https://asti.dynz.net/tags/xaml/</guid>
       <description></description>
     </item>
     
     <item>
       <title>altium</title>
-      <link>/tags/altium/</link>
+      <link>https://asti.dynz.net/tags/altium/</link>
       <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/altium/</guid>
+      <guid>https://asti.dynz.net/tags/altium/</guid>
       <description></description>
     </item>
     
     <item>
       <title>fusion</title>
-      <link>/tags/fusion/</link>
+      <link>https://asti.dynz.net/tags/fusion/</link>
       <pubDate>Tue, 19 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/fusion/</guid>
+      <guid>https://asti.dynz.net/tags/fusion/</guid>
       <description></description>
     </item>
     
     <item>
       <title>eda</title>
-      <link>/tags/eda/</link>
+      <link>https://asti.dynz.net/tags/eda/</link>
       <pubDate>Fri, 21 Dec 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/eda/</guid>
+      <guid>https://asti.dynz.net/tags/eda/</guid>
       <description></description>
     </item>
     
     <item>
       <title>tools</title>
-      <link>/tags/tools/</link>
+      <link>https://asti.dynz.net/tags/tools/</link>
       <pubDate>Fri, 02 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/tools/</guid>
+      <guid>https://asti.dynz.net/tags/tools/</guid>
       <description></description>
     </item>
     
     <item>
       <title>typescript</title>
-      <link>/tags/typescript/</link>
+      <link>https://asti.dynz.net/tags/typescript/</link>
       <pubDate>Tue, 02 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/typescript/</guid>
+      <guid>https://asti.dynz.net/tags/typescript/</guid>
       <description></description>
     </item>
     
     <item>
       <title>web</title>
-      <link>/tags/web/</link>
+      <link>https://asti.dynz.net/tags/web/</link>
       <pubDate>Tue, 02 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/web/</guid>
+      <guid>https://asti.dynz.net/tags/web/</guid>
       <description></description>
     </item>
     

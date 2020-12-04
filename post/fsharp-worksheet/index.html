@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html><head>
+<title>Worksheet: A new way to prototype in F#</title>
+
+<meta charset="utf-8">
+<meta name="X-UA-Compatible" content="IE=edge">
+<meta name="google-site-verification" content="">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta content="telephone=no" name="format-detection">
+<meta name="renderer" content="webkit">
+<meta name="theme-color" content="#ffffff">
+<meta name="title" property="og:title" content="Worksheet: A new way to prototype in F#">
+<meta name="image" property="og:image" content="/images/fsharp.jpg">
+<meta name="description" property="og:description" content="Turn arbitrary programs into Spreadsheets">
+<meta name="keywords" content="[fsharp]">
+<meta name="author" content=""> 
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://asti.dynz.net/scss/journal.min.8335a975ef7e2ae409c16107534604caf6426d51ba9776b9b017b2c1d908c2bc.css" integrity="sha256-gzWpde9&#43;KuQJwWEHU0YEyvZCbVG6l3a5sBeywdkIwrw=" media="screen">
+
+
+
+<link rel="stylesheet" href="https://asti.dynz.net/scss/dark-mode.min.114f186b6cd522a64502e49572cbcc70d7ead986a36668413a7e0d977ffd6fff.css" integrity="sha256-EU8Ya2zVIqZFAuSVcsvMcNfq2YajZmhBOn4Nl3/9b/8=" media="screen">
+
+
+<script src="/vendor/js/vue.min.js" ></script>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Noto+Serif+SC|Material+Icons" />
+
+
+
+
+
+
+
+</head><body>
+    	<div id="app"><div ref="sideContainer" class="side-container">
+    
+    <a class="a-block nav-head false" href="https://asti.dynz.net">
+    
+        <div class="nav-title">
+            Asti&#39;s Notes
+        </div>
+        
+        <div class="nav-subtitle">
+            FP, Rx, EDA
+        </div>
+        
+    </a>
+
+    <div class="nav-link-list">
+        
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/projects">
+                Projects
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/categories">
+                Categories
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/tags">
+                Tags
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/about">
+                About
+            </a>
+            
+        
+    </div>
+
+    
+
+    <div class="nav-footer">
+        
+<br />
+
+
+
+CC by Attribution
+
+    </div>
+    
+</div><div ref="extraContainer" class="extra-container">
+    
+    <div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }">
+
+
+	<div class="toc-content">
+	
+		
+		
+		
+		<h3>Contents</h3>
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#f-interactive-now-with-stories" v-on:click="closeDrawer" id="f-interactive-now-with-stories-nav">
+										 F# Interactive now with Stories!
+									</a>
+								</li>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#the-case-for" v-on:click="closeDrawer" id="the-case-for-nav">
+										 The case for
+									</a>
+								</li>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#how-does-it-work" v-on:click="closeDrawer" id="how-does-it-work-nav">
+										 How does it work?
+									</a>
+								</li>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#criteria-for-nodes" v-on:click="closeDrawer" id="criteria-for-nodes-nav">
+										 Criteria for nodes
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#an-example" v-on:click="closeDrawer" id="an-example-nav">
+										 An example
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#arbitrary-changes" v-on:click="closeDrawer" id="arbitrary-changes-nav">
+										 Arbitrary changes
+									</a>
+								</li>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#implementation" v-on:click="closeDrawer" id="implementation-nav">
+										 Implementation
+									</a>
+								</li>
+						
+							</ul>
+						
+					
+				
+			
+	</div>
+
+</div>
+    
+    <div class="pagination">
+        <a id="globalBackToTop" class="pagination-action animated-visibility" href="#top" :class="{ invisible: scrollY == 0 }">
+            <i class="material-icons pagination-action-icon">
+                keyboard_arrow_up
+            </i>
+        </a>
+        
+        <a class="pagination-action" v-on:click="toggleDarkMode">
+            <i class="material-icons pagination-action-icon" v-if="isDarkMode">
+                brightness_4
+            </i>
+            <i class="material-icons pagination-action-icon" v-else="isDarkMode">
+                brightness_7
+            </i>
+        </a>
+        
+        
+    </div>
+</div><div class="single-column-drawer-container" ref="drawer"
+     v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }">
+    <div class="drawer-content">
+        <div class="drawer-menu">
+            
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/projects">
+                    Projects
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/categories">
+                    Categories
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/tags">
+                    Tags
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/about">
+                    About
+                </a>
+                
+            
+            
+            <div class="toc">
+
+
+	<div class="toc-content">
+	
+		
+		
+		
+		<h3>Contents</h3>
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#f-interactive-now-with-stories" v-on:click="closeDrawer" id="f-interactive-now-with-stories-nav">
+										 F# Interactive now with Stories!
+									</a>
+								</li>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#the-case-for" v-on:click="closeDrawer" id="the-case-for-nav">
+										 The case for
+									</a>
+								</li>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#how-does-it-work" v-on:click="closeDrawer" id="how-does-it-work-nav">
+										 How does it work?
+									</a>
+								</li>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#criteria-for-nodes" v-on:click="closeDrawer" id="criteria-for-nodes-nav">
+										 Criteria for nodes
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#an-example" v-on:click="closeDrawer" id="an-example-nav">
+										 An example
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#arbitrary-changes" v-on:click="closeDrawer" id="arbitrary-changes-nav">
+										 Arbitrary changes
+									</a>
+								</li>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#implementation" v-on:click="closeDrawer" id="implementation-nav">
+										 Implementation
+									</a>
+								</li>
+						
+							</ul>
+						
+					
+				
+			
+	</div>
+
+</div>
+            
+        </div>
+    </div>
+</div>
+<transition name="fade">
+    <div v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if="isDrawerOpen" v-on:click="toggleDrawer"></div>
+</transition>
+<nav ref="navBar" class="navbar sticky-top navbar-light single-column-nav-container">
+    <div ref="navBackground" class="nav-background"></div>
+    <div class="container container-narrow nav-content">
+        <button id="nav_dropdown_btn" class="nav-dropdown-toggle" type="button" v-on:click="toggleDrawer">
+            <i class="material-icons">
+                menu
+            </i>
+        </button>
+        <a ref="navTitle" class="navbar-brand" href="https://asti.dynz.net">
+            Asti&#39;s Notes
+        </a>
+        
+        <button type="button" class="nav-darkmode-toggle" v-on:click="toggleDarkMode">
+            <i class="material-icons" v-if="isDarkMode">
+                brightness_4
+            </i>
+            <i class="material-icons" v-else="isDarkMode">
+                brightness_7
+            </i>
+        </button>
+        
+    </div>
+</nav>
+<div class="single-column-header-container" ref="pageHead"
+     v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
+    <a href="https://asti.dynz.net">
+        <div class="single-column-header-title">Asti&#39;s Notes</div>
+        
+        <div class="single-column-header-subtitle">FP, Rx, EDA</div>
+        
+
+    </a>
+</div>
+            <div id="content">
+<div ref="streamContainer" class="stream-container">
+    <div class="post-list-container post-list-container-shadow">
+        <div class="post">
+            
+            
+            
+                
+            
+
+            <div class="post-head-wrapper"
+                 style="background-image: url('/images/fsharp.jpg')">
+                <div class="post-title">
+                    Worksheet: A new way to prototype in F#
+                    
+                    <div class="post-subtitle">
+                        Turn arbitrary programs into Spreadsheets
+                    </div>
+                    
+                    <div class="post-meta">
+                        
+                            <i class="material-icons" style="">folder</i>
+                                <a href="/categories/dev">/dev</a>
+                                &nbsp;
+                        
+
+                        
+                            <i class="material-icons" style="">label</i>
+                            
+                                <a href="/tags/fsharp">#fsharp</a>
+                                &nbsp;
+                            
+                        
+
+                                                
+                        <i class="material-icons" style="">schedule</i>
+                        <time itemprop="datePublished">
+                            2020-12-04
+                        </time>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="post-body-wrapper">
+                <div class="post-body">
+                    <h1 id="f-interactive-now-with-stories">F# Interactive now with Stories!</h1>
+<figure>
+    <img src="/images/fsi-stories.jpg"/> 
+</figure>
+
+<p>Now that I have your attention, please read on for something even more exciting!</p>
+<h1 id="the-case-for">The case for</h1>
+<p>Working with F# interactive is an exercise in selection and <em>Send to Interactive</em>. While it gives fast feedback, there&rsquo;s always the issue of making changes. Edit something and you have to manually send everything that the edit affects to FSI, which sometimes you may miss out on, and that results in strange behavior.</p>
+<p>What if we could do better? What if we could generalize an arbitrary program into evaluating like a spreadsheet?</p>
+<p>Could we have something like this?</p>
+<figure>
+    <img src="/images/excel.gif" width="60%"/> 
+</figure>
+
+<p>It turns out we can!</p>
+<figure>
+    <img src="/images/excelfsharp.gif" width="80%"/> 
+</figure>
+
+<h1 id="how-does-it-work">How does it work?</h1>
+<p>In a language like F#, declarations can only make references in compile order- this coupled with referentially transparent code get us the building blocks of cells.</p>
+<p>The central idea intuition here is that the nature of functional programs should allow them to be modeled as a directed acyclic graph (a DAG). The graph is acyclic because unlike pure OO languages, forward references are not possible - structure flows <em>downward</em>.</p>
+<h3 id="criteria-for-nodes">Criteria for nodes</h3>
+<p>Picking graph nodes is important - we require a node to be at least a top-level declaration. To qualify to be a declaration, it must be one of the following:</p>
+<table>
+<thead>
+<tr>
+<th>Kind</th>
+<th style="text-align:center">&mdash;&ndash;&gt;</th>
+<th style="text-align:left">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Let binding in a module</td>
+<td style="text-align:center"></td>
+<td style="text-align:left"><code>let add a b = a + b</code></td>
+</tr>
+<tr>
+<td><em>Do</em> expression</td>
+<td style="text-align:center"></td>
+<td style="text-align:left"><code>add 1 2 </code></td>
+</tr>
+<tr>
+<td>Type declaration</td>
+<td style="text-align:center"></td>
+<td style="text-align:left"><code>type Int = Int of Int32</code></td>
+</tr>
+<tr>
+<td>Exception declaration</td>
+<td style="text-align:center"></td>
+<td style="text-align:left"><code>exception OwnException of string</code></td>
+</tr>
+<tr>
+<td>Open declaration</td>
+<td style="text-align:center"></td>
+<td style="text-align:left"><code>open System</code></td>
+</tr>
+<tr>
+<td>Compiler directive</td>
+<td style="text-align:center"></td>
+<td style="text-align:left"><code>#r &quot;System.dll&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<hr>
+<h3 id="an-example">An example</h3>
+<p>Let&rsquo;s consider the following example:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Tree</span> <span style="color:#f92672">=</span> 
+    <span style="color:#f92672">|</span> Empty
+    <span style="color:#f92672">|</span> Branch <span style="color:#66d9ef">of</span> int <span style="color:#f92672">*</span> Tree <span style="color:#f92672">*</span> Tree
+
+<span style="color:#66d9ef">let</span> empty <span style="color:#f92672">=</span> Empty
+<span style="color:#66d9ef">let</span> singleton v <span style="color:#f92672">=</span> Branch<span style="color:#f92672">(</span>v<span style="color:#f92672">,</span> Empty<span style="color:#f92672">,</span> Empty<span style="color:#f92672">)</span>
+
+<span style="color:#66d9ef">let</span> height tree <span style="color:#f92672">=</span> 
+    <span style="color:#66d9ef">let</span> rec heightr level <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>
+    <span style="color:#f92672">|</span> Empty <span style="color:#f92672">-&gt;</span> level
+    <span style="color:#f92672">|</span> Branch<span style="color:#f92672">(_,</span> left<span style="color:#f92672">,</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> 
+        <span style="color:#66d9ef">let</span> level<span style="color:#66d9ef">&#39;</span> <span style="color:#f92672">=</span> level <span style="color:#f92672">+</span> 1
+        max <span style="color:#f92672">(</span>heightr level&#39; left<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>heightr level&#39; right<span style="color:#f92672">)</span>
+
+    heightr 0 tree
+
+<span style="color:#66d9ef">let</span> taller a b <span style="color:#f92672">=</span> max <span style="color:#f92672">(</span>height a<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>height b<span style="color:#f92672">)</span>
+
+taller empty <span style="color:#f92672">(</span>singleton 1<span style="color:#f92672">)</span>
+</code></pre></div><p>Going by our above rules, we scan the AST for declarations:</p>
+<table>
+<thead>
+<tr>
+<th>Symbol Node</th>
+<th>&mdash;&ndash;&gt;</th>
+<th style="text-align:left">Kind</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Tree</code></td>
+<td></td>
+<td style="text-align:left">Type declaration</td>
+</tr>
+<tr>
+<td><code>empty</code></td>
+<td></td>
+<td style="text-align:left">Let binding</td>
+</tr>
+<tr>
+<td><code>singleton</code></td>
+<td></td>
+<td style="text-align:left">Let binding</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td></td>
+<td style="text-align:left">Let binding</td>
+</tr>
+<tr>
+<td><code>heightr</code></td>
+<td></td>
+<td style="text-align:left">Rejected because inside another let binding</td>
+</tr>
+<tr>
+<td><code>taller</code></td>
+<td></td>
+<td style="text-align:left">Let binding</td>
+</tr>
+<tr>
+<td><code>taller empty (singleton 1)</code></td>
+<td></td>
+<td style="text-align:left">Do expression</td>
+</tr>
+</tbody>
+</table>
+<p>Looking at the AST reveals the usage of these symbols from our nodes. For example, <code>empty</code> contains a reference to the <code>Tree</code> symbol. Through instances of symbol usage, for each of these nodes, we can establish links between them.</p>
+<p>Which allows us to generate a graph like this:</p>
+<figure>
+    <img src="/images/worksheet-diag.svg"/> 
+</figure>
+
+<p>For any given expression, it&rsquo;s possible to follow the chain of calls.</p>
+<h1 id="arbitrary-changes">Arbitrary changes</h1>
+<p>We know our cells, and relationships between the cells. But it&rsquo;s not going to be useful until we can track &lsquo;changes&rsquo; to our metaphorical cell. Unlike a spreadsheet, we don&rsquo;t have a convenient labeled box to enter code in.</p>
+<p>This is accomplished by hashing the AST for each top-level declaration. We compare this against our previously hashed AST and decide:</p>
+<ul>
+<li>If the old state contains the same hash - we keep that cell and its value.</li>
+<li>If a hash is absent from the new state, we remove that cell.</li>
+<li>If a hash is not present in the old state, we add a new cell.</li>
+</ul>
+<p>This turns out to be sufficient, instead of tracking cell mutations, which we cannot because we are generalizing for arbitrary changes. If the new cell has any dependents in the graph, they qualify for evaluation as well. And so their dependents, and so on.</p>
+<p>For every qualified cell, we evaluate its value (i.e., run the computation and save the result). 
+There&rsquo;s some additional infrastructure around the evaluator, so things work like we expect them to:</p>
+<figure>
+    <img src="/images/fsworksheet-capture.jpg" width="80%"/> 
+</figure>
+
+<h1 id="implementation">Implementation</h1>
+<p>F# Worksheet has both a console version and a Visual Studio plugin.</p>
+<p>You can use it today by <a href="https://github.com/deviousasti/fsharp-worksheet">cloning the repo</a> and running <code>install.ps1</code>.</p>
+<p>This builds and installs it as a dotnet tool. You can make it watch any script file with:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">PS&gt; fsw program.fsx
+</code></pre></div><p>and it evaluates changes every time you save.</p>
+<figure>
+    <img src="/images/fswatch.gif"/> 
+</figure>
+
+<p>The Visual Studio plugin is in pre-release, it needs additional UX work to make it pleasant to use. You can still build the solution to try it in preview. A brief demo:</p>
+<figure>
+    <img src="/images/fsworksheet.gif"/> 
+</figure>
+
+<p>Ideas are welcome to make it more user-friendly and visual.</p>
+
+                    
+                    <HR width="100%" id="EOF">
+                    <p style="color:#777;">Last modified on 2020-12-04</p>
+                    
+                </div>
+            </div>
+            
+            
+            <nav class="post-pagination">
+
+                
+                <a class="newer-posts">
+                    Next<br>No newer posts.
+                </a>
+                
+                
+                
+                <a class="older-posts" href="https://asti.dynz.net/post/fs-incorrect-gc/">
+                    Previous<br>Invalid GC results in F# tests
+                </a>
+                
+            </nav>
+            <div class="post-comment-wrapper">
+                
+<div class="post-comment-wrapper">
+
+</div>
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+            </div><div id="single-column-footer">
+<br />
+
+
+
+CC by Attribution
+</div>
+            </div>    
+            <script src="https://asti.dynz.netjs/journal.js"></script>
+    </body>
+</html>

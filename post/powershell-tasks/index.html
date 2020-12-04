@@ -23,11 +23,11 @@
 
 
 
-<link rel="stylesheet" href="/scss/journal.min.074c04b896e4e9ec7e517f88eefd59e62ffd212b8c923ac219f7bc81825b28bd.css" integrity="sha256-B0wEuJbk6ex&#43;UX&#43;I7v1Z5i/9ISuMkjrCGfe8gYJbKL0=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/journal.min.8335a975ef7e2ae409c16107534604caf6426d51ba9776b9b017b2c1d908c2bc.css" integrity="sha256-gzWpde9&#43;KuQJwWEHU0YEyvZCbVG6l3a5sBeywdkIwrw=" media="screen">
 
 
 
-<link rel="stylesheet" href="/scss/dark-mode.min.5d4554809a1a12cbf28366c9a81376c1681cdefc525a37617a9741c19b85f22f.css" integrity="sha256-XUVUgJoaEsvyg2bJqBN2wWgc3vxSWjdhepdBwZuF8i8=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/dark-mode.min.114f186b6cd522a64502e49572cbcc70d7ead986a36668413a7e0d977ffd6fff.css" integrity="sha256-EU8Ya2zVIqZFAuSVcsvMcNfq2YajZmhBOn4Nl3/9b/8=" media="screen">
 
 
 <script src="/vendor/js/vue.min.js" ></script>
@@ -49,7 +49,7 @@
 </head><body>
     	<div id="app"><div ref="sideContainer" class="side-container">
     
-    <a class="a-block nav-head false" href="/">
+    <a class="a-block nav-head false" href="https://asti.dynz.net">
     
         <div class="nav-title">
             Asti&#39;s Notes
@@ -373,7 +373,7 @@ CC by Attribution
                 menu
             </i>
         </button>
-        <a ref="navTitle" class="navbar-brand" href="/">
+        <a ref="navTitle" class="navbar-brand" href="https://asti.dynz.net">
             Asti&#39;s Notes
         </a>
         
@@ -390,7 +390,7 @@ CC by Attribution
 </nav>
 <div class="single-column-header-container" ref="pageHead"
      v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
-    <a href="/">
+    <a href="https://asti.dynz.net">
         <div class="single-column-header-title">Asti&#39;s Notes</div>
         
         <div class="single-column-header-subtitle">FP, Rx, EDA</div>
@@ -447,45 +447,45 @@ CC by Attribution
             
             <div class="post-body-wrapper">
                 <div class="post-body">
-                    <p>How do you run a script for every application crash without attaching the debugger or some complicated mess? It's easy enough to write a simple script which checks for the life of the process.</p>
+                    <p>How do you run a script for every application crash without attaching the debugger or some complicated mess? It&rsquo;s easy enough to write a simple script which checks for the life of the process.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#66d9ef">while</span>($(ps taskmgr*) <span style="color:#f92672">-ne</span> $null) 
 {
   sleep 1  
 }
 
-echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">It&#39;s dead, Jim!</span><span style="color:#e6db74">&#34;</span>
-</code></pre></div><p>But that doesn't give us the stack-trace, plus this script has to have a longer life-time than the process you're monitoring.</p>
+echo <span style="color:#e6db74">&#34;It&#39;s dead, Jim!&#34;</span>
+</code></pre></div><p>But that doesn&rsquo;t give us the stack-trace, plus this script has to have a longer life-time than the process you&rsquo;re monitoring.</p>
 <h2 id="enter-the-event-log">Enter The Event Log</h2>
-<p>An application crash with an unhandled exception always writes to the Application event log. If we could run a task for that, we're half-way done.</p>
+<p>An application crash with an unhandled exception always writes to the Application event log. If we could run a task for that, we&rsquo;re half-way done.</p>
 <p>And it turns out you can have a scheduled task for exactly that, triggered by an event log item. But adding one is a little involved, since we need some extra query variables to get us the name and stack-trace.</p>
 <h3 id="scheduled-task">Scheduled Task</h3>
-<p>If you're interested, the query is:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;QueryList</span><span style="color:#f92672">&gt;</span>
+<p>If you&rsquo;re interested, the query is:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;QueryList&gt;</span>
     <span style="color:#f92672">&lt;Query</span> <span style="color:#a6e22e">Id=</span><span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#a6e22e">Path=</span><span style="color:#e6db74">&#34;Application&#34;</span><span style="color:#f92672">&gt;</span>
         <span style="color:#f92672">&lt;Select</span> <span style="color:#a6e22e">Path=</span><span style="color:#e6db74">&#34;Application&#34;</span><span style="color:#f92672">&gt;</span>
             *[System[Provider[@Name=&#39;.NET Runtime&#39;] and EventID=1026]]	             <span style="color:#f92672">&lt;/Select&gt;</span>
     <span style="color:#f92672">&lt;/Query&gt;</span>
 <span style="color:#f92672">&lt;/QueryList&gt;</span>
 </code></pre></div><p>We additionally need a set of <code>ValueQueries</code> (see lines 7-11).</p>
-<p>It's much easier to download the Scheduled Task Xml, and import it in.</p>
+<p>It&rsquo;s much easier to download the Scheduled Task Xml, and import it in.</p>
 <script type="application/javascript" src="https://gist.github.com/deviousasti/03c735687bb076a4f8e214073868958c.js"></script>
 
 <h2 id="the-powershell-side-of-things">The PowerShell side of things</h2>
 <p>The task trigger can be called with named variables we set up in the <code>ValueQueries</code>.</p>
 <pre><code>powershell Trigger.ps1 -eventRecordID $(eventRecordID) -eventChannel $(eventChannel)
 </code></pre><p>Now that we have the event id in our script, we can query the log to get back our stack-trace.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#66d9ef">param</span>($eventRecordID, $eventChannel = <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Application</span><span style="color:#e6db74">&#34;</span>)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#66d9ef">param</span>($eventRecordID, $eventChannel = <span style="color:#e6db74">&#34;Application&#34;</span>)
 
-$event = Get-WinEvent -LogName $eventChannel -FilterXPath <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&lt;QueryList&gt;&lt;Query Id=&#39;0&#39; Path=&#39;</span><span style="color:#e6db74">$</span><span style="color:#e6db74">eventChannel&#39;&gt;&lt;Select Path=&#39;</span><span style="color:#e6db74">$</span><span style="color:#e6db74">eventChannel&#39;&gt;*[System[(EventRecordID=</span><span style="color:#e6db74">$</span><span style="color:#e6db74">eventRecordID)]]&lt;/Select&gt;&lt;/Query&gt;&lt;/QueryList&gt;</span><span style="color:#e6db74">&#34;</span>
+$event = Get-WinEvent -LogName $eventChannel -FilterXPath <span style="color:#e6db74">&#34;&lt;QueryList&gt;&lt;Query Id=&#39;0&#39; Path=&#39;$eventChannel&#39;&gt;&lt;Select Path=&#39;$eventChannel&#39;&gt;*[System[(EventRecordID=$eventRecordID)]]&lt;/Select&gt;&lt;/Query&gt;&lt;/QueryList&gt;&#34;</span>
 
 $stackTrace = $event.Message
 
-<span style="color:#66d9ef">if</span>($stackTrace <span style="color:#f92672">-match</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Exception</span><span style="color:#e6db74">&#34;</span>)
+<span style="color:#66d9ef">if</span>($stackTrace <span style="color:#f92672">-match</span> <span style="color:#e6db74">&#34;Exception&#34;</span>)
 {
-    echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Error Thrown in Application</span><span style="color:#e6db74">&#34;</span> 
+    echo <span style="color:#e6db74">&#34;Error Thrown in Application&#34;</span> 
     $stackTrace &gt; trace.txt
 }
-</code></pre></div><p>The above example will just log the stack-trace to <code>trace.txt</code> every time an application crashes. Of course, you can take any action, such as even mailing you when there's a crash with <code>Send-MailMessage</code>.</p>
+</code></pre></div><p>The above example will just log the stack-trace to <code>trace.txt</code> every time an application crashes. Of course, you can take any action, such as even mailing you when there&rsquo;s a crash with <code>Send-MailMessage</code>.</p>
 
                     
                     <HR width="100%" id="EOF">
@@ -498,19 +498,23 @@ $stackTrace = $event.Message
             <nav class="post-pagination">
 
                 
-                <a class="newer-posts" href="/post/wpf-icon-font/">
+                <a class="newer-posts" href="https://asti.dynz.net/post/wpf-icon-font/">
                     Next<br>Material Icons in WPF
                 </a>
                 
                 
                 
-                <a class="older-posts" href="/post/fast-part-altium/">
+                <a class="older-posts" href="https://asti.dynz.net/post/fast-part-altium/">
                     Previous<br>Datasheet to symbol
                 </a>
                 
             </nav>
             <div class="post-comment-wrapper">
                 
+<div class="post-comment-wrapper">
+
+</div>
+
 
 
 
@@ -530,6 +534,6 @@ $stackTrace = $event.Message
 CC by Attribution
 </div>
             </div>    
-            <script src="/js/journal.js"></script>
+            <script src="https://asti.dynz.netjs/journal.js"></script>
     </body>
 </html>

@@ -1,40 +1,224 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Asti&#39;s Notes</title>
-    <link>/</link>
+    <link>https://asti.dynz.net/</link>
     <description>Recent content on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Mon, 30 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 04 Dec 2020 00:00:00 +0000</lastBuildDate>
     
-        <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://asti.dynz.net/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    
+        <item>
+        <title>Worksheet: A new way to prototype in F#</title>
+        <link>https://asti.dynz.net/post/fsharp-worksheet/</link>
+        <pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate>
+        
+        <guid>https://asti.dynz.net/post/fsharp-worksheet/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/fsharp-worksheet/ -&lt;h1 id=&#34;f-interactive-now-with-stories&#34;&gt;F# Interactive now with Stories!&lt;/h1&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://asti.dynz.net/images/fsi-stories.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Now that I have your attention, please read on for something even more exciting!&lt;/p&gt;
+&lt;h1 id=&#34;the-case-for&#34;&gt;The case for&lt;/h1&gt;
+&lt;p&gt;Working with F# interactive is an exercise in selection and &lt;em&gt;Send to Interactive&lt;/em&gt;. While it gives fast feedback, there&amp;rsquo;s always the issue of making changes. Edit something and you have to manually send everything that the edit affects to FSI, which sometimes you may miss out on, and that results in strange behavior.&lt;/p&gt;
+&lt;p&gt;What if we could do better? What if we could generalize an arbitrary program into evaluating like a spreadsheet?&lt;/p&gt;
+&lt;p&gt;Could we have something like this?&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://asti.dynz.net/images/excel.gif&#34; width=&#34;60%&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;It turns out we can!&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://asti.dynz.net/images/excelfsharp.gif&#34; width=&#34;80%&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;h1 id=&#34;how-does-it-work&#34;&gt;How does it work?&lt;/h1&gt;
+&lt;p&gt;In a language like F#, declarations can only make references in compile order- this coupled with referentially transparent code get us the building blocks of cells.&lt;/p&gt;
+&lt;p&gt;The central idea intuition here is that the nature of functional programs should allow them to be modeled as a directed acyclic graph (a DAG). The graph is acyclic because unlike pure OO languages, forward references are not possible - structure flows &lt;em&gt;downward&lt;/em&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;criteria-for-nodes&#34;&gt;Criteria for nodes&lt;/h3&gt;
+&lt;p&gt;Picking graph nodes is important - we require a node to be at least a top-level declaration. To qualify to be a declaration, it must be one of the following:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Kind&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;&amp;mdash;&amp;ndash;&amp;gt;&lt;/th&gt;
+&lt;th style=&#34;text-align:left&#34;&gt;Example&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Let binding in a module&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;&lt;code&gt;let add a b = a + b&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;em&gt;Do&lt;/em&gt; expression&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;&lt;code&gt;add 1 2 &lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Type declaration&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;&lt;code&gt;type Int = Int of Int32&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Exception declaration&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;&lt;code&gt;exception OwnException of string&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Open declaration&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;&lt;code&gt;open System&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Compiler directive&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;&lt;code&gt;#r &amp;quot;System.dll&amp;quot;&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;an-example&#34;&gt;An example&lt;/h3&gt;
+&lt;p&gt;Let&amp;rsquo;s consider the following example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Tree&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 
+    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; Empty
+    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; Branch &lt;span style=&#34;color:#66d9ef&#34;&gt;of&lt;/span&gt; int &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; Tree &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; Tree
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; empty &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Empty
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; singleton v &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Branch&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;v&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; Empty&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; Empty&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; height tree &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; rec heightr level &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; Empty &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; level
+    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; Branch&lt;span style=&#34;color:#f92672&#34;&gt;(_,&lt;/span&gt; left&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; right&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; 
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; level&lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; level &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; 1
+        max &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;heightr level&amp;#39; left&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;heightr level&amp;#39; right&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+
+    heightr 0 tree
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; taller a b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; max &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;height a&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;height b&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+
+taller empty &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;singleton 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Going by our above rules, we scan the AST for declarations:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Symbol Node&lt;/th&gt;
+&lt;th&gt;&amp;mdash;&amp;ndash;&amp;gt;&lt;/th&gt;
+&lt;th style=&#34;text-align:left&#34;&gt;Kind&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Tree&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;Type declaration&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;empty&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;Let binding&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;singleton&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;Let binding&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;height&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;Let binding&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;heightr&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;Rejected because inside another let binding&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;taller&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;Let binding&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;taller empty (singleton 1)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;Do expression&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Looking at the AST reveals the usage of these symbols from our nodes. For example, &lt;code&gt;empty&lt;/code&gt; contains a reference to the &lt;code&gt;Tree&lt;/code&gt; symbol. Through instances of symbol usage, for each of these nodes, we can establish links between them.&lt;/p&gt;
+&lt;p&gt;Which allows us to generate a graph like this:&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://asti.dynz.net/images/worksheet-diag.svg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;For any given expression, it&amp;rsquo;s possible to follow the chain of calls.&lt;/p&gt;
+&lt;h1 id=&#34;arbitrary-changes&#34;&gt;Arbitrary changes&lt;/h1&gt;
+&lt;p&gt;We know our cells, and relationships between the cells. But it&amp;rsquo;s not going to be useful until we can track &amp;lsquo;changes&amp;rsquo; to our metaphorical cell. Unlike a spreadsheet, we don&amp;rsquo;t have a convenient labeled box to enter code in.&lt;/p&gt;
+&lt;p&gt;This is accomplished by hashing the AST for each top-level declaration. We compare this against our previously hashed AST and decide:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If the old state contains the same hash - we keep that cell and its value.&lt;/li&gt;
+&lt;li&gt;If a hash is absent from the new state, we remove that cell.&lt;/li&gt;
+&lt;li&gt;If a hash is not present in the old state, we add a new cell.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This turns out to be sufficient, instead of tracking cell mutations, which we cannot because we are generalizing for arbitrary changes. If the new cell has any dependents in the graph, they qualify for evaluation as well. And so their dependents, and so on.&lt;/p&gt;
+&lt;p&gt;For every qualified cell, we evaluate its value (i.e., run the computation and save the result). 
+There&amp;rsquo;s some additional infrastructure around the evaluator, so things work like we expect them to:&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://asti.dynz.net/images/fsworksheet-capture.jpg&#34; width=&#34;80%&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;h1 id=&#34;implementation&#34;&gt;Implementation&lt;/h1&gt;
+&lt;p&gt;F# Worksheet has both a console version and a Visual Studio plugin.&lt;/p&gt;
+&lt;p&gt;You can use it today by &lt;a href=&#34;https://github.com/deviousasti/fsharp-worksheet&#34;&gt;cloning the repo&lt;/a&gt; and running &lt;code&gt;install.ps1&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This builds and installs it as a dotnet tool. You can make it watch any script file with:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;PS&amp;gt; fsw program.fsx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and it evaluates changes every time you save.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://asti.dynz.net/images/fswatch.gif&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;The Visual Studio plugin is in pre-release, it needs additional UX work to make it pleasant to use. You can still build the solution to try it in preview. A brief demo:&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://asti.dynz.net/images/fsworksheet.gif&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Ideas are welcome to make it more user-friendly and visual.&lt;/p&gt;
+- https://asti.dynz.net/post/fsharp-worksheet/ - CC by Attribution</description>
+        </item>
     
     
     
         <item>
         <title>Invalid GC results in F# tests</title>
-        <link>/post/fs-incorrect-gc/</link>
+        <link>https://asti.dynz.net/post/fs-incorrect-gc/</link>
         <pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
         
-        <guid>/post/fs-incorrect-gc/</guid>
-        <description>Asti&#39;s Notes /post/fs-incorrect-gc/ -&lt;p&gt;When running tests which check if something is GC&#39;d, it might fail.&lt;/p&gt;
+        <guid>https://asti.dynz.net/post/fs-incorrect-gc/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/fs-incorrect-gc/ -&lt;p&gt;When running tests which check if something is GC&amp;rsquo;d, it might fail.&lt;/p&gt;
 &lt;h2 id=&#34;the-test&#34;&gt;The test&lt;/h2&gt;
 &lt;p&gt;Consider the following test:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&amp;lt;&lt;/span&gt;TestMethod&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;member&lt;/span&gt; _.&lt;span style=&#34;color:#a6e22e&#34;&gt;TestGC&lt;/span&gt;() &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
     &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; mutable &lt;span style=&#34;color:#66d9ef&#34;&gt;obj&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Object()
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; weak &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; WeakReference&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;obj&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; weak &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; WeakReference&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;obj&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
 
     GC.Collect()
 
-    Assert.IsTrue&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;obj&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    Assert.IsTrue&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;obj&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
     Assert.IsTrue&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;weak&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;IsAlive&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;            
 
     &lt;span style=&#34;color:#66d9ef&#34;&gt;obj&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;-&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;
     GC.Collect()
 
-    Assert.IsTrue&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;obj&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    Assert.IsTrue&lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;obj&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;))&lt;/span&gt;
     Assert.IsTrue&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;not&lt;/span&gt; weak&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;IsAlive&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will fail in &lt;code&gt;DEBUG&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;sub-expression-elaboration&#34;&gt;Sub-expression elaboration&lt;/h2&gt;
@@ -51,23 +235,23 @@
 &lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;is_eq&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Rewriting our first example:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; obj&lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;obj&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; isNull &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;obj&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While this usually isn&#39;t a problem, &lt;code&gt;obj&#39;&lt;/code&gt; will end up holding a reference to the original object, so it won&#39;t be collected until it goes out of scope - which is only when the method exits.&lt;/p&gt;
-&lt;p&gt;The rewriting won&#39;t happen for &lt;code&gt;RELEASE&lt;/code&gt; mode, so the test should pass. But any effects related to the lifetime of objects in memory would exist in &lt;code&gt;DEBUG&lt;/code&gt;.&lt;/p&gt;
-- /post/fs-incorrect-gc/ - CC by Attribution</description>
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; isNull &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;obj&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While this usually isn&amp;rsquo;t a problem, &lt;code&gt;obj&#39;&lt;/code&gt; will end up holding a reference to the original object, so it won&amp;rsquo;t be collected until it goes out of scope - which is only when the method exits.&lt;/p&gt;
+&lt;p&gt;The rewriting won&amp;rsquo;t happen for &lt;code&gt;RELEASE&lt;/code&gt; mode, so the test should pass. But any effects related to the lifetime of objects in memory would exist in &lt;code&gt;DEBUG&lt;/code&gt;.&lt;/p&gt;
+- https://asti.dynz.net/post/fs-incorrect-gc/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Incorrect stack traces in F#</title>
-        <link>/post/fsc-stacktrace/</link>
+        <link>https://asti.dynz.net/post/fsc-stacktrace/</link>
         <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
         
-        <guid>/post/fsc-stacktrace/</guid>
-        <description>Asti&#39;s Notes /post/fsc-stacktrace/ -&lt;p&gt;Consider the following simple program:&lt;/p&gt;
+        <guid>https://asti.dynz.net/post/fsc-stacktrace/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/fsc-stacktrace/ -&lt;p&gt;Consider the following simple program:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; foo () &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
-    failwithf &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;foo&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+    failwithf &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;foo&amp;#34;&lt;/span&gt;
 
 &lt;span style=&#34;color:#f92672&#34;&gt;[&amp;lt;&lt;/span&gt;EntryPoint&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; main argv &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
@@ -79,7 +263,7 @@
    at Program.main(String[] argv) in Program.fs:line 13
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And the reason for that is optimizations. For &lt;code&gt;fsc&lt;/code&gt;, optimizations are &lt;a href=&#34;https://github.com/dotnet/fsharp/blob/0f514efe25899ba59778b5bb522e2724aec44a3d/src/fsharp/FSharp.Build/Fsc.fs#L120&#34;&gt;turned on by default&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;inlining&#34;&gt;Inlining&lt;/h2&gt;
-&lt;p&gt;This is the most common thing you&#39;re likely to see. &lt;code&gt;foo()&lt;/code&gt; isn&#39;t even called - if the method body is small enough, &lt;code&gt;fsc&lt;/code&gt; will easily inline it. 
+&lt;p&gt;This is the most common thing you&amp;rsquo;re likely to see. &lt;code&gt;foo()&lt;/code&gt; isn&amp;rsquo;t even called - if the method body is small enough, &lt;code&gt;fsc&lt;/code&gt; will easily inline it. 
 The resulting IL is equivalent to (all inlined):&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;let main argv =
     PrintfModule.PrintFormatToStringThenFail(new PrintfFormat&amp;lt;_&amp;gt;(&amp;quot;foo&amp;quot;));
@@ -89,7 +273,7 @@ The resulting IL is equivalent to (all inlined):&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;fsc -g --optimize- Program.fs
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&#34;tail-call-optimization&#34;&gt;Tail-call optimization&lt;/h2&gt;
-&lt;p&gt;A tail-call optimization avoids allocating a new stack frame for a function call. Tail call optimizations can be applied for functions whose &lt;em&gt;return value&lt;/em&gt; is the call to another function (or itself). And since it works by the elimination of stack-frames, you don&#39;t see it in the stack trace.&lt;/p&gt;
+&lt;p&gt;A tail-call optimization avoids allocating a new stack frame for a function call. Tail call optimizations can be applied for functions whose &lt;em&gt;return value&lt;/em&gt; is the call to another function (or itself). And since it works by the elimination of stack-frames, you don&amp;rsquo;t see it in the stack trace.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;foo&lt;/code&gt; meets this criteria as it shorts &lt;code&gt;main&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Tail calls can be turned off this off with &lt;code&gt;--tailcalls-&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;turning-off-optimizations&#34;&gt;Turning off optimizations&lt;/h2&gt;
@@ -102,19 +286,19 @@ The resulting IL is equivalent to (all inlined):&lt;/p&gt;
    at Program.foo[a]() in Program.fs:line 4
    at Program.main(String[] argv) in Program.fs:line 13
 &lt;/code&gt;&lt;/pre&gt;
-- /post/fsc-stacktrace/ - CC by Attribution</description>
+- https://asti.dynz.net/post/fsc-stacktrace/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>A DOS-like shell in .Net</title>
-        <link>/post/recreate-dos/</link>
+        <link>https://asti.dynz.net/post/recreate-dos/</link>
         <pubDate>Tue, 18 Feb 2020 00:00:00 +0000</pubDate>
         
-        <guid>/post/recreate-dos/</guid>
-        <description>Asti&#39;s Notes /post/recreate-dos/ -&lt;h2 id=&#34;setup&#34;&gt;Setup&lt;/h2&gt;
-&lt;p&gt;Add a reference to &lt;a href=&#34;https://github.com/deviousasti/netshell&#34;&gt;NetShell&lt;/a&gt;, create a new &lt;code&gt;DOS.cs&lt;/code&gt; file. The main file just calls NetShell&#39;s &lt;code&gt;RpcShell&lt;/code&gt; with an instance of &lt;code&gt;DOS&lt;/code&gt;.&lt;/p&gt;
+        <guid>https://asti.dynz.net/post/recreate-dos/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/recreate-dos/ -&lt;h2 id=&#34;setup&#34;&gt;Setup&lt;/h2&gt;
+&lt;p&gt;Add a reference to &lt;a href=&#34;https://github.com/deviousasti/netshell&#34;&gt;NetShell&lt;/a&gt;, create a new &lt;code&gt;DOS.cs&lt;/code&gt; file. The main file just calls NetShell&amp;rsquo;s &lt;code&gt;RpcShell&lt;/code&gt; with an instance of &lt;code&gt;DOS&lt;/code&gt;.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; Main(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;[] args)
 {
     &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; shell = &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; RpcShell(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DOS()) { 
@@ -122,17 +306,17 @@ The resulting IL is equivalent to (all inlined):&lt;/p&gt;
     };
     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; shell.Run();
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With that out of the way, let&#39;s implement the first command.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With that out of the way, let&amp;rsquo;s implement the first command.&lt;/p&gt;
 &lt;h2 id=&#34;echo&#34;&gt;echo&lt;/h2&gt;
 &lt;p&gt;This is trivial. Add a &lt;code&gt;Command&lt;/code&gt; attribute with the (optional) name and help-text.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;[Command(&amp;#34;echo&amp;#34;)]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; Echo(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; text) =&amp;gt; Console.WriteLine(text);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&#39;s see how that looks like:&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s see how that looks like:&lt;/p&gt;
 &lt;figure&gt;
-    &lt;img src=&#34;/images/dos-demo1.gif&#34; width=&#34;100%&#34;/&gt; 
+    &lt;img src=&#34;https://asti.dynz.net/images/dos-demo1.gif&#34; width=&#34;100%&#34;/&gt; 
 &lt;/figure&gt;
 
-&lt;p&gt;Maybe add &lt;a href=&#34;/images/dos-demo2.jpg&#34;&gt;a bit of colour&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Maybe add &lt;a href=&#34;https://asti.dynz.net/images/dos-demo2.jpg&#34;&gt;a bit of colour&lt;/a&gt;.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;[Command(&amp;#34;echo&amp;#34;)]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; Echo(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; text, ConsoleColor color = ConsoleColor.White)
 {
@@ -149,7 +333,7 @@ The resulting IL is equivalent to (all inlined):&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;[Command(&amp;#34;exit&amp;#34;)]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; Exit(Shell shell) =&amp;gt; shell.Exit(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;cd&#34;&gt;cd&lt;/h2&gt;
-&lt;p&gt;This is as you&#39;d expect, but you also need to change the current shell prompt. We&#39;re using the built-in dependency injection to get the instance of the shell, and set the prompt.&lt;/p&gt;
+&lt;p&gt;This is as you&amp;rsquo;d expect, but you also need to change the current shell prompt. We&amp;rsquo;re using the built-in dependency injection to get the instance of the shell, and set the prompt.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;[Command(&amp;#34;cd&amp;#34;)]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; ChangeDir([Suggest(nameof(SuggestDirs))] &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; directory, Shell shell)
 {
@@ -160,7 +344,7 @@ The resulting IL is equivalent to (all inlined):&lt;/p&gt;
     shell.Prompt = Environment.CurrentDirectory = path;
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;type&#34;&gt;type&lt;/h2&gt;
-&lt;p&gt;Just return the file contents and it&#39;ll be printed out automatically.&lt;/p&gt;
+&lt;p&gt;Just return the file contents and it&amp;rsquo;ll be printed out automatically.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;[Command(&amp;#34;type&amp;#34;)]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; Type([Suggest(nameof(SuggestFiles))] &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; filename) =&amp;gt; 
 	File.ReadAllText(Path.Combine(Dir, filename));
@@ -168,7 +352,7 @@ The resulting IL is equivalent to (all inlined):&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; IEnumerable&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&amp;gt; SuggestFiles() =&amp;gt; 
 	Directory.EnumerateFiles(Dir).Select(Path.GetFileName);
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;dir&#34;&gt;dir&lt;/h2&gt;
-&lt;p&gt;Here we&#39;re showing a simple dir command, but here&#39;s how to add help-text to the command, and for each pattern.&lt;/p&gt;
+&lt;p&gt;Here we&amp;rsquo;re showing a simple dir command, but here&amp;rsquo;s how to add help-text to the command, and for each pattern.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;[Command(&amp;#34;dir&amp;#34;, &amp;#34;Lists directories and files with an optional pattern&amp;#34;)]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; IEnumerable&amp;lt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&amp;gt; List(
 &lt;span style=&#34;color:#a6e22e&#34;&gt;	[Description(&amp;#34;Accepts glob patterns&amp;#34;)]&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; pattern = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;,
@@ -187,8 +371,8 @@ Syntax: dir (String [pattern] = *) (Boolean [files] = False)
 /files	    Only show files if true
 D:\&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;start&#34;&gt;start&lt;/h2&gt;
-&lt;p&gt;Running applications: Anything that doesn&#39;t match our commands, we can attempt to run with the given command-line - this is DOS&amp;rsquo; famous &amp;ldquo;Bad command or file name&amp;rdquo;. We can do that with the &lt;code&gt;DefaultCommand&lt;/code&gt; attribute which marks a catch-all method.&lt;/p&gt;
-&lt;p&gt;The following implementation redirects the &lt;code&gt;stdin/stdout&lt;/code&gt; of our console to the program, till it&#39;s terminated.&lt;/p&gt;
+&lt;p&gt;Running applications: Anything that doesn&amp;rsquo;t match our commands, we can attempt to run with the given command-line - this is DOS&#39; famous &amp;ldquo;Bad command or file name&amp;rdquo;. We can do that with the &lt;code&gt;DefaultCommand&lt;/code&gt; attribute which marks a catch-all method.&lt;/p&gt;
+&lt;p&gt;The following implementation redirects the &lt;code&gt;stdin/stdout&lt;/code&gt; of our console to the program, till it&amp;rsquo;s terminated.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;[DefaultCommand]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; Execute(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; name, &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;[] args)
@@ -205,23 +389,23 @@ D:\&amp;gt;
         }
     }
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Our demo isn&#39;t complete until we run the Windows Command Prompt inside our command prompt!&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Our demo isn&amp;rsquo;t complete until we run the Windows Command Prompt inside our command prompt!&lt;/p&gt;
 &lt;figure&gt;
-    &lt;img src=&#34;/images/dos-demo3.gif&#34;/&gt; 
+    &lt;img src=&#34;https://asti.dynz.net/images/dos-demo3.gif&#34;/&gt; 
 &lt;/figure&gt;
 
-- /post/recreate-dos/ - CC by Attribution</description>
+- https://asti.dynz.net/post/recreate-dos/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Boost beware</title>
-        <link>/post/boost-beware/</link>
+        <link>https://asti.dynz.net/post/boost-beware/</link>
         <pubDate>Sat, 21 Dec 2019 00:00:00 +0000</pubDate>
         
-        <guid>/post/boost-beware/</guid>
-        <description>Asti&#39;s Notes /post/boost-beware/ -&lt;p&gt;There are a lot of new small-form factor, low part count boost converters being released for battery boost applications. These typically switch at high frequencies to reduce component sizes.&lt;/p&gt;
+        <guid>https://asti.dynz.net/post/boost-beware/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/boost-beware/ -&lt;p&gt;There are a lot of new small-form factor, low part count boost converters being released for battery boost applications. These typically switch at high frequencies to reduce component sizes.&lt;/p&gt;
 &lt;h2 id=&#34;the-symptoms&#34;&gt;The Symptoms&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Devices sometimes brownout with no pattern&lt;/li&gt;
@@ -259,24 +443,24 @@ use of only ceramic capacitors&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Poor quality connectors to the battery/ poor contact / poor choice of connector.&lt;/p&gt;
-&lt;p&gt;Some batteries use 2.54mm / 1.27mm pitch JST connectors, these usually cannot handle more 1A, and coupled with poor wires, eqv. resistance could be 1 ohm or even more. 1 ohm at 1A is a drop of 1V - that&#39;s a 3.7V battery coming in as 2.7V - which is a 27% drop - which means a corresponding increase in current draw - not good for sudden load spikes.&lt;/p&gt;
+&lt;p&gt;Some batteries use 2.54mm / 1.27mm pitch JST connectors, these usually cannot handle more 1A, and coupled with poor wires, eqv. resistance could be 1 ohm or even more. 1 ohm at 1A is a drop of 1V - that&amp;rsquo;s a 3.7V battery coming in as 2.7V - which is a 27% drop - which means a corresponding increase in current draw - not good for sudden load spikes.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;p&gt;Trust nothing, measure.&lt;/p&gt;
-- /post/boost-beware/ - CC by Attribution</description>
+- https://asti.dynz.net/post/boost-beware/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>How to get rid of Semihosting</title>
-        <link>/post/semihosting/</link>
+        <link>https://asti.dynz.net/post/semihosting/</link>
         <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
         
-        <guid>/post/semihosting/</guid>
-        <description>Asti&#39;s Notes /post/semihosting/ -&lt;p&gt;&amp;hellip;&lt;em&gt;or&lt;/em&gt; why my application stops when disconnected from the debugger.&lt;/p&gt;
-&lt;p&gt;As you can tell from the image, I&#39;ve been bitten badly by semihosting before.&lt;/p&gt;
+        <guid>https://asti.dynz.net/post/semihosting/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/semihosting/ -&lt;p&gt;&amp;hellip;&lt;em&gt;or&lt;/em&gt; why my application stops when disconnected from the debugger.&lt;/p&gt;
+&lt;p&gt;As you can tell from the image, I&amp;rsquo;ve been bitten badly by semihosting before.&lt;/p&gt;
 &lt;h2 id=&#34;what-is-arm-semihosting&#34;&gt;What is ARM Semihosting?&lt;/h2&gt;
 &lt;p&gt;Semihosting is a mechanism that enables code running on an ARM target to communicate and use the Input/Output facilities on a host computer running a debugger.&lt;/p&gt;
 &lt;p&gt;To put it simply, it lets you use &lt;code&gt;printf&lt;/code&gt;, &lt;code&gt;scanf&lt;/code&gt; and other syscalls on a target where the host acts as the &amp;lsquo;system&amp;rsquo; in those calls. ARM Semihosting can be useful when other avenues of troubleshooting are difficult.&lt;/p&gt;
@@ -284,23 +468,23 @@ use of only ceramic capacitors&lt;/p&gt;
 &lt;p&gt;The culprit:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-assembly&#34; data-lang=&#34;assembly&#34;&gt;BKPT 0xAB
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;ARM processors use the &lt;code&gt;BKPT&lt;/code&gt;instruction on the Cortex M0, M0+, M1, M3, M4. M7 and on others the &lt;code&gt;SVC&lt;/code&gt; instruction (previously &lt;code&gt;SWI&lt;/code&gt;). Now the implementation of &lt;code&gt;BKPT&lt;/code&gt; is - when the instruction is encountered, the CPU halts and waits for the host to respond.&lt;/p&gt;
-&lt;p&gt;When the host does not support semihosting, or there is no debugger connected - that&#39;s the end of the line.&lt;/p&gt;
+&lt;p&gt;When the host does not support semihosting, or there is no debugger connected - that&amp;rsquo;s the end of the line.&lt;/p&gt;
 &lt;h2 id=&#34;how-to-remove-semihosting&#34;&gt;How to remove Semihosting&lt;/h2&gt;
-&lt;p&gt;You may not be intentionally using Semihosting, but your toolchain might be building with Semihosting. Here&#39;s what to look for:&lt;/p&gt;
+&lt;p&gt;You may not be intentionally using Semihosting, but your toolchain might be building with Semihosting. Here&amp;rsquo;s what to look for:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;Linker flags should be &lt;code&gt;--specs=nosys.specs&lt;/code&gt; and not &lt;code&gt;–specs=rdimon.specs&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;nosys = no POSIX calls, so if your build fails you&#39;ve got some work left. If you were already building with &lt;code&gt;nosys&lt;/code&gt;, and this doesn&#39;t help, read on.&lt;/p&gt;
+&lt;p&gt;nosys = no POSIX calls, so if your build fails you&amp;rsquo;ve got some work left. If you were already building with &lt;code&gt;nosys&lt;/code&gt;, and this doesn&amp;rsquo;t help, read on.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Compile this (not for ARM, for x86!), and replace &lt;code&gt;g++&lt;/code&gt; or &lt;code&gt;ld&lt;/code&gt; with it.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;iostream&amp;gt; &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;iostream&amp;gt; &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;using&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; std; 
 
-&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; argc, &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; argv) 
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; argc, &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt; argv) 
 { 
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; argc; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;i) 
-        cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; argv[i] &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;; 
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; argc; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;i) 
+        cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; argv[i] &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; &amp;#34;&lt;/span&gt;; 
 
     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; 
 } 
@@ -325,18 +509,18 @@ Make sure that at no point is &lt;code&gt;rdimon.specs&lt;/code&gt; ever mention
 &lt;li&gt;
 &lt;p&gt;Check dissasembly of syscalls (&lt;code&gt;_write, _system, _start...&lt;/code&gt;)&lt;/p&gt;
 &lt;p&gt;&lt;figure&gt;
-    &lt;img src=&#34;/images/disas1.jpg&#34;/&gt; 
+    &lt;img src=&#34;https://asti.dynz.net/images/disas1.jpg&#34;/&gt; 
 &lt;/figure&gt;
 
 &lt;figure&gt;
-    &lt;img src=&#34;/images/disas2.jpg&#34;/&gt; 
+    &lt;img src=&#34;https://asti.dynz.net/images/disas2.jpg&#34;/&gt; 
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;p&gt;Track down the sources of the syscalls. Try replacing &lt;em&gt;libc&lt;/em&gt; or &lt;em&gt;newlib&lt;/em&gt; with another copy.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Trust nothing. Not even the the &lt;a href=&#34;https://en.wikipedia.org/wiki/Crt0&#34;&gt;C runtime&lt;/a&gt;. Versions of &lt;code&gt;crt0.s&lt;/code&gt; with &lt;code&gt;BKPT&lt;/code&gt; in them have been shipped.&lt;/p&gt;
-&lt;p&gt;Replace &lt;code&gt;cortex_m*/crt0.o&lt;/code&gt; in your toolchain with one from another version of the toolchain or from another vendor&#39;s. It shouldn&#39;t matter.&lt;/p&gt;
+&lt;p&gt;Replace &lt;code&gt;cortex_m*/crt0.o&lt;/code&gt; in your toolchain with one from another version of the toolchain or from another vendor&amp;rsquo;s. It shouldn&amp;rsquo;t matter.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Disassemble and repeat until you find the call responsible&lt;/p&gt;
@@ -345,20 +529,20 @@ Make sure that at no point is &lt;code&gt;rdimon.specs&lt;/code&gt; ever mention
 &lt;p&gt;If all else fails, toss everything in the fire and start over&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-- /post/semihosting/ - CC by Attribution</description>
+- https://asti.dynz.net/post/semihosting/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>A git-config parser</title>
-        <link>/post/git-config-parser/</link>
+        <link>https://asti.dynz.net/post/git-config-parser/</link>
         <pubDate>Tue, 24 Sep 2019 00:00:00 +0000</pubDate>
         
-        <guid>/post/git-config-parser/</guid>
-        <description>Asti&#39;s Notes /post/git-config-parser/ -&lt;p&gt;Reading &lt;code&gt;.git/config&lt;/code&gt; is the fastest way of getting info on a repository and its dependencies.&lt;/p&gt;
+        <guid>https://asti.dynz.net/post/git-config-parser/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/git-config-parser/ -&lt;p&gt;Reading &lt;code&gt;.git/config&lt;/code&gt; is the fastest way of getting info on a repository and its dependencies.&lt;/p&gt;
 &lt;h2 id=&#34;the-spec&#34;&gt;The Spec&lt;/h2&gt;
-&lt;p&gt;Let&#39;s start by going through the spec from &lt;a href=&#34;https://git-scm.com/docs/git-config#_syntax&#34;&gt;https://git-scm.com/docs/git-config#_syntax&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s start by going through the spec from &lt;a href=&#34;https://git-scm.com/docs/git-config#_syntax&#34;&gt;https://git-scm.com/docs/git-config#_syntax&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;An example config:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-config&#34; data-lang=&#34;config&#34;&gt;# Core variables
 [core]
@@ -373,16 +557,16 @@ Make sure that at no point is &lt;code&gt;rdimon.specs&lt;/code&gt; ever mention
 &lt;blockquote&gt;
 &lt;p&gt;The &lt;em&gt;#&lt;/em&gt; and &lt;em&gt;;&lt;/em&gt; characters begin comments to the end of line, blank lines are ignored.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; isComment &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;line&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; line&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;StartsWith&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; line&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;StartsWith&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;#&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; String.IsNullOrWhiteSpace&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;line&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; isComment &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;line&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; line&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;StartsWith&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; line&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;StartsWith&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;#&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; String.IsNullOrWhiteSpace&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;line&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;The file consists of sections and variables. A section begins with the name of the section in square brackets and continues until the next section begins.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; isSectionHeader &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;line&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; line&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;StartsWith&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; line&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;EndsWith&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;]&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; isSectionHeader &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;line&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; line&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;StartsWith&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;[&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; line&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;EndsWith&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;]&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;Sections can be further divided into subsections. To begin a subsection put its name in double quotes, separated by space from the section name, in the section header.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; splitSectionHeader &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;line&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 
-    line&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Split&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[|&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|]&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; 2&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; Array.map&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fun&lt;/span&gt; s &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; s&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Trim&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;[&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;]&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#34;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    line&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Split&lt;span style=&#34;color:#f92672&#34;&gt;([|&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|],&lt;/span&gt; 2&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; Array.map&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fun&lt;/span&gt; s &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; s&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Trim&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;[&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;]&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#34;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;construction&#34;&gt;Construction&lt;/h2&gt;
 &lt;p&gt;What we want is a seq of &lt;code&gt;ConfigSection&lt;/code&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ConfigSection&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; Name&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; Subsection&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; Values&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; Map&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
@@ -393,27 +577,41 @@ Make sure that at no point is &lt;code&gt;rdimon.specs&lt;/code&gt; ever mention
 		&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;line&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; line&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;                        
 	&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;
 		&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;section&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; line&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So this is going to be our example up top:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;(&amp;quot;&amp;quot;,&amp;quot;&amp;quot;)
 (&amp;quot;core&amp;quot;, &amp;quot;core&amp;quot;)
 (&amp;quot;core&amp;quot;, &amp;quot;filemode = false&amp;quot;)
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now if we do a &lt;code&gt;Seq.groupBy fst&lt;/code&gt;, we have our values grouped under our sections.&lt;/p&gt;
-&lt;p&gt;Here&#39;s the whole implementation:&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s the whole implementation:&lt;/p&gt;
 &lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/deviousasti/48a75b7624ea1c180e3148d63bf3dfae.js&#34;&gt;&lt;/script&gt;
 
-- /post/git-config-parser/ - CC by Attribution</description>
+- https://asti.dynz.net/post/git-config-parser/ - CC by Attribution</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>Ain&#39;t nobody got time for that</title>
+        <link>https://asti.dynz.net/post/posix-time-micro/</link>
+        <pubDate>Tue, 24 Sep 2019 00:00:00 +0000</pubDate>
+        
+        <guid>https://asti.dynz.net/post/posix-time-micro/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/posix-time-micro/ -&lt;pre&gt;&lt;code&gt;1&amp;gt;  ------------------- Memory utilization report -------------------
+1&amp;gt;  Used FLASH: 23KB out of 64KB (36%) [+10K]
+1&amp;gt;  Used SRAM: 6244 bytes out of 8192 bytes (76%) [+1688]
+&lt;/code&gt;&lt;/pre&gt;- https://asti.dynz.net/post/posix-time-micro/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>A better SFV</title>
-        <link>/post/powershell-sfv/</link>
+        <link>https://asti.dynz.net/post/powershell-sfv/</link>
         <pubDate>Sun, 11 Aug 2019 00:00:00 +0000</pubDate>
         
-        <guid>/post/powershell-sfv/</guid>
-        <description>Asti&#39;s Notes /post/powershell-sfv/ -&lt;h2 id=&#34;file-hashes&#34;&gt;File hashes&lt;/h2&gt;
+        <guid>https://asti.dynz.net/post/powershell-sfv/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/powershell-sfv/ -&lt;h2 id=&#34;file-hashes&#34;&gt;File hashes&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Simple_file_verification&#34;&gt;SFV&lt;/a&gt; used CRC for file checksums - which were fast to compute, but trivial to generate collisions for. We should probably move on to something like &lt;strong&gt;SHA256&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;This is already in PowerShell:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;Get-FileHash -Algorithm SHA256 
@@ -436,7 +634,7 @@ Pages.zip	E65277A391BE9AFCEF046650F23AB0ECB67DE4334C449F21271068239A413F18
 &lt;h2 id=&#34;comparing&#34;&gt;Comparing&lt;/h2&gt;
 &lt;p&gt;Comparing is equally simple - read a saved file and use &lt;code&gt;Compare-Object&lt;/code&gt; to roughly diff it with a calculated result.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;Compare-Object ($Table) (Get-Content $Verify)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here&#39;s the final powershell module:&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here&amp;rsquo;s the final powershell module:&lt;/p&gt;
 &lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/deviousasti/041d5298adf9a23e7700b7ff5460ce0b.js&#34;&gt;&lt;/script&gt;
 
 &lt;h2 id=&#34;usage&#34;&gt;Usage&lt;/h2&gt;
@@ -447,40 +645,40 @@ Pages.zip	E65277A391BE9AFCEF046650F23AB0ECB67DE4334C449F21271068239A413F18
 &lt;p&gt;The defaults are:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;Create-Verification -Path . -Filter *.*
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;
-    &lt;img src=&#34;/images/powershell-verify1.gif&#34;/&gt; 
+    &lt;img src=&#34;https://asti.dynz.net/images/powershell-verify1.gif&#34;/&gt; 
 &lt;/figure&gt;
 
 &lt;p&gt;To verify, use:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;Create-Verification -Verify (folder.sha2) 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;-Path&lt;/code&gt; and &lt;code&gt;-Filter&lt;/code&gt; options still apply.&lt;/p&gt;
 &lt;figure&gt;
-    &lt;img src=&#34;/images/powershell-verify2.gif&#34;/&gt; 
+    &lt;img src=&#34;https://asti.dynz.net/images/powershell-verify2.gif&#34;/&gt; 
 &lt;/figure&gt;
 
 &lt;p&gt;Note that the function produces a object stream of &lt;code&gt;{ Side, File }&lt;/code&gt;, so you can still post-process the output with scripts that handle &lt;code&gt;Compare-Object&lt;/code&gt; output.&lt;/p&gt;
-- /post/powershell-sfv/ - CC by Attribution</description>
+- https://asti.dynz.net/post/powershell-sfv/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Decoding a oneof case in nanopb</title>
-        <link>/post/nanopb-value/</link>
+        <link>https://asti.dynz.net/post/nanopb-value/</link>
         <pubDate>Sat, 03 Aug 2019 00:00:00 +0000</pubDate>
         
-        <guid>/post/nanopb-value/</guid>
-        <description>Asti&#39;s Notes /post/nanopb-value/ -&lt;h2 id=&#34;decoding-callbacks&#34;&gt;Decoding callbacks&lt;/h2&gt;
+        <guid>https://asti.dynz.net/post/nanopb-value/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/nanopb-value/ -&lt;h2 id=&#34;decoding-callbacks&#34;&gt;Decoding callbacks&lt;/h2&gt;
 &lt;p&gt;Say you have a message type with variable fields:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-protobuf&#34; data-lang=&#34;protobuf&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;message&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;KeyValue&lt;/span&gt; {&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; key     &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; value   &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;}&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-protobuf&#34; data-lang=&#34;protobuf&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;message&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;KeyValue&lt;/span&gt; {&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; key     &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; value   &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;}&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This generates:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;typedef&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; _KeyValue {
     pb_callback_t key;
     pb_callback_t value;
 } KeyValue;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Decoding this in nanopb isn&#39;t so bad -&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Decoding this in nanopb isn&amp;rsquo;t so bad -&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;KeyValue &lt;span style=&#34;color:#a6e22e&#34;&gt;decodeKV&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; key, &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; value)
 {
 	KeyValue kv;
@@ -488,7 +686,7 @@ Pages.zip	E65277A391BE9AFCEF046650F23AB0ECB67DE4334C449F21271068239A413F18
 	kv.value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; readStringCallback(value);
     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; kv;
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Call &lt;code&gt;pb_decode&lt;/code&gt; and you&#39;re done.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Call &lt;code&gt;pb_decode&lt;/code&gt; and you&amp;rsquo;re done.&lt;/p&gt;
 &lt;h2 id=&#34;the-callback-and-the-union&#34;&gt;The callback and the union&lt;/h2&gt;
 &lt;p&gt;If your type happens to be inside a &lt;code&gt;oneof&lt;/code&gt; like so:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;message Request {
@@ -499,7 +697,7 @@ Pages.zip	E65277A391BE9AFCEF046650F23AB0ECB67DE4334C449F21271068239A413F18
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;suddenly, the &lt;code&gt;KeyValue&lt;/code&gt; struct is in an union type - which itself is a field in another struct.&lt;/p&gt;
 &lt;p&gt;Now when you use &lt;code&gt;decodeKV&lt;/code&gt; try to decode &lt;code&gt;Request&lt;/code&gt; (the container message), you will find that nothing happens, and your callbacks are never called. This is because during the decode, the union type itself is initialized and so the &lt;code&gt;pb_callback&lt;/code&gt;s are set to &lt;code&gt;NULL&lt;/code&gt; - no callbacks set, no call back (pardon the alliteration).&lt;/p&gt;
-&lt;h2 id=&#34;if-you-dont-succeed-at-first-decode-again&#34;&gt;If you don&#39;t succeed at first, decode again&lt;/h2&gt;
+&lt;h2 id=&#34;if-you-dont-succeed-at-first-decode-again&#34;&gt;If you don&amp;rsquo;t succeed at first, decode again&lt;/h2&gt;
 &lt;p&gt;For this to work out, we need to create an environment where we decode the inner struct as a standalone message - like in our very first scenario.&lt;/p&gt;
 &lt;p&gt;First we need to figure out which was our &lt;code&gt;oneof&lt;/code&gt; case - to be more specific, the message descriptor corresponding to our &lt;code&gt;oneof&lt;/code&gt; case.&lt;/p&gt;
 &lt;p&gt;We need a type to collect our findings, so:&lt;/p&gt;
@@ -509,7 +707,7 @@ Pages.zip	E65277A391BE9AFCEF046650F23AB0ECB67DE4334C449F21271068239A413F18
 		&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; pb_msgdesc_t&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; submsg_desc;
 		pb_istream_t stream;
 	} pb_union_t;	
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I&#39;ll put in the full implementation in a gist below, but for now:&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I&amp;rsquo;ll put in the full implementation in a gist below, but for now:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;	&lt;span style=&#34;color:#75715e&#34;&gt;//iterate and decode tag till we get our union desc 
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; pb_union_t &lt;span style=&#34;color:#a6e22e&#34;&gt;getUnionType&lt;/span&gt;(uint8_t buffer[], size_t size);
 	
@@ -522,194 +720,10 @@ Pages.zip	E65277A391BE9AFCEF046650F23AB0ECB67DE4334C449F21271068239A413F18
 Now you can check when &lt;code&gt;oneof.tag&lt;/code&gt; matches &lt;code&gt;Request_setting_tag&lt;/code&gt; and we have all the information we need to decode &lt;code&gt;KeyValue&lt;/code&gt;.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;KeyValue kv &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; decodeKV(key, value);
 decodeUnion(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;kv, oneof);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and that&#39;s it really.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and that&amp;rsquo;s it really.&lt;/p&gt;
 &lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/deviousasti/ced9041be0c54829a69e9cc18a39f7c4.js&#34;&gt;&lt;/script&gt;
 
-- /post/nanopb-value/ - CC by Attribution</description>
-        </item>
-    
-    
-    
-        <item>
-        <title>Sync git modules to .gitmodules</title>
-        <link>/post/powershell-git-sync/</link>
-        <pubDate>Mon, 17 Jun 2019 00:00:00 +0000</pubDate>
-        
-        <guid>/post/powershell-git-sync/</guid>
-        <description>Asti&#39;s Notes /post/powershell-git-sync/ -&lt;h2 id=&#34;gitmodules-is-not-git-submodules&#34;&gt;.gitmodules is not git submodules&lt;/h2&gt;
-&lt;p&gt;A  &lt;code&gt;.gitmodules&lt;/code&gt; file is sort of indicative - it&#39;s not what actually is being tracked by Git.
-When you start a new project, and you have to include a bunch of submodules, you may think of starting off by copying and editing a &lt;code&gt;.gitmodules&lt;/code&gt; file with all the submodules you want, but that literally does nothing.&lt;/p&gt;
-&lt;p&gt;You&#39;ll find out that you have to &lt;code&gt;git submodule add&lt;/code&gt; everything by hand.
-Well, we could just automate that.&lt;/p&gt;
-&lt;h2 id=&#34;reading-gitmodules&#34;&gt;Reading .gitmodules&lt;/h2&gt;
-&lt;p&gt;Git has some commands to help us read &lt;code&gt;.gitmodules&lt;/code&gt;.
-It&#39;s behind &lt;code&gt;git config --file&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;Let&#39;s get all the keys first.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;git config --file .gitmodules --list
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;That was easy.  We got a list of keys.
-And to get a value for a specific key:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; lookup($key, $defaultValue = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;) {        
-	$value = git config -&lt;span style=&#34;color:#f92672&#34;&gt;-file&lt;/span&gt; $gitmodules --get &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;$&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;key&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; 2&amp;gt;&amp;amp;1 
-	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;($LASTEXITCODE &lt;span style=&#34;color:#f92672&#34;&gt;-ne&lt;/span&gt; 0) { $defaultValue } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; { $value }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;extracting-submodules&#34;&gt;Extracting submodules&lt;/h2&gt;
-&lt;p&gt;We just get a list of the unique submodules, and lookup the keys for &lt;code&gt;path&lt;/code&gt;, &lt;code&gt;url&lt;/code&gt; and &lt;code&gt;branch&lt;/code&gt; (if it exists).&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;all | 
-&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; { $_ -split &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;\.&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;  | select -Index 1 } | 
-select -Unique |
-&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; {&lt;span style=&#34;color:#66d9ef&#34;&gt;[pscustomobject]&lt;/span&gt;@{ 
-	Path = lookup &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;submodule.&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;$&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;_.path&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;; 
-	Url = lookup &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;submodule.&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;$&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;_.url&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;;  
-	Branch = lookup &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;submodule.&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;$&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;_.branch&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;master&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;;
-}} 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That gives us something like this:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;Path               Url                                                      Branch  
-----               ---                                                      ------  
-stm32-core         https://git.webyfy.com/webyfylabs/core-STM32.git         STM32F03
-src/rtt            https://git.webyfy.com/webyfylabs/rtt.git                master  
-src/node           https://git.webyfy.com/webyfylabs/node-core.git          master  
-src/sens           https://git.webyfy.com/webyfylabs/sens-core.git          master  
-rtt                https://git.webyfy.com/webyfylabs/rtt.git                master  
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Pretty neat.&lt;/p&gt;
-&lt;h2 id=&#34;std-from-powershell&#34;&gt;std from PowerShell&lt;/h2&gt;
-&lt;p&gt;While all that remains is call &lt;code&gt;git submodule add&lt;/code&gt; with the parameters we just found, you will quickly run into a problem:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;git : Cloning into &#39;D:/Experiments/Subtest/src/rtt&#39;...
-At D:\Experiments\Subtest\SyncSubmodules.ps1:29 char:9
-+         git submodule add $sub.Url $sub.Path
-+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (Cloning into &#39;D...est/src/rtt&#39;...:String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;There is actually no error here - PowerShell thinks that any output in &lt;code&gt;stderr&lt;/code&gt; is &lt;em&gt;due&lt;/em&gt; to an error.
-Even if we redirect &lt;code&gt;stderr&lt;/code&gt;, the &lt;code&gt;stderr&lt;/code&gt; stream will end up propagating downstream. In order to avoid this, we redirect then reproject every element to an &lt;code&gt;stdout&lt;/code&gt;  stream.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;2&amp;gt;&amp;amp;1 | foreach { &amp;quot;$_&amp;quot; }
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So our add becomes:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;git submodule add $sub.Url $sub.Path 2&amp;gt;&amp;amp;1 | foreach { &amp;quot;$_&amp;quot; }
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now that we all that pieces, we can make the module.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/deviousasti/b23160ef21d16faa3b8668ae11a20ed2.js&#34;&gt;&lt;/script&gt;
-
-&lt;h2 id=&#34;usage&#34;&gt;Usage:&lt;/h2&gt;
-&lt;p&gt;cd to path with &lt;code&gt;.gitmodules&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;Sync-Submodules
-&lt;/code&gt;&lt;/pre&gt;- /post/powershell-git-sync/ - CC by Attribution</description>
-        </item>
-    
-    
-    
-        <item>
-        <title>An Html Imports Bundler</title>
-        <link>/post/html-imports/</link>
-        <pubDate>Mon, 06 May 2019 00:00:00 +0000</pubDate>
-        
-        <guid>/post/html-imports/</guid>
-        <description>Asti&#39;s Notes /post/html-imports/ -&lt;p&gt;Once upon a time HTML imports was marketed as #include for the web and the best thing ever invented.
-And it was a great idea.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;HTML Imports is a way to include HTML documents in other HTML documents. You&#39;re not limited to markup either. An import can also include CSS, JavaScript, or anything else an .html file can contain. In other words, this makes imports a fantastic tool for loading related HTML/CSS/JS&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;As with all great ideas, it was just killed off. In Chrome 73, all support will be removed and it will be as it had never existed. Well, at least there was some tool to transform all these imports into a single page with Polymer&#39;s &lt;a href=&#34;https://github.com/Polymer/vulcanize&#34;&gt;Vulcanize&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;But.. that was deprecated and moved to &lt;a href=&#34;https://github.com/Polymer/polymer-bundler&#34;&gt;Polymer Bundler&lt;/a&gt;. And then that was moved to Polymer&#39;s monorepo with CLI tools. And&amp;hellip; it&#39;s still broken. And unmaintained.&lt;/p&gt;
-&lt;p&gt;The original bundler repo had 1k commits and 20k lines of typescript.
-Can we just get the most of the functionality with our own bundler in as few lines of code as possible?&lt;/p&gt;
-&lt;h2 id=&#34;parsing-the-html&#34;&gt;Parsing the Html&lt;/h2&gt;
-&lt;p&gt;There&#39;s two candiates. &lt;code&gt;FSharp.Data&lt;/code&gt; and &lt;code&gt;HtmlAgilityPack&lt;/code&gt;.
-Both are good enough for parsing, but we need to modify the DOM tree and write the output, which  &lt;code&gt;FSharp.Data&lt;/code&gt; doesn&#39;t support.&lt;/p&gt;
-&lt;p&gt;We&#39;ll need the DOM and the source file:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;type ImportDocument = { document: HtmlDocument; file: string }
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and to parse:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; scanFile file &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt; 
-       &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; doc &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;createDoc &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;File.ReadAllText file&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-       Some &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; document &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; doc&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; file &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; file &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;with&lt;/span&gt; ex &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;
-       warnWith &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;sprintf &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;Could not parse: %s&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%A&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; file ex&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-       None
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That&#39;s it for parsing an html file.&lt;/p&gt;
-&lt;h2 id=&#34;matching-our-targets&#34;&gt;Matching our targets&lt;/h2&gt;
-&lt;p&gt;The basic premise is to match an import node&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;link&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;rel&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;import&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;href&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;imports.html&amp;#34;&lt;/span&gt; /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and repeatedly unfold it every time you encounter another import node.
-Additionally, we must rewrite &lt;code&gt;script&lt;/code&gt; and &lt;code&gt;stylesheet&lt;/code&gt; paths to the new relative path.&lt;/p&gt;
-&lt;p&gt;We&#39;ll write some partial active patterns for those.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; someIf condition value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; condition &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt; Some value &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; None
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;Import&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;_&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; node &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; someIf &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;node &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;link&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;node &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; attr &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;rel&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;import&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; node
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;Script&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;_&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; node &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; someIf &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;node &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;script&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;node &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; attr &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; node
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;Style&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;_&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; node  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; someIf &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;node &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;link&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;node &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; attr &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;rel&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;stylesheet&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; node
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;mapping-our-paths&#34;&gt;Mapping our paths&lt;/h2&gt;
-&lt;p&gt;There&#39;s no good idiomatic way to use &lt;code&gt;Path&lt;/code&gt; from within F#, so we&#39;ll write us a few helpers.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;    let fullPath = Path.GetFullPath
-    let parentDir file = 
-        Path.GetDirectoryName(fullPath file)
-    let relativeTo file other = 
-        Path.Combine((parentDir file), other) |&amp;gt;  fullPath
-    let partialRelativeTo root file =
-        Path.GetRelativePath((parentDir root), file).Replace(&amp;quot;\\&amp;quot;, &amp;quot;/&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;unfolding-an-import&#34;&gt;Unfolding an import&lt;/h2&gt;
-&lt;p&gt;Unfolding is:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;If it&#39;s already imported, avoid&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;If it&#39;s an import, recursively unfold.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;If it&#39;s a &lt;code&gt;script&lt;/code&gt; or &lt;code&gt;style&lt;/code&gt;, rewrite the path&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;If it&#39;s none of the above, just include the element unchanged&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; unfoldImports source root hasResource &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; rec unfold source rel &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; importfile &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; source &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; attr &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;href&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; relativeTo rel
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; relativeToImport rel &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rel &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; relativeTo importfile &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; partialRelativeTo root&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;file
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; imported &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; hasResource importfile &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt; None &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; scanFile importfile 
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; imported &lt;span style=&#34;color:#66d9ef&#34;&gt;with&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; Some&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;imported&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;                     
-            seq &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-                &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; elem &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; imported&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;document &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; rootNode &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; children &lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt;    
-                    &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; elem &lt;span style=&#34;color:#66d9ef&#34;&gt;with&lt;/span&gt;
-                    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; Import&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;elem&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;yield&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt; unfold elem importfile
-                    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; Script&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;elem&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;yield&lt;/span&gt; elem &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; attrMap &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; relativeToImport
-                    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; Style&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;elem&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;yield&lt;/span&gt; elem &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; attrMap &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;href&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; relativeToImport
-                    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;_&lt;/span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;yield&lt;/span&gt; elem
-            &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; None &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; Seq.empty
-          
-    unfold source root&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;file
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;injecting-our-imports&#34;&gt;Injecting our imports&lt;/h2&gt;
-&lt;p&gt;We need to insert each element at the site of the import, however, simple using &lt;code&gt;importNode.InsertAfter&lt;/code&gt; reverses our import order. A better solution is to repeatedly fold the newly inserted element:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;Seq.fold &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fun&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;cur&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; HtmlNode&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; elem &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; cur&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ParentNode&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;InsertAfter&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;elem&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; cur&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; source
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;so the entire replace all would be:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; replaceImports doc &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;    
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; set &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; HashSet&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;_&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;()
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; add &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;not&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; set&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Add
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; replaceImport source &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 
-        unfoldImports source doc add
-        &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; Seq.fold &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fun&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;cur&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; HtmlNode&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; elem &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; cur&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ParentNode&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;InsertAfter&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;elem&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; cur&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; source       
-        &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; ignore
-        source&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Remove()            
-            
-    doc&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;document
-    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; rootNode
-    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; descendants &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;link&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; Seq.choose &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;Import&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;_&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; Seq.toArray
-    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; Seq.iter replaceImport
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;saving-the-output&#34;&gt;Saving the output&lt;/h2&gt;
-&lt;p&gt;There&#39;s not much else to do than just load up and file and call &lt;code&gt;replaceImports&lt;/code&gt; on it:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; scanFile input &lt;span style=&#34;color:#66d9ef&#34;&gt;with&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; None &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; printfn &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;Input file was invalid&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; Some &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;root&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; 
-    replaceImports root
-    root&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;document&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Save&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;output&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And that&#39;s all there is to it.&lt;/p&gt;
-&lt;p&gt;Here&#39;s the full source. The main bits are in &lt;code&gt;Program.fs&lt;/code&gt;, the &lt;code&gt;Html.fs&lt;/code&gt; is just a small wrapper to make &lt;code&gt;AgilityPack&lt;/code&gt; more like &lt;code&gt;FSharp.Data&lt;/code&gt;.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/deviousasti/b63f98b66401676511f00148ae38ce8f.js&#34;&gt;&lt;/script&gt;
-
-- /post/html-imports/ - CC by Attribution</description>
+- https://asti.dynz.net/post/nanopb-value/ - CC by Attribution</description>
         </item>
     
     

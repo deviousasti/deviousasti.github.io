@@ -23,11 +23,11 @@
 
 
 
-<link rel="stylesheet" href="/scss/journal.min.074c04b896e4e9ec7e517f88eefd59e62ffd212b8c923ac219f7bc81825b28bd.css" integrity="sha256-B0wEuJbk6ex&#43;UX&#43;I7v1Z5i/9ISuMkjrCGfe8gYJbKL0=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/journal.min.8335a975ef7e2ae409c16107534604caf6426d51ba9776b9b017b2c1d908c2bc.css" integrity="sha256-gzWpde9&#43;KuQJwWEHU0YEyvZCbVG6l3a5sBeywdkIwrw=" media="screen">
 
 
 
-<link rel="stylesheet" href="/scss/dark-mode.min.5d4554809a1a12cbf28366c9a81376c1681cdefc525a37617a9741c19b85f22f.css" integrity="sha256-XUVUgJoaEsvyg2bJqBN2wWgc3vxSWjdhepdBwZuF8i8=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/dark-mode.min.114f186b6cd522a64502e49572cbcc70d7ead986a36668413a7e0d977ffd6fff.css" integrity="sha256-EU8Ya2zVIqZFAuSVcsvMcNfq2YajZmhBOn4Nl3/9b/8=" media="screen">
 
 
 <script src="/vendor/js/vue.min.js" ></script>
@@ -49,7 +49,7 @@
 </head><body>
     	<div id="app"><div ref="sideContainer" class="side-container">
     
-    <a class="a-block nav-head false" href="/">
+    <a class="a-block nav-head false" href="https://asti.dynz.net">
     
         <div class="nav-title">
             Asti&#39;s Notes
@@ -595,7 +595,7 @@ CC by Attribution
                 menu
             </i>
         </button>
-        <a ref="navTitle" class="navbar-brand" href="/">
+        <a ref="navTitle" class="navbar-brand" href="https://asti.dynz.net">
             Asti&#39;s Notes
         </a>
         
@@ -612,7 +612,7 @@ CC by Attribution
 </nav>
 <div class="single-column-header-container" ref="pageHead"
      v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
-    <a href="/">
+    <a href="https://asti.dynz.net">
         <div class="single-column-header-title">Asti&#39;s Notes</div>
         
         <div class="single-column-header-subtitle">FP, Rx, EDA</div>
@@ -674,11 +674,11 @@ CC by Attribution
 A scheduler decides what order &ldquo;thunks&rdquo; (a unit of work) execute in, and how time <em>flows</em>.</p>
 <p>There are a number of scheduler implementations for doing work on diverse models of concurrency.
 Rx is very preferential to single-threadedness, and opposed to being multi-threaded out of the box.</p>
-<p>Most of the time, you don't need to worry about it, and you can go with the reasonable defaults. But very rarely, (and especially if you break the Observable contract), you end up with out-of-order notifications, <a href="http://en.wikipedia.org/wiki/Deadlock">deadlocks</a>, <a href="http://en.wikipedia.org/wiki/Deadlock#Livelock">livelocks</a> or things lost to the void.</p>
+<p>Most of the time, you don&rsquo;t need to worry about it, and you can go with the reasonable defaults. But very rarely, (and especially if you break the Observable contract), you end up with out-of-order notifications, <a href="http://en.wikipedia.org/wiki/Deadlock">deadlocks</a>, <a href="http://en.wikipedia.org/wiki/Deadlock#Livelock">livelocks</a> or things lost to the void.</p>
 <h2 id="immediatescheduler">ImmediateScheduler</h2>
-<p>This is the simplest of the lot. It's essentially:</p>
+<p>This is the simplest of the lot. It&rsquo;s essentially:</p>
 <pre><code>Schedule(action) =&gt; action()
-</code></pre><p>That's why it's&hellip; immediate. This is one of the most used schedulers, because there can be context switch, and the more reasonable everything behaves.</p>
+</code></pre><p>That&rsquo;s why it&rsquo;s&hellip; immediate. This is one of the most used schedulers, because there can be context switch, and the more reasonable everything behaves.</p>
 <h2 id="currentthreadscheduler">CurrentThreadScheduler</h2>
 <p>This is similar to `Immediate with a not-so-subtle difference:</p>
 <pre><code>Schedule(action, delay) =&gt; 
@@ -704,9 +704,9 @@ Rx is very preferential to single-threadedness, and opposed to being multi-threa
 });
 </code></pre></div><p>This prints <code>2 1</code>. Using <code>ImmediateScheduler</code> here would give you <code>1 2</code>.</p>
 <h2 id="eventloopscheduler">EventLoopScheduler</h2>
-<p>Units of work are scheduled in an event-loop running on a single dedicated thread. Internally, it's a priority queue dispatched by the worker thread. Technically, it's two queues - one for immediate, and one for time-scheduled items.</p>
+<p>Units of work are scheduled in an event-loop running on a single dedicated thread. Internally, it&rsquo;s a priority queue dispatched by the worker thread. Technically, it&rsquo;s two queues - one for immediate, and one for time-scheduled items.</p>
 <p>As with other event loops, this has the strongest guarantee of serialized notifications.
-If encounter heisenbugs related to the order of execution, this is the way to go. The caveat is that it's single threaded, so any blocking work locks up the scheduler.</p>
+If encounter heisenbugs related to the order of execution, this is the way to go. The caveat is that it&rsquo;s single threaded, so any blocking work locks up the scheduler.</p>
 <pre><code>Schedule(action, duetime) =&gt; 
 	if (duetime &gt; 0) 
 		time_enqueue(action, duetime)
@@ -715,7 +715,7 @@ If encounter heisenbugs related to the order of execution, this is the way to go
 </code></pre><h2 id="newthreadscheduler">NewThreadScheduler</h2>
 <p>This is conceptually easy to understand - it creates a new thread for every item of work.</p>
 <pre><code>Schedule(action) =&gt; new Thread(action).Start()
-</code></pre><p>Threads aren't <em>that</em> expensive for modern machines, but why would you need this scheduler?
+</code></pre><p>Threads aren&rsquo;t <em>that</em> expensive for modern machines, but why would you need this scheduler?
 If you have a really long running work function, on the order of minutes to hours, this is better than locking up a thread in one of the thread pools.</p>
 <p>If you happen to pass in an item scheduled in the future though, it creates an <code>EventLoopScheduler</code> and uses that.</p>
 <pre><code>Schedule(action, delay) =&gt; new EventLoopScheduler().Schedule(action, delay)
@@ -728,9 +728,9 @@ If you have a really long running work function, on the order of minutes to hour
 <p>Schedules an unit of work on the task pool, using the Tasks API.</p>
 <pre><code>Schedule(action) =&gt; TaskFactory.StartNew(action)
 </code></pre><p>This is one of the more optimized schedulers given its frequent use, and as with tasks, prefer it for short units of work.
-Still don't arbitrarily use it for everything - <code>Immediate</code> is orders of magnitude faster with much less GC.</p>
+Still don&rsquo;t arbitrarily use it for everything - <code>Immediate</code> is orders of magnitude faster with much less GC.</p>
 <h2 id="defaultscheduler">DefaultScheduler</h2>
-<p>This is a platform specific scheduler implementation which calls uses the platform's implementation of <code>IConcurrencyAbstractionLayer</code>. The implementation is defined in <code>System.Reactive.PlatformServices</code>, which might vary depending on the target.</p>
+<p>This is a platform specific scheduler implementation which calls uses the platform&rsquo;s implementation of <code>IConcurrencyAbstractionLayer</code>. The implementation is defined in <code>System.Reactive.PlatformServices</code>, which might vary depending on the target.</p>
 <p>For almost all platforms, the abstraction layer in use is based on the <code>ThreadPool</code>.
 <code>Scheduler.Default</code> returns the singleton instance of this.</p>
 <pre><code>DefaultScheduler Default =&gt; DefaultScheduler.Instance;
@@ -747,19 +747,23 @@ Still don't arbitrarily use it for everything - <code>Immediate</code> is orders
             <nav class="post-pagination">
 
                 
-                <a class="newer-posts" href="/post/rx-last-value/">
+                <a class="newer-posts" href="https://asti.dynz.net/post/rx-last-value/">
                     Next<br>Getting the last value from an Observable when it fails
                 </a>
                 
                 
                 
-                <a class="older-posts" href="/post/wpf-icon-font/">
+                <a class="older-posts" href="https://asti.dynz.net/post/wpf-icon-font/">
                     Previous<br>Material Icons in WPF
                 </a>
                 
             </nav>
             <div class="post-comment-wrapper">
                 
+<div class="post-comment-wrapper">
+
+</div>
+
 
 
 
@@ -779,6 +783,6 @@ Still don't arbitrarily use it for everything - <code>Immediate</code> is orders
 CC by Attribution
 </div>
             </div>    
-            <script src="/js/journal.js"></script>
+            <script src="https://asti.dynz.netjs/journal.js"></script>
     </body>
 </html>

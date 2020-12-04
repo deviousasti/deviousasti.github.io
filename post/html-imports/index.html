@@ -23,11 +23,11 @@
 
 
 
-<link rel="stylesheet" href="/scss/journal.min.074c04b896e4e9ec7e517f88eefd59e62ffd212b8c923ac219f7bc81825b28bd.css" integrity="sha256-B0wEuJbk6ex&#43;UX&#43;I7v1Z5i/9ISuMkjrCGfe8gYJbKL0=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/journal.min.8335a975ef7e2ae409c16107534604caf6426d51ba9776b9b017b2c1d908c2bc.css" integrity="sha256-gzWpde9&#43;KuQJwWEHU0YEyvZCbVG6l3a5sBeywdkIwrw=" media="screen">
 
 
 
-<link rel="stylesheet" href="/scss/dark-mode.min.5d4554809a1a12cbf28366c9a81376c1681cdefc525a37617a9741c19b85f22f.css" integrity="sha256-XUVUgJoaEsvyg2bJqBN2wWgc3vxSWjdhepdBwZuF8i8=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/dark-mode.min.114f186b6cd522a64502e49572cbcc70d7ead986a36668413a7e0d977ffd6fff.css" integrity="sha256-EU8Ya2zVIqZFAuSVcsvMcNfq2YajZmhBOn4Nl3/9b/8=" media="screen">
 
 
 <script src="/vendor/js/vue.min.js" ></script>
@@ -49,7 +49,7 @@
 </head><body>
     	<div id="app"><div ref="sideContainer" class="side-container">
     
-    <a class="a-block nav-head false" href="/">
+    <a class="a-block nav-head false" href="https://asti.dynz.net">
     
         <div class="nav-title">
             Asti&#39;s Notes
@@ -503,7 +503,7 @@ CC by Attribution
                 menu
             </i>
         </button>
-        <a ref="navTitle" class="navbar-brand" href="/">
+        <a ref="navTitle" class="navbar-brand" href="https://asti.dynz.net">
             Asti&#39;s Notes
         </a>
         
@@ -520,7 +520,7 @@ CC by Attribution
 </nav>
 <div class="single-column-header-container" ref="pageHead"
      v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
-    <a href="/">
+    <a href="https://asti.dynz.net">
         <div class="single-column-header-title">Asti&#39;s Notes</div>
         
         <div class="single-column-header-subtitle">FP, Rx, EDA</div>
@@ -580,38 +580,38 @@ CC by Attribution
                     <p>Once upon a time HTML imports was marketed as #include for the web and the best thing ever invented.
 And it was a great idea.</p>
 <blockquote>
-<p>HTML Imports is a way to include HTML documents in other HTML documents. You're not limited to markup either. An import can also include CSS, JavaScript, or anything else an .html file can contain. In other words, this makes imports a fantastic tool for loading related HTML/CSS/JS</p>
+<p>HTML Imports is a way to include HTML documents in other HTML documents. You&rsquo;re not limited to markup either. An import can also include CSS, JavaScript, or anything else an .html file can contain. In other words, this makes imports a fantastic tool for loading related HTML/CSS/JS</p>
 </blockquote>
-<p>As with all great ideas, it was just killed off. In Chrome 73, all support will be removed and it will be as it had never existed. Well, at least there was some tool to transform all these imports into a single page with Polymer's <a href="https://github.com/Polymer/vulcanize">Vulcanize</a>.</p>
-<p>But.. that was deprecated and moved to <a href="https://github.com/Polymer/polymer-bundler">Polymer Bundler</a>. And then that was moved to Polymer's monorepo with CLI tools. And&hellip; it's still broken. And unmaintained.</p>
+<p>As with all great ideas, it was just killed off. In Chrome 73, all support will be removed and it will be as it had never existed. Well, at least there was some tool to transform all these imports into a single page with Polymer&rsquo;s <a href="https://github.com/Polymer/vulcanize">Vulcanize</a>.</p>
+<p>But.. that was deprecated and moved to <a href="https://github.com/Polymer/polymer-bundler">Polymer Bundler</a>. And then that was moved to Polymer&rsquo;s monorepo with CLI tools. And&hellip; it&rsquo;s still broken. And unmaintained.</p>
 <p>The original bundler repo had 1k commits and 20k lines of typescript.
 Can we just get the most of the functionality with our own bundler in as few lines of code as possible?</p>
 <h2 id="parsing-the-html">Parsing the Html</h2>
-<p>There's two candiates. <code>FSharp.Data</code> and <code>HtmlAgilityPack</code>.
-Both are good enough for parsing, but we need to modify the DOM tree and write the output, which  <code>FSharp.Data</code> doesn't support.</p>
-<p>We'll need the DOM and the source file:</p>
+<p>There&rsquo;s two candiates. <code>FSharp.Data</code> and <code>HtmlAgilityPack</code>.
+Both are good enough for parsing, but we need to modify the DOM tree and write the output, which  <code>FSharp.Data</code> doesn&rsquo;t support.</p>
+<p>We&rsquo;ll need the DOM and the source file:</p>
 <pre><code>type ImportDocument = { document: HtmlDocument; file: string }
 </code></pre><p>and to parse:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> scanFile file <span style="color:#f92672">=</span> 
     <span style="color:#66d9ef">try</span> 
-       <span style="color:#66d9ef">let</span> doc <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>createDoc <span style="color:#f92672">(</span>File.ReadAllText file<span style="color:#f92672">)</span><span style="color:#f92672">)</span>
+       <span style="color:#66d9ef">let</span> doc <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>createDoc <span style="color:#f92672">(</span>File.ReadAllText file<span style="color:#f92672">))</span>
        Some <span style="color:#f92672">{</span> document <span style="color:#f92672">=</span> doc<span style="color:#f92672">;</span> file <span style="color:#f92672">=</span> file <span style="color:#f92672">}</span>
     <span style="color:#66d9ef">with</span> ex <span style="color:#f92672">-&gt;</span>
-       warnWith <span style="color:#f92672">(</span>sprintf <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Could not parse: %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">%A</span><span style="color:#e6db74">&#34;</span> file ex<span style="color:#f92672">)</span>
+       warnWith <span style="color:#f92672">(</span>sprintf <span style="color:#e6db74">&#34;Could not parse: %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">%A&#34;</span> file ex<span style="color:#f92672">)</span>
        None
-</code></pre></div><p>That's it for parsing an html file.</p>
+</code></pre></div><p>That&rsquo;s it for parsing an html file.</p>
 <h2 id="matching-our-targets">Matching our targets</h2>
 <p>The basic premise is to match an import node</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;import&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;imports.html&#34;</span> /&gt;
 </code></pre></div><p>and repeatedly unfold it every time you encounter another import node.
 Additionally, we must rewrite <code>script</code> and <code>stylesheet</code> paths to the new relative path.</p>
-<p>We'll write some partial active patterns for those.</p>
+<p>We&rsquo;ll write some partial active patterns for those.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> someIf condition value <span style="color:#f92672">=</span> <span style="color:#66d9ef">if</span> condition <span style="color:#66d9ef">then</span> Some value <span style="color:#66d9ef">else</span> None
-<span style="color:#66d9ef">let</span> <span style="color:#f92672">(</span><span style="color:#f92672">|</span>Import<span style="color:#f92672">|</span><span style="color:#f92672">_</span><span style="color:#f92672">|</span><span style="color:#f92672">)</span> node <span style="color:#f92672">=</span> someIf <span style="color:#f92672">(</span><span style="color:#f92672">(</span>node <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">link</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>node <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> attr <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">rel</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">import</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> node
-<span style="color:#66d9ef">let</span> <span style="color:#f92672">(</span><span style="color:#f92672">|</span>Script<span style="color:#f92672">|</span><span style="color:#f92672">_</span><span style="color:#f92672">|</span><span style="color:#f92672">)</span> node <span style="color:#f92672">=</span> someIf <span style="color:#f92672">(</span><span style="color:#f92672">(</span>node <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">script</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>node <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> attr <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">src</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> node
-<span style="color:#66d9ef">let</span> <span style="color:#f92672">(</span><span style="color:#f92672">|</span>Style<span style="color:#f92672">|</span><span style="color:#f92672">_</span><span style="color:#f92672">|</span><span style="color:#f92672">)</span> node  <span style="color:#f92672">=</span> someIf <span style="color:#f92672">(</span><span style="color:#f92672">(</span>node <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">link</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>node <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> attr <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">rel</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">stylesheet</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> node
+<span style="color:#66d9ef">let</span> <span style="color:#f92672">(|</span>Import<span style="color:#f92672">|_|)</span> node <span style="color:#f92672">=</span> someIf <span style="color:#f92672">((</span>node <span style="color:#f92672">|&gt;</span> name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;link&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>node <span style="color:#f92672">|&gt;</span> attr <span style="color:#e6db74">&#34;rel&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;import&#34;</span><span style="color:#f92672">))</span> node
+<span style="color:#66d9ef">let</span> <span style="color:#f92672">(|</span>Script<span style="color:#f92672">|_|)</span> node <span style="color:#f92672">=</span> someIf <span style="color:#f92672">((</span>node <span style="color:#f92672">|&gt;</span> name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;script&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>node <span style="color:#f92672">|&gt;</span> attr <span style="color:#e6db74">&#34;src&#34;</span> <span style="color:#f92672">&lt;&gt;</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">))</span> node
+<span style="color:#66d9ef">let</span> <span style="color:#f92672">(|</span>Style<span style="color:#f92672">|_|)</span> node  <span style="color:#f92672">=</span> someIf <span style="color:#f92672">((</span>node <span style="color:#f92672">|&gt;</span> name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;link&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>node <span style="color:#f92672">|&gt;</span> attr <span style="color:#e6db74">&#34;rel&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;stylesheet&#34;</span><span style="color:#f92672">))</span> node
 </code></pre></div><h2 id="mapping-our-paths">Mapping our paths</h2>
-<p>There's no good idiomatic way to use <code>Path</code> from within F#, so we'll write us a few helpers.</p>
+<p>There&rsquo;s no good idiomatic way to use <code>Path</code> from within F#, so we&rsquo;ll write us a few helpers.</p>
 <pre><code>    let fullPath = Path.GetFullPath
     let parentDir file = 
         Path.GetDirectoryName(fullPath file)
@@ -623,32 +623,32 @@ Additionally, we must rewrite <code>script</code> and <code>stylesheet</code> pa
 <p>Unfolding is:</p>
 <ul>
 <li>
-<p>If it's already imported, avoid</p>
+<p>If it&rsquo;s already imported, avoid</p>
 </li>
 <li>
-<p>If it's an import, recursively unfold.</p>
+<p>If it&rsquo;s an import, recursively unfold.</p>
 </li>
 <li>
-<p>If it's a <code>script</code> or <code>style</code>, rewrite the path</p>
+<p>If it&rsquo;s a <code>script</code> or <code>style</code>, rewrite the path</p>
 </li>
 <li>
-<p>If it's none of the above, just include the element unchanged</p>
+<p>If it&rsquo;s none of the above, just include the element unchanged</p>
 </li>
 </ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp">
 <span style="color:#66d9ef">let</span> unfoldImports source root hasResource <span style="color:#f92672">=</span> 
     <span style="color:#66d9ef">let</span> rec unfold source rel <span style="color:#f92672">=</span> 
-        <span style="color:#66d9ef">let</span> importfile <span style="color:#f92672">=</span> source <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> attr <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">href</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> relativeTo rel
-        <span style="color:#66d9ef">let</span> relativeToImport rel <span style="color:#f92672">=</span> rel <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> relativeTo importfile <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> partialRelativeTo root<span style="color:#f92672">.</span>file
+        <span style="color:#66d9ef">let</span> importfile <span style="color:#f92672">=</span> source <span style="color:#f92672">|&gt;</span> attr <span style="color:#e6db74">&#34;href&#34;</span> <span style="color:#f92672">|&gt;</span> relativeTo rel
+        <span style="color:#66d9ef">let</span> relativeToImport rel <span style="color:#f92672">=</span> rel <span style="color:#f92672">|&gt;</span> relativeTo importfile <span style="color:#f92672">|&gt;</span> partialRelativeTo root<span style="color:#f92672">.</span>file
         <span style="color:#66d9ef">let</span> imported <span style="color:#f92672">=</span> <span style="color:#66d9ef">if</span> hasResource importfile <span style="color:#66d9ef">then</span> None <span style="color:#66d9ef">else</span> scanFile importfile 
         <span style="color:#66d9ef">match</span> imported <span style="color:#66d9ef">with</span>
         <span style="color:#f92672">|</span> Some<span style="color:#f92672">(</span>imported<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span>                     
             seq <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">for</span> elem <span style="color:#66d9ef">in</span> imported<span style="color:#f92672">.</span>document <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> rootNode <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> children <span style="color:#66d9ef">do</span>    
+                <span style="color:#66d9ef">for</span> elem <span style="color:#66d9ef">in</span> imported<span style="color:#f92672">.</span>document <span style="color:#f92672">|&gt;</span> rootNode <span style="color:#f92672">|&gt;</span> children <span style="color:#66d9ef">do</span>    
                     <span style="color:#66d9ef">match</span> elem <span style="color:#66d9ef">with</span>
                     <span style="color:#f92672">|</span> Import<span style="color:#f92672">(</span>elem<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">yield</span><span style="color:#f92672">!</span> unfold elem importfile
-                    <span style="color:#f92672">|</span> Script<span style="color:#f92672">(</span>elem<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">yield</span> elem <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> attrMap <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">src</span><span style="color:#e6db74">&#34;</span> relativeToImport
-                    <span style="color:#f92672">|</span> Style<span style="color:#f92672">(</span>elem<span style="color:#f92672">)</span>  <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">yield</span> elem <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> attrMap <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">href</span><span style="color:#e6db74">&#34;</span> relativeToImport
+                    <span style="color:#f92672">|</span> Script<span style="color:#f92672">(</span>elem<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">yield</span> elem <span style="color:#f92672">|&gt;</span> attrMap <span style="color:#e6db74">&#34;src&#34;</span> relativeToImport
+                    <span style="color:#f92672">|</span> Style<span style="color:#f92672">(</span>elem<span style="color:#f92672">)</span>  <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">yield</span> elem <span style="color:#f92672">|&gt;</span> attrMap <span style="color:#e6db74">&#34;href&#34;</span> relativeToImport
                     <span style="color:#f92672">|</span> <span style="color:#f92672">_</span>            <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">yield</span> elem
             <span style="color:#f92672">}</span>
         <span style="color:#f92672">|</span> None <span style="color:#f92672">-&gt;</span> Seq.empty
@@ -657,32 +657,32 @@ Additionally, we must rewrite <code>script</code> and <code>stylesheet</code> pa
 
 </code></pre></div><h2 id="injecting-our-imports">Injecting our imports</h2>
 <p>We need to insert each element at the site of the import, however, simple using <code>importNode.InsertAfter</code> reverses our import order. A better solution is to repeatedly fold the newly inserted element:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp">Seq.fold <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> <span style="color:#f92672">(</span>cur<span style="color:#f92672">:</span> HtmlNode<span style="color:#f92672">)</span> elem <span style="color:#f92672">-&gt;</span> cur<span style="color:#f92672">.</span>ParentNode<span style="color:#f92672">.</span>InsertAfter<span style="color:#f92672">(</span>elem<span style="color:#f92672">,</span> cur<span style="color:#f92672">)</span><span style="color:#f92672">)</span> source
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp">Seq.fold <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> <span style="color:#f92672">(</span>cur<span style="color:#f92672">:</span> HtmlNode<span style="color:#f92672">)</span> elem <span style="color:#f92672">-&gt;</span> cur<span style="color:#f92672">.</span>ParentNode<span style="color:#f92672">.</span>InsertAfter<span style="color:#f92672">(</span>elem<span style="color:#f92672">,</span> cur<span style="color:#f92672">))</span> source
 </code></pre></div><p>so the entire replace all would be:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> replaceImports doc <span style="color:#f92672">=</span>    
-    <span style="color:#66d9ef">let</span> set <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">_</span><span style="color:#f92672">&gt;</span>()
-    <span style="color:#66d9ef">let</span> add <span style="color:#f92672">=</span> <span style="color:#f92672">not</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> set<span style="color:#f92672">.</span>Add
+    <span style="color:#66d9ef">let</span> set <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;_&gt;</span>()
+    <span style="color:#66d9ef">let</span> add <span style="color:#f92672">=</span> <span style="color:#f92672">not</span> <span style="color:#f92672">&lt;&lt;</span> set<span style="color:#f92672">.</span>Add
     <span style="color:#66d9ef">let</span> replaceImport source <span style="color:#f92672">=</span> 
         unfoldImports source doc add
-        <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> Seq.fold <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> <span style="color:#f92672">(</span>cur<span style="color:#f92672">:</span> HtmlNode<span style="color:#f92672">)</span> elem <span style="color:#f92672">-&gt;</span> cur<span style="color:#f92672">.</span>ParentNode<span style="color:#f92672">.</span>InsertAfter<span style="color:#f92672">(</span>elem<span style="color:#f92672">,</span> cur<span style="color:#f92672">)</span><span style="color:#f92672">)</span> source       
-        <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> ignore
+        <span style="color:#f92672">|&gt;</span> Seq.fold <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> <span style="color:#f92672">(</span>cur<span style="color:#f92672">:</span> HtmlNode<span style="color:#f92672">)</span> elem <span style="color:#f92672">-&gt;</span> cur<span style="color:#f92672">.</span>ParentNode<span style="color:#f92672">.</span>InsertAfter<span style="color:#f92672">(</span>elem<span style="color:#f92672">,</span> cur<span style="color:#f92672">))</span> source       
+        <span style="color:#f92672">|&gt;</span> ignore
         source<span style="color:#f92672">.</span>Remove()            
             
     doc<span style="color:#f92672">.</span>document
-    <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> rootNode
-    <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> descendants <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">link</span><span style="color:#e6db74">&#34;</span>
-    <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> Seq.choose <span style="color:#f92672">(</span><span style="color:#f92672">|</span>Import<span style="color:#f92672">|</span><span style="color:#f92672">_</span><span style="color:#f92672">|</span><span style="color:#f92672">)</span>
-    <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> Seq.toArray
-    <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> Seq.iter replaceImport
+    <span style="color:#f92672">|&gt;</span> rootNode
+    <span style="color:#f92672">|&gt;</span> descendants <span style="color:#e6db74">&#34;link&#34;</span>
+    <span style="color:#f92672">|&gt;</span> Seq.choose <span style="color:#f92672">(|</span>Import<span style="color:#f92672">|_|)</span>
+    <span style="color:#f92672">|&gt;</span> Seq.toArray
+    <span style="color:#f92672">|&gt;</span> Seq.iter replaceImport
 </code></pre></div><h2 id="saving-the-output">Saving the output</h2>
-<p>There's not much else to do than just load up and file and call <code>replaceImports</code> on it:</p>
+<p>There&rsquo;s not much else to do than just load up and file and call <code>replaceImports</code> on it:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">match</span> scanFile input <span style="color:#66d9ef">with</span>
-<span style="color:#f92672">|</span> None <span style="color:#f92672">-&gt;</span> printfn <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Input file was invalid</span><span style="color:#e6db74">&#34;</span>
+<span style="color:#f92672">|</span> None <span style="color:#f92672">-&gt;</span> printfn <span style="color:#e6db74">&#34;Input file was invalid&#34;</span>
 <span style="color:#f92672">|</span> Some <span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> 
     replaceImports root
     root<span style="color:#f92672">.</span>document<span style="color:#f92672">.</span>Save<span style="color:#f92672">(</span>output<span style="color:#f92672">)</span>
-</code></pre></div><p>And that's all there is to it.</p>
-<p>Here's the full source. The main bits are in <code>Program.fs</code>, the <code>Html.fs</code> is just a small wrapper to make <code>AgilityPack</code> more like <code>FSharp.Data</code>.</p>
+</code></pre></div><p>And that&rsquo;s all there is to it.</p>
+<p>Here&rsquo;s the full source. The main bits are in <code>Program.fs</code>, the <code>Html.fs</code> is just a small wrapper to make <code>AgilityPack</code> more like <code>FSharp.Data</code>.</p>
 <script type="application/javascript" src="https://gist.github.com/deviousasti/b63f98b66401676511f00148ae38ce8f.js"></script>
 
 
@@ -697,13 +697,13 @@ Additionally, we must rewrite <code>script</code> and <code>stylesheet</code> pa
             <nav class="post-pagination">
 
                 
-                <a class="newer-posts" href="/post/powershell-git-sync/">
+                <a class="newer-posts" href="https://asti.dynz.net/post/powershell-git-sync/">
                     Next<br>Sync git modules to .gitmodules
                 </a>
                 
                 
                 
-                <a class="older-posts" href="/post/rx-last-value/">
+                <a class="older-posts" href="https://asti.dynz.net/post/rx-last-value/">
                     Previous<br>Getting the last value from an Observable when it fails
                 </a>
                 
@@ -727,6 +727,6 @@ Additionally, we must rewrite <code>script</code> and <code>stylesheet</code> pa
 CC by Attribution
 </div>
             </div>    
-            <script src="/js/journal.js"></script>
+            <script src="https://asti.dynz.netjs/journal.js"></script>
     </body>
 </html>

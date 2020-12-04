@@ -23,11 +23,11 @@
 
 
 
-<link rel="stylesheet" href="/scss/journal.min.074c04b896e4e9ec7e517f88eefd59e62ffd212b8c923ac219f7bc81825b28bd.css" integrity="sha256-B0wEuJbk6ex&#43;UX&#43;I7v1Z5i/9ISuMkjrCGfe8gYJbKL0=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/journal.min.8335a975ef7e2ae409c16107534604caf6426d51ba9776b9b017b2c1d908c2bc.css" integrity="sha256-gzWpde9&#43;KuQJwWEHU0YEyvZCbVG6l3a5sBeywdkIwrw=" media="screen">
 
 
 
-<link rel="stylesheet" href="/scss/dark-mode.min.5d4554809a1a12cbf28366c9a81376c1681cdefc525a37617a9741c19b85f22f.css" integrity="sha256-XUVUgJoaEsvyg2bJqBN2wWgc3vxSWjdhepdBwZuF8i8=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/dark-mode.min.114f186b6cd522a64502e49572cbcc70d7ead986a36668413a7e0d977ffd6fff.css" integrity="sha256-EU8Ya2zVIqZFAuSVcsvMcNfq2YajZmhBOn4Nl3/9b/8=" media="screen">
 
 
 <script src="/vendor/js/vue.min.js" ></script>
@@ -49,7 +49,7 @@
 </head><body>
     	<div id="app"><div ref="sideContainer" class="side-container">
     
-    <a class="a-block nav-head false" href="/">
+    <a class="a-block nav-head false" href="https://asti.dynz.net">
     
         <div class="nav-title">
             Asti&#39;s Notes
@@ -411,7 +411,7 @@ CC by Attribution
                 menu
             </i>
         </button>
-        <a ref="navTitle" class="navbar-brand" href="/">
+        <a ref="navTitle" class="navbar-brand" href="https://asti.dynz.net">
             Asti&#39;s Notes
         </a>
         
@@ -428,7 +428,7 @@ CC by Attribution
 </nav>
 <div class="single-column-header-container" ref="pageHead"
      v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
-    <a href="/">
+    <a href="https://asti.dynz.net">
         <div class="single-column-header-title">Asti&#39;s Notes</div>
         
         <div class="single-column-header-subtitle">FP, Rx, EDA</div>
@@ -488,22 +488,22 @@ CC by Attribution
             
             <div class="post-body-wrapper">
                 <div class="post-body">
-                    <p>Now there are a million web-worker libraries out there, but what's the harm in having more interesting implementations?</p>
+                    <p>Now there are a million web-worker libraries out there, but what&rsquo;s the harm in having more interesting implementations?</p>
 <h2 id="the-proxy">The Proxy</h2>
 <p>The simplest way to start using a worker would be something that can drop in and sub for a regular class with methods and state.</p>
-<p>We can do that by creating a proxy for the class - you call the methods on the proxy - the calls are intercepted and run in the worker, and the results are passed to you as a <code>Promise</code>. If the results in the original class were a promise in the first place, you can't return a <code>Promise&lt;Promise&gt;&gt;</code> - that would be bad - so we need type unwrapping.</p>
+<p>We can do that by creating a proxy for the class - you call the methods on the proxy - the calls are intercepted and run in the worker, and the results are passed to you as a <code>Promise</code>. If the results in the original class were a promise in the first place, you can&rsquo;t return a <code>Promise&lt;Promise&gt;&gt;</code> - that would be bad - so we need type unwrapping.</p>
 <p>The type function is:</p>
 <pre><code>Proxy(f(x) -&gt; y) = f(x) -&gt; Promise&lt;y&gt;
 Proxy(f(x) -&gt; Promise&lt;y&gt;) = f(x) -&gt; Promise&lt;y&gt;
 </code></pre><h2 id="building-the-type-function">Building the type function</h2>
-<p>Let's define what a method is</p>
+<p>Let&rsquo;s define what a method is</p>
 <pre><code>type Method = (...args: any[]) =&gt; any;
 </code></pre><p>We need to unwrap any promises types:</p>
 <pre><code>type UnwrapPromise&lt;P&gt; = P extends Promise&lt;infer V&gt; ? V : P;
 </code></pre><p>The proxy function:</p>
 <pre><code>type ProxiedFunction&lt;F extends Method&gt; = 
         (...params: Parameters&lt;F&gt;) =&gt; Promise&lt;UnwrapPromise&lt;ReturnType&lt;F&gt;&gt;&gt;;
-</code></pre><p>Now let's assemble it  together:</p>
+</code></pre><p>Now let&rsquo;s assemble it  together:</p>
 <pre><code>export type Proxy&lt;T&gt; = 
 {
 	[P in keyof T]: T[P] extends Method ?
@@ -519,13 +519,13 @@ and returns a proxied function for every method.</p>
     <span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">number</span>, <span style="color:#a6e22e">y</span>: <span style="color:#66d9ef">number</span>) {
         <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">x</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">y</span>;
     }
-    <span style="color:#a6e22e">async</span> <span style="color:#a6e22e">addAsync</span>(<span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">number</span>, <span style="color:#a6e22e">y</span>: <span style="color:#66d9ef">number</span>) {
+    <span style="color:#66d9ef">async</span> <span style="color:#a6e22e">addAsync</span>(<span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">number</span>, <span style="color:#a6e22e">y</span>: <span style="color:#66d9ef">number</span>) {
         <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">x</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">y</span>;
     }
 }
 </code></pre></div><p>We expect the signature of the <code>add</code> method on the proxy to be</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">number</span>, <span style="color:#a6e22e">y</span>: <span style="color:#66d9ef">number</span>) <span style="color:#f92672">:</span> <span style="color:#a6e22e">Promise</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">number</span><span style="color:#f92672">&gt;</span>
-<span style="color:#a6e22e">addAsync</span>(<span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">number</span>, <span style="color:#a6e22e">y</span>: <span style="color:#66d9ef">number</span>) <span style="color:#f92672">:</span> <span style="color:#a6e22e">Promise</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">number</span><span style="color:#f92672">&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">number</span>, <span style="color:#a6e22e">y</span>: <span style="color:#66d9ef">number</span>) <span style="color:#f92672">:</span> <span style="color:#a6e22e">Promise</span>&lt;<span style="color:#f92672">number</span>&gt;
+<span style="color:#a6e22e">addAsync</span>(<span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">number</span>, <span style="color:#a6e22e">y</span>: <span style="color:#66d9ef">number</span>) <span style="color:#f92672">:</span> <span style="color:#a6e22e">Promise</span>&lt;<span style="color:#f92672">number</span>&gt;
 </code></pre></div><p>And that is exactly what we see:</p>
 <figure>
     <img src="/images/ts-web-workers-vscode.jpg"/> 
@@ -546,13 +546,13 @@ and returns a proxied function for every method.</p>
             <nav class="post-pagination">
 
                 
-                <a class="newer-posts" href="/post/bom-merge/">
+                <a class="newer-posts" href="https://asti.dynz.net/post/bom-merge/">
                     Next<br>Combine your Bill of Materials
                 </a>
                 
                 
                 
-                <a class="older-posts" href="/about/">
+                <a class="older-posts" href="https://asti.dynz.net/about/">
                     Previous<br>About
                 </a>
                 
@@ -576,6 +576,6 @@ and returns a proxied function for every method.</p>
 CC by Attribution
 </div>
             </div>    
-            <script src="/js/journal.js"></script>
+            <script src="https://asti.dynz.netjs/journal.js"></script>
     </body>
 </html>

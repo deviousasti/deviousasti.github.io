@@ -23,11 +23,11 @@
 
 
 
-<link rel="stylesheet" href="/scss/journal.min.074c04b896e4e9ec7e517f88eefd59e62ffd212b8c923ac219f7bc81825b28bd.css" integrity="sha256-B0wEuJbk6ex&#43;UX&#43;I7v1Z5i/9ISuMkjrCGfe8gYJbKL0=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/journal.min.8335a975ef7e2ae409c16107534604caf6426d51ba9776b9b017b2c1d908c2bc.css" integrity="sha256-gzWpde9&#43;KuQJwWEHU0YEyvZCbVG6l3a5sBeywdkIwrw=" media="screen">
 
 
 
-<link rel="stylesheet" href="/scss/dark-mode.min.5d4554809a1a12cbf28366c9a81376c1681cdefc525a37617a9741c19b85f22f.css" integrity="sha256-XUVUgJoaEsvyg2bJqBN2wWgc3vxSWjdhepdBwZuF8i8=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/dark-mode.min.114f186b6cd522a64502e49572cbcc70d7ead986a36668413a7e0d977ffd6fff.css" integrity="sha256-EU8Ya2zVIqZFAuSVcsvMcNfq2YajZmhBOn4Nl3/9b/8=" media="screen">
 
 
 <script src="/vendor/js/vue.min.js" ></script>
@@ -49,7 +49,7 @@
 </head><body>
     	<div id="app"><div ref="sideContainer" class="side-container">
     
-    <a class="a-block nav-head false" href="/">
+    <a class="a-block nav-head false" href="https://asti.dynz.net">
     
         <div class="nav-title">
             Asti&#39;s Notes
@@ -319,7 +319,7 @@ CC by Attribution
                 menu
             </i>
         </button>
-        <a ref="navTitle" class="navbar-brand" href="/">
+        <a ref="navTitle" class="navbar-brand" href="https://asti.dynz.net">
             Asti&#39;s Notes
         </a>
         
@@ -336,7 +336,7 @@ CC by Attribution
 </nav>
 <div class="single-column-header-container" ref="pageHead"
      v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
-    <a href="/">
+    <a href="https://asti.dynz.net">
         <div class="single-column-header-title">Asti&#39;s Notes</div>
         
         <div class="single-column-header-subtitle">FP, Rx, EDA</div>
@@ -396,23 +396,23 @@ CC by Attribution
             
             <div class="post-body-wrapper">
                 <div class="post-body">
-                    <p>When running tests which check if something is GC'd, it might fail.</p>
+                    <p>When running tests which check if something is GC&rsquo;d, it might fail.</p>
 <h2 id="the-test">The test</h2>
 <p>Consider the following test:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#f92672">[&lt;</span>TestMethod<span style="color:#f92672">&gt;]</span>
 <span style="color:#66d9ef">member</span> _.<span style="color:#a6e22e">TestGC</span>() <span style="color:#f92672">=</span>
     <span style="color:#66d9ef">let</span> mutable <span style="color:#66d9ef">obj</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Object()
-    <span style="color:#66d9ef">let</span> weak <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> WeakReference<span style="color:#f92672">(</span><span style="color:#66d9ef">obj</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">let</span> weak <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> WeakReference<span style="color:#f92672">(</span><span style="color:#66d9ef">obj</span><span style="color:#f92672">);</span>
 
     GC.Collect()
 
-    Assert.IsTrue<span style="color:#f92672">(</span><span style="color:#66d9ef">obj</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
+    Assert.IsTrue<span style="color:#f92672">(</span><span style="color:#66d9ef">obj</span> <span style="color:#f92672">&lt;&gt;</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
     Assert.IsTrue<span style="color:#f92672">(</span>weak<span style="color:#f92672">.</span>IsAlive<span style="color:#f92672">)</span>            
 
     <span style="color:#66d9ef">obj</span> <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">null</span>
     GC.Collect()
 
-    Assert.IsTrue<span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">obj</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
+    Assert.IsTrue<span style="color:#f92672">((</span><span style="color:#66d9ef">obj</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">))</span>
     Assert.IsTrue<span style="color:#f92672">(</span><span style="color:#f92672">not</span> weak<span style="color:#f92672">.</span>IsAlive<span style="color:#f92672">)</span>
 </code></pre></div><p>This will fail in <code>DEBUG</code>.</p>
 <h2 id="sub-expression-elaboration">Sub-expression elaboration</h2>
@@ -429,9 +429,9 @@ CC by Attribution
 <span style="color:#66d9ef">assert</span> <span style="color:#f92672">(</span>is_eq<span style="color:#f92672">)</span>
 </code></pre></div><p>Rewriting our first example:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> obj<span style="color:#66d9ef">&#39;</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">obj</span>
-<span style="color:#66d9ef">let</span> isNull <span style="color:#f92672">=</span> <span style="color:#66d9ef">obj</span><span style="color:#66d9ef">&#39;</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">null</span>
-</code></pre></div><p>While this usually isn't a problem, <code>obj'</code> will end up holding a reference to the original object, so it won't be collected until it goes out of scope - which is only when the method exits.</p>
-<p>The rewriting won't happen for <code>RELEASE</code> mode, so the test should pass. But any effects related to the lifetime of objects in memory would exist in <code>DEBUG</code>.</p>
+<span style="color:#66d9ef">let</span> isNull <span style="color:#f92672">=</span> <span style="color:#66d9ef">obj</span><span style="color:#66d9ef">&#39;</span> <span style="color:#f92672">&lt;&gt;</span> <span style="color:#66d9ef">null</span>
+</code></pre></div><p>While this usually isn&rsquo;t a problem, <code>obj'</code> will end up holding a reference to the original object, so it won&rsquo;t be collected until it goes out of scope - which is only when the method exits.</p>
+<p>The rewriting won&rsquo;t happen for <code>RELEASE</code> mode, so the test should pass. But any effects related to the lifetime of objects in memory would exist in <code>DEBUG</code>.</p>
 
                     
                     <HR width="100%" id="EOF">
@@ -444,13 +444,13 @@ CC by Attribution
             <nav class="post-pagination">
 
                 
-                <a class="newer-posts">
-                    Next<br>No newer posts.
+                <a class="newer-posts" href="https://asti.dynz.net/post/fsharp-worksheet/">
+                    Next<br>Worksheet: A new way to prototype in F#
                 </a>
                 
                 
                 
-                <a class="older-posts" href="/post/fsc-stacktrace/">
+                <a class="older-posts" href="https://asti.dynz.net/post/fsc-stacktrace/">
                     Previous<br>Incorrect stack traces in F#
                 </a>
                 
@@ -474,6 +474,6 @@ CC by Attribution
 CC by Attribution
 </div>
             </div>    
-            <script src="/js/journal.js"></script>
+            <script src="https://asti.dynz.netjs/journal.js"></script>
     </body>
 </html>

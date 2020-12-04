@@ -23,11 +23,11 @@
 
 
 
-<link rel="stylesheet" href="/scss/journal.min.074c04b896e4e9ec7e517f88eefd59e62ffd212b8c923ac219f7bc81825b28bd.css" integrity="sha256-B0wEuJbk6ex&#43;UX&#43;I7v1Z5i/9ISuMkjrCGfe8gYJbKL0=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/journal.min.8335a975ef7e2ae409c16107534604caf6426d51ba9776b9b017b2c1d908c2bc.css" integrity="sha256-gzWpde9&#43;KuQJwWEHU0YEyvZCbVG6l3a5sBeywdkIwrw=" media="screen">
 
 
 
-<link rel="stylesheet" href="/scss/dark-mode.min.5d4554809a1a12cbf28366c9a81376c1681cdefc525a37617a9741c19b85f22f.css" integrity="sha256-XUVUgJoaEsvyg2bJqBN2wWgc3vxSWjdhepdBwZuF8i8=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/dark-mode.min.114f186b6cd522a64502e49572cbcc70d7ead986a36668413a7e0d977ffd6fff.css" integrity="sha256-EU8Ya2zVIqZFAuSVcsvMcNfq2YajZmhBOn4Nl3/9b/8=" media="screen">
 
 
 <script src="/vendor/js/vue.min.js" ></script>
@@ -49,7 +49,7 @@
 </head><body>
     	<div id="app"><div ref="sideContainer" class="side-container">
     
-    <a class="a-block nav-head false" href="/">
+    <a class="a-block nav-head false" href="https://asti.dynz.net">
     
         <div class="nav-title">
             Asti&#39;s Notes
@@ -679,7 +679,7 @@ CC by Attribution
                 menu
             </i>
         </button>
-        <a ref="navTitle" class="navbar-brand" href="/">
+        <a ref="navTitle" class="navbar-brand" href="https://asti.dynz.net">
             Asti&#39;s Notes
         </a>
         
@@ -696,7 +696,7 @@ CC by Attribution
 </nav>
 <div class="single-column-header-container" ref="pageHead"
      v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
-    <a href="/">
+    <a href="https://asti.dynz.net">
         <div class="single-column-header-title">Asti&#39;s Notes</div>
         
         <div class="single-column-header-subtitle">FP, Rx, EDA</div>
@@ -767,32 +767,32 @@ CC by Attribution
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> empty <span style="color:#f92672">=</span> <span style="color:#66d9ef">fun</span> <span style="color:#f92672">_</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">false</span>
 </code></pre></div><h2 id="universal">universal</h2>
 <p>A universal set is a set which contains all objects, including itself. 
-For now, our definition does not care about Russel's paradox.</p>
+For now, our definition does not care about Russel&rsquo;s paradox.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> universal <span style="color:#f92672">=</span> <span style="color:#66d9ef">fun</span> <span style="color:#f92672">_</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">true</span>
 </code></pre></div><h2 id="zip">zip</h2>
 <p>A zip combines two sets with a combinator function.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> zip set1 set2 fn <span style="color:#f92672">=</span> <span style="color:#66d9ef">fun</span> v <span style="color:#f92672">-&gt;</span> fn <span style="color:#f92672">(</span>set1 <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> contains v<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>set2 <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> contains v<span style="color:#f92672">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> zip set1 set2 fn <span style="color:#f92672">=</span> <span style="color:#66d9ef">fun</span> v <span style="color:#f92672">-&gt;</span> fn <span style="color:#f92672">(</span>set1 <span style="color:#f92672">|&gt;</span> contains v<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>set2 <span style="color:#f92672">|&gt;</span> contains v<span style="color:#f92672">)</span>
 </code></pre></div><h2 id="union">union</h2>
 <p>A set union combines the elements of both sets. We can express this with <code>zip</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> union set1 set2 <span style="color:#f92672">=</span> zip set1 set2 <span style="color:#f92672">(</span><span style="color:#f92672">|</span><span style="color:#f92672">|</span><span style="color:#f92672">)</span> 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> union set1 set2 <span style="color:#f92672">=</span> zip set1 set2 <span style="color:#f92672">(||)</span> 
 </code></pre></div><h2 id="intersect">intersect</h2>
 <p>An intersection of two sets only has members which belong in both the sets, or, ANDing.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> intersect set1 set2 <span style="color:#f92672">=</span> zip set1 set2 <span style="color:#f92672">(</span><span style="color:#f92672">&amp;&amp;</span><span style="color:#f92672">)</span> 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> intersect set1 set2 <span style="color:#f92672">=</span> zip set1 set2 <span style="color:#f92672">(&amp;&amp;)</span> 
 </code></pre></div><h2 id="filter">filter</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> filter fn set1 <span style="color:#f92672">=</span> zip set1 fn <span style="color:#f92672">(</span><span style="color:#f92672">&amp;&amp;</span><span style="color:#f92672">)</span> 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> filter fn set1 <span style="color:#f92672">=</span> zip set1 fn <span style="color:#f92672">(&amp;&amp;)</span> 
 </code></pre></div><p>and moving on to constructing sets.</p>
 <h2 id="singleton">singleton</h2>
 <p>A singleton set has only one element.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> singleton value <span style="color:#f92672">=</span> <span style="color:#66d9ef">fun</span> v <span style="color:#f92672">-&gt;</span> value <span style="color:#f92672">=</span> v
 </code></pre></div><h2 id="oflist">ofList</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> ofList <span style="color:#66d9ef">list</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">fun</span> v <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> List.contains v
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> ofList <span style="color:#66d9ef">list</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">fun</span> v <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">list</span> <span style="color:#f92672">|&gt;</span> List.contains v
 </code></pre></div><h1 id="tests">Tests</h1>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">assert</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.singleton <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.contains 1<span style="color:#f92672">)</span>
-<span style="color:#66d9ef">assert</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.singleton <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.contains 0 <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">not</span><span style="color:#f92672">)</span>
-<span style="color:#66d9ef">assert</span> <span style="color:#f92672">(</span><span style="color:#f92672">[</span>1<span style="color:#f92672">;</span> 2<span style="color:#f92672">;</span> 3<span style="color:#f92672">]</span> <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.ofList <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.contains 1<span style="color:#f92672">)</span>
-<span style="color:#66d9ef">assert</span> <span style="color:#f92672">(</span><span style="color:#f92672">[</span>1<span style="color:#f92672">;</span> 2<span style="color:#f92672">;</span> 3<span style="color:#f92672">]</span> <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.ofList <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.union <span style="color:#f92672">(</span>FSet.singleton 4<span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.contains 4<span style="color:#f92672">)</span>
-<span style="color:#66d9ef">assert</span> <span style="color:#f92672">(</span><span style="color:#f92672">[</span>1<span style="color:#f92672">;</span> 2<span style="color:#f92672">;</span> 3<span style="color:#f92672">]</span> <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.ofList <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.intersect <span style="color:#f92672">(</span>FSet.singleton 1<span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.contains 1<span style="color:#f92672">)</span>
-<span style="color:#66d9ef">assert</span> <span style="color:#f92672">(</span><span style="color:#f92672">[</span>1<span style="color:#f92672">;</span> 2<span style="color:#f92672">;</span> 3<span style="color:#f92672">]</span> <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.ofList <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.intersect <span style="color:#f92672">(</span>FSet.singleton 4<span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> FSet.contains 4 <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">not</span><span style="color:#f92672">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">assert</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">|&gt;</span> FSet.singleton <span style="color:#f92672">|&gt;</span> FSet.contains 1<span style="color:#f92672">)</span>
+<span style="color:#66d9ef">assert</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">|&gt;</span> FSet.singleton <span style="color:#f92672">|&gt;</span> FSet.contains 0 <span style="color:#f92672">|&gt;</span> <span style="color:#f92672">not</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">assert</span> <span style="color:#f92672">([</span>1<span style="color:#f92672">;</span> 2<span style="color:#f92672">;</span> 3<span style="color:#f92672">]</span> <span style="color:#f92672">|&gt;</span> FSet.ofList <span style="color:#f92672">|&gt;</span> FSet.contains 1<span style="color:#f92672">)</span>
+<span style="color:#66d9ef">assert</span> <span style="color:#f92672">([</span>1<span style="color:#f92672">;</span> 2<span style="color:#f92672">;</span> 3<span style="color:#f92672">]</span> <span style="color:#f92672">|&gt;</span> FSet.ofList <span style="color:#f92672">|&gt;</span> FSet.union <span style="color:#f92672">(</span>FSet.singleton 4<span style="color:#f92672">)</span> <span style="color:#f92672">|&gt;</span> FSet.contains 4<span style="color:#f92672">)</span>
+<span style="color:#66d9ef">assert</span> <span style="color:#f92672">([</span>1<span style="color:#f92672">;</span> 2<span style="color:#f92672">;</span> 3<span style="color:#f92672">]</span> <span style="color:#f92672">|&gt;</span> FSet.ofList <span style="color:#f92672">|&gt;</span> FSet.intersect <span style="color:#f92672">(</span>FSet.singleton 1<span style="color:#f92672">)</span> <span style="color:#f92672">|&gt;</span> FSet.contains 1<span style="color:#f92672">)</span>
+<span style="color:#66d9ef">assert</span> <span style="color:#f92672">([</span>1<span style="color:#f92672">;</span> 2<span style="color:#f92672">;</span> 3<span style="color:#f92672">]</span> <span style="color:#f92672">|&gt;</span> FSet.ofList <span style="color:#f92672">|&gt;</span> FSet.intersect <span style="color:#f92672">(</span>FSet.singleton 4<span style="color:#f92672">)</span> <span style="color:#f92672">|&gt;</span> FSet.contains 4 <span style="color:#f92672">|&gt;</span> <span style="color:#f92672">not</span><span style="color:#f92672">)</span>
 </code></pre></div>
                     
                     <HR width="100%" id="EOF">
@@ -805,14 +805,14 @@ For now, our definition does not care about Russel's paradox.</p>
             <nav class="post-pagination">
 
                 
-                <a class="newer-posts" href="/post/render-altium/">
+                <a class="newer-posts" href="https://asti.dynz.net/post/render-altium/">
                     Next<br>Create high quality renders of your Altium boards
                 </a>
                 
                 
                 
-                <a class="older-posts" href="/post/daisychain-altium/">
-                    Previous<br>Daisy chains in Altium
+                <a class="older-posts" href="https://asti.dynz.net/post/fs-generic-naming/">
+                    Previous<br>Naming of generic parameters in F#
                 </a>
                 
             </nav>
@@ -835,6 +835,6 @@ For now, our definition does not care about Russel's paradox.</p>
 CC by Attribution
 </div>
             </div>    
-            <script src="/js/journal.js"></script>
+            <script src="https://asti.dynz.netjs/journal.js"></script>
     </body>
 </html>

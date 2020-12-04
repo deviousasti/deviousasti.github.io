@@ -23,11 +23,11 @@
 
 
 
-<link rel="stylesheet" href="/scss/journal.min.074c04b896e4e9ec7e517f88eefd59e62ffd212b8c923ac219f7bc81825b28bd.css" integrity="sha256-B0wEuJbk6ex&#43;UX&#43;I7v1Z5i/9ISuMkjrCGfe8gYJbKL0=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/journal.min.8335a975ef7e2ae409c16107534604caf6426d51ba9776b9b017b2c1d908c2bc.css" integrity="sha256-gzWpde9&#43;KuQJwWEHU0YEyvZCbVG6l3a5sBeywdkIwrw=" media="screen">
 
 
 
-<link rel="stylesheet" href="/scss/dark-mode.min.5d4554809a1a12cbf28366c9a81376c1681cdefc525a37617a9741c19b85f22f.css" integrity="sha256-XUVUgJoaEsvyg2bJqBN2wWgc3vxSWjdhepdBwZuF8i8=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/dark-mode.min.114f186b6cd522a64502e49572cbcc70d7ead986a36668413a7e0d977ffd6fff.css" integrity="sha256-EU8Ya2zVIqZFAuSVcsvMcNfq2YajZmhBOn4Nl3/9b/8=" media="screen">
 
 
 <script src="/vendor/js/vue.min.js" ></script>
@@ -49,7 +49,7 @@
 </head><body>
     	<div id="app"><div ref="sideContainer" class="side-container">
     
-    <a class="a-block nav-head false" href="/">
+    <a class="a-block nav-head false" href="https://asti.dynz.net">
     
         <div class="nav-title">
             Asti&#39;s Notes
@@ -457,7 +457,7 @@ CC by Attribution
                 menu
             </i>
         </button>
-        <a ref="navTitle" class="navbar-brand" href="/">
+        <a ref="navTitle" class="navbar-brand" href="https://asti.dynz.net">
             Asti&#39;s Notes
         </a>
         
@@ -474,7 +474,7 @@ CC by Attribution
 </nav>
 <div class="single-column-header-container" ref="pageHead"
      v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
-    <a href="/">
+    <a href="https://asti.dynz.net">
         <div class="single-column-header-title">Asti&#39;s Notes</div>
         
         <div class="single-column-header-subtitle">FP, Rx, EDA</div>
@@ -532,30 +532,30 @@ CC by Attribution
             <div class="post-body-wrapper">
                 <div class="post-body">
                     <h2 id="gitmodules-is-not-git-submodules">.gitmodules is not git submodules</h2>
-<p>A  <code>.gitmodules</code> file is sort of indicative - it's not what actually is being tracked by Git.
+<p>A  <code>.gitmodules</code> file is sort of indicative - it&rsquo;s not what actually is being tracked by Git.
 When you start a new project, and you have to include a bunch of submodules, you may think of starting off by copying and editing a <code>.gitmodules</code> file with all the submodules you want, but that literally does nothing.</p>
-<p>You'll find out that you have to <code>git submodule add</code> everything by hand.
+<p>You&rsquo;ll find out that you have to <code>git submodule add</code> everything by hand.
 Well, we could just automate that.</p>
 <h2 id="reading-gitmodules">Reading .gitmodules</h2>
 <p>Git has some commands to help us read <code>.gitmodules</code>.
-It's behind <code>git config --file</code>.</p>
-<p>Let's get all the keys first.</p>
+It&rsquo;s behind <code>git config --file</code>.</p>
+<p>Let&rsquo;s get all the keys first.</p>
 <pre><code>git config --file .gitmodules --list
 </code></pre><p>That was easy.  We got a list of keys.
 And to get a value for a specific key:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#66d9ef">function</span> lookup($key, $defaultValue = <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&#34;</span>) {        
-	$value = git config -<span style="color:#f92672">-file</span> $gitmodules --get <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">$</span><span style="color:#e6db74">key</span><span style="color:#e6db74">&#34;</span> 2&gt;&amp;1 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#66d9ef">function</span> lookup($key, $defaultValue = <span style="color:#e6db74">&#34;&#34;</span>) {        
+	$value = git config -<span style="color:#f92672">-file</span> $gitmodules --get <span style="color:#e6db74">&#34;$key&#34;</span> 2&gt;&amp;1 
 	<span style="color:#66d9ef">if</span>($LASTEXITCODE <span style="color:#f92672">-ne</span> 0) { $defaultValue } <span style="color:#66d9ef">else</span> { $value }
 }
 </code></pre></div><h2 id="extracting-submodules">Extracting submodules</h2>
 <p>We just get a list of the unique submodules, and lookup the keys for <code>path</code>, <code>url</code> and <code>branch</code> (if it exists).</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">all | 
-<span style="color:#66d9ef">foreach</span> { $_ -split <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">\.</span><span style="color:#e6db74">&#34;</span>  | select -Index 1 } | 
+<span style="color:#66d9ef">foreach</span> { $_ -split <span style="color:#e6db74">&#34;\.&#34;</span>  | select -Index 1 } | 
 select -Unique |
 <span style="color:#66d9ef">foreach</span> {<span style="color:#66d9ef">[pscustomobject]</span>@{ 
-	Path = lookup <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">submodule.</span><span style="color:#e6db74">$</span><span style="color:#e6db74">_.path</span><span style="color:#e6db74">&#34;</span>; 
-	Url = lookup <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">submodule.</span><span style="color:#e6db74">$</span><span style="color:#e6db74">_.url</span><span style="color:#e6db74">&#34;</span>;  
-	Branch = lookup <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">submodule.</span><span style="color:#e6db74">$</span><span style="color:#e6db74">_.branch</span><span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">master</span><span style="color:#e6db74">&#34;</span>;
+	Path = lookup <span style="color:#e6db74">&#34;submodule.$_.path&#34;</span>; 
+	Url = lookup <span style="color:#e6db74">&#34;submodule.$_.url&#34;</span>;  
+	Branch = lookup <span style="color:#e6db74">&#34;submodule.$_.branch&#34;</span> <span style="color:#e6db74">&#34;master&#34;</span>;
 }} 
 </code></pre></div><p>That gives us something like this:</p>
 <pre><code>Path               Url                                                      Branch  
@@ -597,19 +597,23 @@ Even if we redirect <code>stderr</code>, the <code>stderr</code> stream will end
             <nav class="post-pagination">
 
                 
-                <a class="newer-posts" href="/post/nanopb-value/">
+                <a class="newer-posts" href="https://asti.dynz.net/post/nanopb-value/">
                     Next<br>Decoding a oneof case in nanopb
                 </a>
                 
                 
                 
-                <a class="older-posts" href="/post/html-imports/">
+                <a class="older-posts" href="https://asti.dynz.net/post/html-imports/">
                     Previous<br>An Html Imports Bundler
                 </a>
                 
             </nav>
             <div class="post-comment-wrapper">
                 
+<div class="post-comment-wrapper">
+
+</div>
+
 
 
 
@@ -629,6 +633,6 @@ Even if we redirect <code>stderr</code>, the <code>stderr</code> stream will end
 CC by Attribution
 </div>
             </div>    
-            <script src="/js/journal.js"></script>
+            <script src="https://asti.dynz.netjs/journal.js"></script>
     </body>
 </html>

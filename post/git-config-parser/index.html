@@ -23,11 +23,11 @@
 
 
 
-<link rel="stylesheet" href="/scss/journal.min.074c04b896e4e9ec7e517f88eefd59e62ffd212b8c923ac219f7bc81825b28bd.css" integrity="sha256-B0wEuJbk6ex&#43;UX&#43;I7v1Z5i/9ISuMkjrCGfe8gYJbKL0=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/journal.min.8335a975ef7e2ae409c16107534604caf6426d51ba9776b9b017b2c1d908c2bc.css" integrity="sha256-gzWpde9&#43;KuQJwWEHU0YEyvZCbVG6l3a5sBeywdkIwrw=" media="screen">
 
 
 
-<link rel="stylesheet" href="/scss/dark-mode.min.5d4554809a1a12cbf28366c9a81376c1681cdefc525a37617a9741c19b85f22f.css" integrity="sha256-XUVUgJoaEsvyg2bJqBN2wWgc3vxSWjdhepdBwZuF8i8=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/dark-mode.min.114f186b6cd522a64502e49572cbcc70d7ead986a36668413a7e0d977ffd6fff.css" integrity="sha256-EU8Ya2zVIqZFAuSVcsvMcNfq2YajZmhBOn4Nl3/9b/8=" media="screen">
 
 
 <script src="/vendor/js/vue.min.js" ></script>
@@ -49,7 +49,7 @@
 </head><body>
     	<div id="app"><div ref="sideContainer" class="side-container">
     
-    <a class="a-block nav-head false" href="/">
+    <a class="a-block nav-head false" href="https://asti.dynz.net">
     
         <div class="nav-title">
             Asti&#39;s Notes
@@ -319,7 +319,7 @@ CC by Attribution
                 menu
             </i>
         </button>
-        <a ref="navTitle" class="navbar-brand" href="/">
+        <a ref="navTitle" class="navbar-brand" href="https://asti.dynz.net">
             Asti&#39;s Notes
         </a>
         
@@ -336,7 +336,7 @@ CC by Attribution
 </nav>
 <div class="single-column-header-container" ref="pageHead"
      v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
-    <a href="/">
+    <a href="https://asti.dynz.net">
         <div class="single-column-header-title">Asti&#39;s Notes</div>
         
         <div class="single-column-header-subtitle">FP, Rx, EDA</div>
@@ -398,7 +398,7 @@ CC by Attribution
                 <div class="post-body">
                     <p>Reading <code>.git/config</code> is the fastest way of getting info on a repository and its dependencies.</p>
 <h2 id="the-spec">The Spec</h2>
-<p>Let's start by going through the spec from <a href="https://git-scm.com/docs/git-config#_syntax">https://git-scm.com/docs/git-config#_syntax</a></p>
+<p>Let&rsquo;s start by going through the spec from <a href="https://git-scm.com/docs/git-config#_syntax">https://git-scm.com/docs/git-config#_syntax</a></p>
 <p>An example config:</p>
 <pre><code class="language-config" data-lang="config"># Core variables
 [core]
@@ -413,16 +413,16 @@ CC by Attribution
 <blockquote>
 <p>The <em>#</em> and <em>;</em> characters begin comments to the end of line, blank lines are ignored.</p>
 </blockquote>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> isComment <span style="color:#f92672">(</span>line<span style="color:#f92672">:</span><span style="color:#66d9ef">string</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span> line<span style="color:#f92672">.</span>StartsWith<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;;&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> line<span style="color:#f92672">.</span>StartsWith<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> String.IsNullOrWhiteSpace<span style="color:#f92672">(</span>line<span style="color:#f92672">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> isComment <span style="color:#f92672">(</span>line<span style="color:#f92672">:</span><span style="color:#66d9ef">string</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span> line<span style="color:#f92672">.</span>StartsWith<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;;&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">||</span> line<span style="color:#f92672">.</span>StartsWith<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">||</span> String.IsNullOrWhiteSpace<span style="color:#f92672">(</span>line<span style="color:#f92672">)</span>
 </code></pre></div><blockquote>
 <p>The file consists of sections and variables. A section begins with the name of the section in square brackets and continues until the next section begins.</p>
 </blockquote>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> isSectionHeader <span style="color:#f92672">(</span>line<span style="color:#f92672">:</span><span style="color:#66d9ef">string</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span> line<span style="color:#f92672">.</span>StartsWith<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">[</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> line<span style="color:#f92672">.</span>EndsWith<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">]</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> isSectionHeader <span style="color:#f92672">(</span>line<span style="color:#f92672">:</span><span style="color:#66d9ef">string</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span> line<span style="color:#f92672">.</span>StartsWith<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;[&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> line<span style="color:#f92672">.</span>EndsWith<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;]&#34;</span><span style="color:#f92672">)</span>
 </code></pre></div><blockquote>
 <p>Sections can be further divided into subsections. To begin a subsection put its name in double quotes, separated by space from the section name, in the section header.</p>
 </blockquote>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> splitSectionHeader <span style="color:#f92672">(</span>line<span style="color:#f92672">:</span><span style="color:#66d9ef">string</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span> 
-    line<span style="color:#f92672">.</span>Split<span style="color:#f92672">(</span><span style="color:#f92672">[|</span><span style="color:#e6db74">&#39; &#39;</span><span style="color:#f92672">|]</span><span style="color:#f92672">,</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">&gt;</span> Array.map<span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> s <span style="color:#f92672">-&gt;</span> s<span style="color:#f92672">.</span>Trim<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;[&#39;</span><span style="color:#f92672">,</span><span style="color:#e6db74">&#39;]&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39; &#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;&#34;&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
+    line<span style="color:#f92672">.</span>Split<span style="color:#f92672">([|</span><span style="color:#e6db74">&#39; &#39;</span><span style="color:#f92672">|],</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">|&gt;</span> Array.map<span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> s <span style="color:#f92672">-&gt;</span> s<span style="color:#f92672">.</span>Trim<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;[&#39;</span><span style="color:#f92672">,</span><span style="color:#e6db74">&#39;]&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39; &#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;&#34;&#39;</span><span style="color:#f92672">))</span>
 </code></pre></div><h2 id="construction">Construction</h2>
 <p>What we want is a seq of <code>ConfigSection</code></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ConfigSection</span> <span style="color:#f92672">=</span> <span style="color:#f92672">{</span> Name<span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span><span style="color:#f92672">;</span> Subsection<span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span><span style="color:#f92672">;</span> Values<span style="color:#f92672">:</span> Map<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">string</span><span style="color:#f92672">,</span><span style="color:#66d9ef">string</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">}</span>
@@ -433,13 +433,13 @@ CC by Attribution
 		<span style="color:#f92672">(</span>line<span style="color:#f92672">,</span> line<span style="color:#f92672">)</span>                        
 	<span style="color:#66d9ef">else</span>
 		<span style="color:#f92672">(</span>section<span style="color:#f92672">,</span> line<span style="color:#f92672">)</span>
-<span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">)</span>
 </code></pre></div><p>So this is going to be our example up top:</p>
 <pre><code>(&quot;&quot;,&quot;&quot;)
 (&quot;core&quot;, &quot;core&quot;)
 (&quot;core&quot;, &quot;filemode = false&quot;)
 </code></pre><p>Now if we do a <code>Seq.groupBy fst</code>, we have our values grouped under our sections.</p>
-<p>Here's the whole implementation:</p>
+<p>Here&rsquo;s the whole implementation:</p>
 <script type="application/javascript" src="https://gist.github.com/deviousasti/48a75b7624ea1c180e3148d63bf3dfae.js"></script>
 
 
@@ -454,14 +454,14 @@ CC by Attribution
             <nav class="post-pagination">
 
                 
-                <a class="newer-posts" href="/post/semihosting/">
+                <a class="newer-posts" href="https://asti.dynz.net/post/semihosting/">
                     Next<br>How to get rid of Semihosting
                 </a>
                 
                 
                 
-                <a class="older-posts" href="/post/powershell-sfv/">
-                    Previous<br>A better SFV
+                <a class="older-posts" href="https://asti.dynz.net/post/posix-time-micro/">
+                    Previous<br>Ain&#39;t nobody got time for that
                 </a>
                 
             </nav>
@@ -484,6 +484,6 @@ CC by Attribution
 CC by Attribution
 </div>
             </div>    
-            <script src="/js/journal.js"></script>
+            <script src="https://asti.dynz.netjs/journal.js"></script>
     </body>
 </html>

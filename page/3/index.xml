@@ -1,39 +1,166 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Asti&#39;s Notes</title>
-    <link>/</link>
+    <link>https://asti.dynz.net/</link>
     <description>Recent content on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Mon, 30 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 04 Dec 2020 00:00:00 +0000</lastBuildDate>
     
-        <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://asti.dynz.net/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    
+        <item>
+        <title>Naming of generic parameters in F#</title>
+        <link>https://asti.dynz.net/post/fs-generic-naming/</link>
+        <pubDate>Thu, 31 Jan 2019 00:00:00 +0000</pubDate>
+        
+        <guid>https://asti.dynz.net/post/fs-generic-naming/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/fs-generic-naming/ -&lt;p&gt;F# would like to name the first inferred parameter &lt;code&gt;&#39;a&lt;/code&gt;, then &lt;code&gt;&#39;b&lt;/code&gt;, &lt;code&gt;&#39;c&lt;/code&gt; and so on. If it&amp;rsquo;s in use, it will be suffixed with 0..n. Let&amp;rsquo;s look at an example:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;let fn a b c d e f g h = () 
+//a:&#39;a -&amp;gt; b:&#39;b -&amp;gt; c:&#39;c -&amp;gt; d:&#39;d -&amp;gt; e:&#39;e -&amp;gt; f:&#39;f -&amp;gt; g:&#39;g -&amp;gt; h:&#39;h -&amp;gt; unit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So if you constrain &lt;code&gt;a&lt;/code&gt; to something, it&amp;rsquo;ll start naming from the next unconstrained parameter - &lt;code&gt;b&lt;/code&gt; onwards.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;let fn (a : &#39;fst) b c d e f g h = ()
+//a:&#39;fst -&amp;gt; b:&#39;a -&amp;gt; c:&#39;b -&amp;gt; d:&#39;c -&amp;gt; e:&#39;d -&amp;gt; f:&#39;e -&amp;gt; g:&#39;f -&amp;gt; h:&#39;g -&amp;gt; unit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;When you constrain &lt;code&gt;b&lt;/code&gt;, it will have the same sequence, but skip &lt;code&gt;b&lt;/code&gt;, because we named it.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;let fn a (b : &#39;snd) c d e f g h = ()
+//a:&#39;a -&amp;gt; b:&#39;snd -&amp;gt; c:&#39;b -&amp;gt; d:&#39;c -&amp;gt; e:&#39;d -&amp;gt; f:&#39;e -&amp;gt; g:&#39;f -&amp;gt; h:&#39;g -&amp;gt; unit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So what happens when you manually constrain with a name in the series? It&amp;rsquo;s about to go from &lt;code&gt;&#39;a&lt;/code&gt; to &lt;code&gt;&#39;b&lt;/code&gt;, sees &lt;code&gt;&#39;b&lt;/code&gt; already in use, so uses a &lt;code&gt;&#39;b0&lt;/code&gt; instead.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;let fn a (b : &#39;b) c d e f g h = ()
+//a:&#39;a -&amp;gt; b:&#39;b -&amp;gt; c:&#39;b0 -&amp;gt; d:&#39;c -&amp;gt; e:&#39;d -&amp;gt; f:&#39;e -&amp;gt; g:&#39;f -&amp;gt; h:&#39;g -&amp;gt; unit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This sequence will continue - if &lt;code&gt;&#39;b0&lt;/code&gt; is in use, &lt;code&gt;&#39;b1&lt;/code&gt; is chosen.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;let fn a (b : &#39;b) (c: &#39;b0) d e f g h = ()
+//a:&#39;a -&amp;gt; b:&#39;b -&amp;gt; c:&#39;b0 -&amp;gt; d:&#39;b1 -&amp;gt; e:&#39;c -&amp;gt; f:&#39;d -&amp;gt; g:&#39;e -&amp;gt; h:&#39;f -&amp;gt; unit&lt;/code&gt;&lt;/pre&gt;
+- https://asti.dynz.net/post/fs-generic-naming/ - CC by Attribution</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>Daisy chains in Altium</title>
+        <link>https://asti.dynz.net/post/daisychain-altium/</link>
+        <pubDate>Fri, 21 Dec 2018 00:00:00 +0000</pubDate>
+        
+        <guid>https://asti.dynz.net/post/daisychain-altium/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/daisychain-altium/ -&lt;h2 id=&#34;why-a-way-to-daisy-chain&#34;&gt;Why a way to daisy-chain?&lt;/h2&gt;
+&lt;p&gt;If you wanted to daisy chain any component the conventional way, say a bunch of WS2812s on your board, you&amp;rsquo;d be making multiple instances and manually wiring them to each other.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://asti.dynz.net/images/notimefordat.jfif&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;steps&#34;&gt;Steps&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Make a sub-sheet out of the components you want to daisy chain (unless it&amp;rsquo;s not in one already).&lt;/li&gt;
+&lt;li&gt;Change the designator of the sheet to &lt;code&gt;Repeat(name, 1, N)&lt;/code&gt; where &lt;code&gt;N&lt;/code&gt; is the number of items you want. E.g., &lt;code&gt;Repeat(SW, 1, 8)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Change the daisy chain input port to &lt;code&gt;Repeat(DIN)&lt;/code&gt;and output to &lt;code&gt;Repeat(DOUT)&lt;/code&gt; - the usual&lt;/li&gt;
+&lt;li&gt;Connect &lt;code&gt;DIN&lt;/code&gt; to a bus with net label &lt;code&gt;DIN[2..N]&lt;/code&gt;. E.g., &lt;code&gt;DOUT[2..8]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Connect &lt;code&gt;DOUT&lt;/code&gt; to a bus with net label &lt;code&gt;DOUT[1..N-1]&lt;/code&gt;. E.g., &lt;code&gt;DOUT[1..7]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;That&amp;rsquo;s it. Just connect the two buses together and you&amp;rsquo;re done.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Your daisy chain&amp;rsquo;s input will be &lt;code&gt;DIN1&lt;/code&gt; and the output should be &lt;code&gt;DOUT&amp;lt;N&amp;gt;&lt;/code&gt;. (i.e., &lt;code&gt;DIN1&lt;/code&gt; and &lt;code&gt;DOUT8&lt;/code&gt;)&lt;/p&gt;
+&lt;h2 id=&#34;example&#34;&gt;Example&lt;/h2&gt;
+&lt;p&gt;The final schematic should look something like this:
+&lt;figure&gt;
+    &lt;img src=&#34;https://asti.dynz.net/images/altium-daisychain.jpg&#34;/&gt; 
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It&amp;rsquo;s not too much effort to set this up.&lt;/li&gt;
+&lt;li&gt;You can simply change the values for &lt;code&gt;N=16&lt;/code&gt; or &lt;code&gt;N=100&lt;/code&gt; and the daisy chaining will be set up correctly&lt;/li&gt;
+&lt;li&gt;Since the sheet is repeated, you can use room commands for laying out and ordering all of them - and you only need to route one of them&lt;/li&gt;
+&lt;li&gt;Automation &lt;a href=&#34;https://xkcd.com/1319/&#34;&gt;caveats apply&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;You might need to place a &lt;code&gt;NOERC&lt;/code&gt; on the output with &amp;ldquo;nets containing multiple names&amp;rdquo;, because technically &lt;code&gt;DIN(N)&lt;/code&gt; is connected to &lt;code&gt;DOUT(N+1)&lt;/code&gt;&lt;/p&gt;
+- https://asti.dynz.net/post/daisychain-altium/ - CC by Attribution</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>Combine your Bill of Materials</title>
+        <link>https://asti.dynz.net/post/bom-merge/</link>
+        <pubDate>Fri, 02 Nov 2018 00:00:00 +0000</pubDate>
+        
+        <guid>https://asti.dynz.net/post/bom-merge/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/bom-merge/ -&lt;p&gt;Sometimes, you have a small run of boards, and you need to combine the BOM for them, to know how much to order or check against your inventory. This is especially needed when a lot of designs share parts, and it is tedious to combine them by hand.&lt;/p&gt;
+&lt;p&gt;Get &lt;a href=&#34;https://github.com/deviousasti/csv-merge&#34;&gt;csv-merge&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;step-1&#34;&gt;Step 1&lt;/h2&gt;
+&lt;p&gt;Export your BOM files as CSV (Comma Separated Values).&lt;/p&gt;
+&lt;p&gt;Check if most of your BOMs have the same header - the order does not matter, just the name.&lt;/p&gt;
+&lt;h2 id=&#34;step-2&#34;&gt;Step 2&lt;/h2&gt;
+&lt;p&gt;Drag and drop your BOM files onto the window. You can also drag folders onto it - they will be searched recursively for all &lt;code&gt;csv&lt;/code&gt; files.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://asti.dynz.net/images/csv-merge1.gif&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;You can remove any files you don&amp;rsquo;t want by selecting it, and &lt;a href=&#34;https://asti.dynz.net/images/csv-merge2.gif&#34;&gt;hitting delete&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;You can drag folders or files onto the window again to bring in new files, or ones you&amp;rsquo;ve removed.&lt;/p&gt;
+&lt;p&gt;No duplicates will be added.&lt;/p&gt;
+&lt;h2 id=&#34;step-3&#34;&gt;Step 3&lt;/h2&gt;
+&lt;p&gt;Whichever entry you select will be the one that&amp;rsquo;s used for.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://asti.dynz.net/images/csv-merge3.gif&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;Click merge when you&amp;rsquo;re done.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://asti.dynz.net/images/csv-merge4.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;All of the rows in these sheets are appended one after another, irrespective or column ordering.&lt;/p&gt;
+&lt;p&gt;The first column will be the file name of where these rows were taken from.&lt;/p&gt;
+&lt;h2 id=&#34;step-4&#34;&gt;Step 4&lt;/h2&gt;
+&lt;p&gt;Choose a set of keys - these are what identifies a component uniquely.&lt;/p&gt;
+&lt;p&gt;Usually, the value column does that. In case the values are not descriptive enough, check Footprint as well.&lt;/p&gt;
+&lt;p&gt;That way, &lt;code&gt;10k 1%, 0805&lt;/code&gt; will be how a part is declared unique.&lt;/p&gt;
+&lt;p&gt;You can set the &lt;code&gt;Quantity&lt;/code&gt; column to Total. This will cause the values in each cell to be summed up.&lt;/p&gt;
+&lt;p&gt;Usually, this is already done using reasonable defaults.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://asti.dynz.net/images/csv-merge5.gif&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;When you&amp;rsquo;re done, hit Consolidate.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://asti.dynz.net/images/csv-merge6.jpg&#34;/&gt; 
+&lt;/figure&gt;
+
+&lt;p&gt;The first column will be a list of which sheets the parts were taken from.&lt;/p&gt;
+&lt;p&gt;The designators column has been joined with &lt;code&gt;;&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The quantity has been summed - leaving us with the total number of parts.&lt;/p&gt;
+- https://asti.dynz.net/post/bom-merge/ - CC by Attribution</description>
+        </item>
     
     
     
         <item>
         <title>Web Workers and Typescript constraints</title>
-        <link>/post/ts-worker-constraints/</link>
+        <link>https://asti.dynz.net/post/ts-worker-constraints/</link>
         <pubDate>Tue, 02 Oct 2018 00:00:00 +0000</pubDate>
         
-        <guid>/post/ts-worker-constraints/</guid>
-        <description>Asti&#39;s Notes /post/ts-worker-constraints/ -&lt;p&gt;Now there are a million web-worker libraries out there, but what&#39;s the harm in having more interesting implementations?&lt;/p&gt;
+        <guid>https://asti.dynz.net/post/ts-worker-constraints/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/ts-worker-constraints/ -&lt;p&gt;Now there are a million web-worker libraries out there, but what&amp;rsquo;s the harm in having more interesting implementations?&lt;/p&gt;
 &lt;h2 id=&#34;the-proxy&#34;&gt;The Proxy&lt;/h2&gt;
 &lt;p&gt;The simplest way to start using a worker would be something that can drop in and sub for a regular class with methods and state.&lt;/p&gt;
-&lt;p&gt;We can do that by creating a proxy for the class - you call the methods on the proxy - the calls are intercepted and run in the worker, and the results are passed to you as a &lt;code&gt;Promise&lt;/code&gt;. If the results in the original class were a promise in the first place, you can&#39;t return a &lt;code&gt;Promise&amp;lt;Promise&amp;gt;&amp;gt;&lt;/code&gt; - that would be bad - so we need type unwrapping.&lt;/p&gt;
+&lt;p&gt;We can do that by creating a proxy for the class - you call the methods on the proxy - the calls are intercepted and run in the worker, and the results are passed to you as a &lt;code&gt;Promise&lt;/code&gt;. If the results in the original class were a promise in the first place, you can&amp;rsquo;t return a &lt;code&gt;Promise&amp;lt;Promise&amp;gt;&amp;gt;&lt;/code&gt; - that would be bad - so we need type unwrapping.&lt;/p&gt;
 &lt;p&gt;The type function is:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Proxy(f(x) -&amp;gt; y) = f(x) -&amp;gt; Promise&amp;lt;y&amp;gt;
 Proxy(f(x) -&amp;gt; Promise&amp;lt;y&amp;gt;) = f(x) -&amp;gt; Promise&amp;lt;y&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;building-the-type-function&#34;&gt;Building the type function&lt;/h2&gt;
-&lt;p&gt;Let&#39;s define what a method is&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s define what a method is&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;type Method = (...args: any[]) =&amp;gt; any;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We need to unwrap any promises types:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;type UnwrapPromise&amp;lt;P&amp;gt; = P extends Promise&amp;lt;infer V&amp;gt; ? V : P;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The proxy function:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;type ProxiedFunction&amp;lt;F extends Method&amp;gt; = 
         (...params: Parameters&amp;lt;F&amp;gt;) =&amp;gt; Promise&amp;lt;UnwrapPromise&amp;lt;ReturnType&amp;lt;F&amp;gt;&amp;gt;&amp;gt;;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now let&#39;s assemble it  together:&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now let&amp;rsquo;s assemble it  together:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;export type Proxy&amp;lt;T&amp;gt; = 
 {
 	[P in keyof T]: T[P] extends Method ?
@@ -49,22 +176,22 @@ and returns a proxied function for every method.&lt;/p&gt;
     &lt;span style=&#34;color:#a6e22e&#34;&gt;add&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;) {
         &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;;
     }
-    &lt;span style=&#34;color:#a6e22e&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;addAsync&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;addAsync&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;) {
         &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;;
     }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We expect the signature of the &lt;code&gt;add&lt;/code&gt; method on the proxy to be&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;add&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Promise&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span style=&#34;color:#a6e22e&#34;&gt;addAsync&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Promise&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;add&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Promise&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;number&lt;/span&gt;&amp;gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;addAsync&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Promise&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;number&lt;/span&gt;&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And that is exactly what we see:&lt;/p&gt;
 &lt;figure&gt;
-    &lt;img src=&#34;/images/ts-web-workers-vscode.jpg&#34;/&gt; 
+    &lt;img src=&#34;https://asti.dynz.net/images/ts-web-workers-vscode.jpg&#34;/&gt; 
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
 &lt;p&gt;The full  implementation of the web-worker proxy can be found at:&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/deviousasti/workers.ts&#34;&gt;https://github.com/deviousasti/workers.ts&lt;/a&gt;&lt;/p&gt;
-- /post/ts-worker-constraints/ - CC by Attribution</description>
+- https://asti.dynz.net/post/ts-worker-constraints/ - CC by Attribution</description>
         </item>
     
     

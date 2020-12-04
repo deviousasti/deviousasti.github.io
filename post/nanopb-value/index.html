@@ -23,11 +23,11 @@
 
 
 
-<link rel="stylesheet" href="/scss/journal.min.074c04b896e4e9ec7e517f88eefd59e62ffd212b8c923ac219f7bc81825b28bd.css" integrity="sha256-B0wEuJbk6ex&#43;UX&#43;I7v1Z5i/9ISuMkjrCGfe8gYJbKL0=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/journal.min.8335a975ef7e2ae409c16107534604caf6426d51ba9776b9b017b2c1d908c2bc.css" integrity="sha256-gzWpde9&#43;KuQJwWEHU0YEyvZCbVG6l3a5sBeywdkIwrw=" media="screen">
 
 
 
-<link rel="stylesheet" href="/scss/dark-mode.min.5d4554809a1a12cbf28366c9a81376c1681cdefc525a37617a9741c19b85f22f.css" integrity="sha256-XUVUgJoaEsvyg2bJqBN2wWgc3vxSWjdhepdBwZuF8i8=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/dark-mode.min.114f186b6cd522a64502e49572cbcc70d7ead986a36668413a7e0d977ffd6fff.css" integrity="sha256-EU8Ya2zVIqZFAuSVcsvMcNfq2YajZmhBOn4Nl3/9b/8=" media="screen">
 
 
 <script src="/vendor/js/vue.min.js" ></script>
@@ -49,7 +49,7 @@
 </head><body>
     	<div id="app"><div ref="sideContainer" class="side-container">
     
-    <a class="a-block nav-head false" href="/">
+    <a class="a-block nav-head false" href="https://asti.dynz.net">
     
         <div class="nav-title">
             Asti&#39;s Notes
@@ -188,7 +188,7 @@ CC by Attribution
 						
 								<li>
 				 					<a href="#if-you-dont-succeed-at-first-decode-again" v-on:click="closeDrawer" id="if-you-dont-succeed-at-first-decode-again-nav">
-										 If you don&#39;t succeed at first, decode again
+										 If you don’t succeed at first, decode again
 									</a>
 								</li>
 						
@@ -359,7 +359,7 @@ CC by Attribution
 						
 								<li>
 				 					<a href="#if-you-dont-succeed-at-first-decode-again" v-on:click="closeDrawer" id="if-you-dont-succeed-at-first-decode-again-nav">
-										 If you don&#39;t succeed at first, decode again
+										 If you don’t succeed at first, decode again
 									</a>
 								</li>
 						
@@ -411,7 +411,7 @@ CC by Attribution
                 menu
             </i>
         </button>
-        <a ref="navTitle" class="navbar-brand" href="/">
+        <a ref="navTitle" class="navbar-brand" href="https://asti.dynz.net">
             Asti&#39;s Notes
         </a>
         
@@ -428,7 +428,7 @@ CC by Attribution
 </nav>
 <div class="single-column-header-container" ref="pageHead"
      v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
-    <a href="/">
+    <a href="https://asti.dynz.net">
         <div class="single-column-header-title">Asti&#39;s Notes</div>
         
         <div class="single-column-header-subtitle">FP, Rx, EDA</div>
@@ -487,16 +487,16 @@ CC by Attribution
                 <div class="post-body">
                     <h2 id="decoding-callbacks">Decoding callbacks</h2>
 <p>Say you have a message type with variable fields:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-protobuf" data-lang="protobuf"><span style="color:#66d9ef">message</span> <span style="color:#a6e22e">KeyValue</span> {<span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#66d9ef">string</span> key     <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;<span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#66d9ef">string</span> value   <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;<span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span>}<span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-protobuf" data-lang="protobuf"><span style="color:#66d9ef">message</span> <span style="color:#a6e22e">KeyValue</span> {<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#66d9ef">string</span> key     <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#66d9ef">string</span> value   <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>}<span style="color:#960050;background-color:#1e0010">
 </span></code></pre></div><p>This generates:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _KeyValue {
     pb_callback_t key;
     pb_callback_t value;
 } KeyValue;
-</code></pre></div><p>Decoding this in nanopb isn't so bad -</p>
+</code></pre></div><p>Decoding this in nanopb isn&rsquo;t so bad -</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">KeyValue <span style="color:#a6e22e">decodeKV</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> key, <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> value)
 {
 	KeyValue kv;
@@ -504,7 +504,7 @@ CC by Attribution
 	kv.value <span style="color:#f92672">=</span> readStringCallback(value);
     <span style="color:#66d9ef">return</span> kv;
 }
-</code></pre></div><p>Call <code>pb_decode</code> and you're done.</p>
+</code></pre></div><p>Call <code>pb_decode</code> and you&rsquo;re done.</p>
 <h2 id="the-callback-and-the-union">The callback and the union</h2>
 <p>If your type happens to be inside a <code>oneof</code> like so:</p>
 <pre><code>message Request {
@@ -515,7 +515,7 @@ CC by Attribution
 }
 </code></pre><p>suddenly, the <code>KeyValue</code> struct is in an union type - which itself is a field in another struct.</p>
 <p>Now when you use <code>decodeKV</code> try to decode <code>Request</code> (the container message), you will find that nothing happens, and your callbacks are never called. This is because during the decode, the union type itself is initialized and so the <code>pb_callback</code>s are set to <code>NULL</code> - no callbacks set, no call back (pardon the alliteration).</p>
-<h2 id="if-you-dont-succeed-at-first-decode-again">If you don't succeed at first, decode again</h2>
+<h2 id="if-you-dont-succeed-at-first-decode-again">If you don&rsquo;t succeed at first, decode again</h2>
 <p>For this to work out, we need to create an environment where we decode the inner struct as a standalone message - like in our very first scenario.</p>
 <p>First we need to figure out which was our <code>oneof</code> case - to be more specific, the message descriptor corresponding to our <code>oneof</code> case.</p>
 <p>We need a type to collect our findings, so:</p>
@@ -525,7 +525,7 @@ CC by Attribution
 		<span style="color:#66d9ef">const</span> pb_msgdesc_t<span style="color:#f92672">*</span> submsg_desc;
 		pb_istream_t stream;
 	} pb_union_t;	
-</code></pre></div><p>I'll put in the full implementation in a gist below, but for now:</p>
+</code></pre></div><p>I&rsquo;ll put in the full implementation in a gist below, but for now:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">	<span style="color:#75715e">//iterate and decode tag till we get our union desc 
 </span><span style="color:#75715e"></span>	<span style="color:#66d9ef">const</span> pb_union_t <span style="color:#a6e22e">getUnionType</span>(uint8_t buffer[], size_t size);
 	
@@ -538,7 +538,7 @@ CC by Attribution
 Now you can check when <code>oneof.tag</code> matches <code>Request_setting_tag</code> and we have all the information we need to decode <code>KeyValue</code>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">KeyValue kv <span style="color:#f92672">=</span> decodeKV(key, value);
 decodeUnion(<span style="color:#f92672">&amp;</span>kv, oneof);
-</code></pre></div><p>and that's it really.</p>
+</code></pre></div><p>and that&rsquo;s it really.</p>
 <script type="application/javascript" src="https://gist.github.com/deviousasti/ced9041be0c54829a69e9cc18a39f7c4.js"></script>
 
 
@@ -553,19 +553,23 @@ decodeUnion(<span style="color:#f92672">&amp;</span>kv, oneof);
             <nav class="post-pagination">
 
                 
-                <a class="newer-posts" href="/post/powershell-sfv/">
+                <a class="newer-posts" href="https://asti.dynz.net/post/powershell-sfv/">
                     Next<br>A better SFV
                 </a>
                 
                 
                 
-                <a class="older-posts" href="/post/powershell-git-sync/">
+                <a class="older-posts" href="https://asti.dynz.net/post/powershell-git-sync/">
                     Previous<br>Sync git modules to .gitmodules
                 </a>
                 
             </nav>
             <div class="post-comment-wrapper">
                 
+<div class="post-comment-wrapper">
+
+</div>
+
 
 
 
@@ -585,6 +589,6 @@ decodeUnion(<span style="color:#f92672">&amp;</span>kv, oneof);
 CC by Attribution
 </div>
             </div>    
-            <script src="/js/journal.js"></script>
+            <script src="https://asti.dynz.netjs/journal.js"></script>
     </body>
 </html>
