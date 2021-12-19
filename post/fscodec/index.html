@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html><head>
+<title>Contracts for Event Sourced Systems with FsCodec</title>
+
+<meta charset="utf-8">
+<meta name="X-UA-Compatible" content="IE=edge">
+<meta name="google-site-verification" content="">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta content="telephone=no" name="format-detection">
+<meta name="renderer" content="webkit">
+<meta name="theme-color" content="#ffffff">
+<meta name="title" property="og:title" content="Contracts for Event Sourced Systems with FsCodec">
+<meta name="image" property="og:image" content="/images/fsharp.jpg">
+<meta name="description" property="og:description" content="Safe serialization for contracts">
+<meta name="keywords" content="[fsharp eventsourcing]">
+<meta name="author" content=""> 
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://asti.dynz.net/scss/journal.min.ac56748e3d2aa17f13e1b3eba75350b8d31b7594a0f2e5984d3bd99c3fcb274c.css" integrity="sha256-rFZ0jj0qoX8T4bPrp1NQuNMbdZSg8uWYTTvZnD/LJ0w=" media="screen">
+
+
+
+<link rel="stylesheet" href="https://asti.dynz.net/scss/dark-mode.min.a7a37263ed873168ee6c96873085365e27b2399886d480b811952523b1cc66b1.css" integrity="sha256-p6NyY&#43;2HMWjubJaHMIU2XieyOZiG1IC4EZUlI7HMZrE=" media="screen">
+
+
+<script src="/vendor/js/vue.min.js" ></script>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Noto+Serif+SC|Material+Icons" />
+
+
+
+
+
+
+
+</head><body>
+    	<div id="app"><div ref="sideContainer" class="side-container">
+    
+    <a class="a-block nav-head false" href="https://asti.dynz.net">
+    
+        <div class="nav-title">
+            Asti&#39;s Notes
+        </div>
+        
+        <div class="nav-subtitle">
+            FP, Rx, EDA
+        </div>
+        
+    </a>
+
+    <div class="nav-link-list">
+        
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/projects">
+                Projects
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/categories">
+                Categories
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/tags">
+                Tags
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/about">
+                About
+            </a>
+            
+        
+    </div>
+
+    
+
+    <div class="nav-footer">
+        
+<br />
+
+
+
+CC by Attribution
+
+    </div>
+    
+</div><div ref="extraContainer" class="extra-container">
+    
+    <div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }">
+
+
+	<div class="toc-content">
+	
+		
+		
+		
+		<h3>Contents</h3>
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#contracts-for-event-sourced-systems-with-fscodec" v-on:click="closeDrawer" id="contracts-for-event-sourced-systems-with-fscodec-nav">
+										 Contracts for Event Sourced Systems with FsCodec
+									</a>
+								</li>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#why" v-on:click="closeDrawer" id="why-nav">
+										 Why
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#structuring-events" v-on:click="closeDrawer" id="structuring-events-nav">
+										 Structuring events
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#encodingdecoding" v-on:click="closeDrawer" id="encodingdecoding-nav">
+										 Encoding/Decoding
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#differing-contracts" v-on:click="closeDrawer" id="differing-contracts-nav">
+										 Differing Contracts
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#enumerations" v-on:click="closeDrawer" id="enumerations-nav">
+										 Enumerations
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#further-reading" v-on:click="closeDrawer" id="further-reading-nav">
+										 Further reading
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+	</div>
+
+</div>
+    
+    <div class="pagination">
+        <a id="globalBackToTop" class="pagination-action animated-visibility" href="#top" :class="{ invisible: scrollY == 0 }">
+            <i class="material-icons pagination-action-icon">
+                keyboard_arrow_up
+            </i>
+        </a>
+        
+        <a class="pagination-action" v-on:click="toggleDarkMode">
+            <i class="material-icons pagination-action-icon" v-if="isDarkMode">
+                brightness_4
+            </i>
+            <i class="material-icons pagination-action-icon" v-else="isDarkMode">
+                brightness_7
+            </i>
+        </a>
+        
+        
+    </div>
+</div><div class="single-column-drawer-container" ref="drawer"
+     v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }">
+    <div class="drawer-content">
+        <div class="drawer-menu">
+            
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/projects">
+                    Projects
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/categories">
+                    Categories
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/tags">
+                    Tags
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/about">
+                    About
+                </a>
+                
+            
+            
+            <div class="toc">
+
+
+	<div class="toc-content">
+	
+		
+		
+		
+		<h3>Contents</h3>
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#contracts-for-event-sourced-systems-with-fscodec" v-on:click="closeDrawer" id="contracts-for-event-sourced-systems-with-fscodec-nav">
+										 Contracts for Event Sourced Systems with FsCodec
+									</a>
+								</li>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#why" v-on:click="closeDrawer" id="why-nav">
+										 Why
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#structuring-events" v-on:click="closeDrawer" id="structuring-events-nav">
+										 Structuring events
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#encodingdecoding" v-on:click="closeDrawer" id="encodingdecoding-nav">
+										 Encoding/Decoding
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#differing-contracts" v-on:click="closeDrawer" id="differing-contracts-nav">
+										 Differing Contracts
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#enumerations" v-on:click="closeDrawer" id="enumerations-nav">
+										 Enumerations
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+				
+				
+					
+						
+						
+							<ul>
+						
+							<ul>
+						
+						
+								<li>
+				 					<a href="#further-reading" v-on:click="closeDrawer" id="further-reading-nav">
+										 Further reading
+									</a>
+								</li>
+						
+							</ul>
+						
+							</ul>
+						
+					
+				
+			
+	</div>
+
+</div>
+            
+        </div>
+    </div>
+</div>
+<transition name="fade">
+    <div v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if="isDrawerOpen" v-on:click="toggleDrawer"></div>
+</transition>
+<nav ref="navBar" class="navbar sticky-top navbar-light single-column-nav-container">
+    <div ref="navBackground" class="nav-background"></div>
+    <div class="container container-narrow nav-content">
+        <button id="nav_dropdown_btn" class="nav-dropdown-toggle" type="button" v-on:click="toggleDrawer">
+            <i class="material-icons">
+                menu
+            </i>
+        </button>
+        <a ref="navTitle" class="navbar-brand" href="https://asti.dynz.net">
+            Asti&#39;s Notes
+        </a>
+        
+        <button type="button" class="nav-darkmode-toggle" v-on:click="toggleDarkMode">
+            <i class="material-icons" v-if="isDarkMode">
+                brightness_4
+            </i>
+            <i class="material-icons" v-else="isDarkMode">
+                brightness_7
+            </i>
+        </button>
+        
+    </div>
+</nav>
+<div class="single-column-header-container" ref="pageHead"
+     v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
+    <a href="https://asti.dynz.net">
+        <div class="single-column-header-title">Asti&#39;s Notes</div>
+        
+        <div class="single-column-header-subtitle">FP, Rx, EDA</div>
+        
+
+    </a>
+</div>
+            <div id="content">
+<div ref="streamContainer" class="stream-container">
+    <div class="post-list-container post-list-container-shadow">
+        <div class="post">
+            
+            
+            
+                
+            
+
+            <div class="post-head-wrapper"
+                 style="background-image: url('/images/fsharp.jpg')">
+                <div class="post-title">
+                    Contracts for Event Sourced Systems with FsCodec
+                    
+                    <div class="post-subtitle">
+                        Safe serialization for contracts
+                    </div>
+                    
+                    <div class="post-meta">
+                        
+                            <i class="material-icons" style="">folder</i>
+                                <a href="/categories/dev">/dev</a>
+                                &nbsp;
+                        
+
+                        
+                            <i class="material-icons" style="">label</i>
+                            
+                                <a href="/tags/fsharp">#fsharp</a>
+                                &nbsp;
+                            
+                                <a href="/tags/eventsourcing">#eventsourcing</a>
+                                &nbsp;
+                            
+                        
+
+                                                
+                        <i class="material-icons" style="">schedule</i>
+                        <time itemprop="datePublished">
+                            2021-12-18
+                        </time>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="post-body-wrapper">
+                <div class="post-body">
+                    <h1 id="contracts-for-event-sourced-systems-with-fscodec">Contracts for Event Sourced Systems with FsCodec</h1>
+<p><a href="https://github.com/jet/FsCodec/">FsCodec</a> is an <em>opinionated</em> library for working with contracts in event sourced systems in F#. At its core, it&rsquo;s a set of custom JSON serializers for two backends Newtonsoft.Json (NSJ) or System.Text.Json (STJ).</p>
+<p>Normally a higher level system like Propulsion or Equinox will handle this for you - but if you just want contract encoding/decoding, we can directly use <code>FsCodec</code> which is plenty high-level. This post details using it in your projects if you don&rsquo;t want to take on additional dependencies.</p>
+<h2 id="why">Why</h2>
+<p>Why not just use NSJ or STJ instead? For starters, it doesn&rsquo;t understand F# core types like options, lists, maps et al. If you chose to add custom serializers for those types and made some reasonable choices to get a consistent, version-able output, you&rsquo;d likely end up with FsCodec.</p>
+<h2 id="structuring-events">Structuring events</h2>
+<p>This is where the opinionated part is - if you want to structure your events in a resilient fashion, one of the more maintenance-amenable ways is to structure it as a <a href="https://github.com/eiriktsarpalis/TypeShape/blob/main/src/TypeShape/Applications/UnionContract.fs">union contract</a>. Concisely:</p>
+<ul>
+<li>a discriminated union for each event stream</li>
+<li>each event in the stream is a union case</li>
+<li>all details of an event is contained in a <em>single</em> record type</li>
+<li>the union is marked with a <code>IUnionContract</code> interface</li>
+</ul>
+<p>Consider this toy domain model:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">module</span> ShoppingCart <span style="color:#f92672">=</span> 
+    <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">CartAddItem</span> <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>
+        sku <span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span>
+        quantity<span style="color:#f92672">:</span> int
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">CartRemoveItem</span> <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>
+        sku <span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">CartUpdateQuantity</span> <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>
+        sku <span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span>
+        newQuantity <span style="color:#f92672">:</span> int
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">CartClear</span> <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>
+        automatic <span style="color:#f92672">:</span> <span style="color:#66d9ef">bool</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">CartCheckout</span> <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>
+        oneclick <span style="color:#f92672">:</span> <span style="color:#66d9ef">bool</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#f92672">[&lt;</span>RequireQualifiedAccess<span style="color:#f92672">&gt;]</span>
+    <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ShoppingCartEvents</span> <span style="color:#f92672">=</span>
+        <span style="color:#f92672">|</span> CartAddItem <span style="color:#66d9ef">of</span> CartAddItem
+        <span style="color:#f92672">|</span> CartRemoveItem <span style="color:#66d9ef">of</span> CartRemoveItem
+        <span style="color:#f92672">|</span> CartUpdateQuantity <span style="color:#66d9ef">of</span> CartUpdateQuantity
+        <span style="color:#f92672">|</span> CartClear <span style="color:#66d9ef">of</span> CartClear
+        <span style="color:#f92672">|</span> CartCheckout <span style="color:#66d9ef">of</span> CartCheckout
+            <span style="color:#66d9ef">interface</span> IUnionContract
+
+</code></pre></div><p>Each event is a union case with detail contained in a record type.</p>
+<h2 id="encodingdecoding">Encoding/Decoding</h2>
+<p>With an event DU, you can create a <strong>codec</strong> to encode/decode it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> codec <span style="color:#f92672">=</span> Codec.Create<span style="color:#f92672">&lt;</span>ShoppingCart.ShoppingCartEvents<span style="color:#f92672">&gt;</span>()
+</code></pre></div><p>If you add more fields in the record in the future, existing applications will ignore those fields. If you add more events in the future, they won&rsquo;t be decoded by the codec and just be ignored.</p>
+<p>Now that we have a codec, we can decode events with <code>TryDecode</code> and encoding events with <code>Encode</code>.</p>
+<p>FsCodec uses two core types as its event abstraction:</p>
+<ul>
+<li><a href="https://github.com/jet/FsCodec/blob/master/src/FsCodec/FsCodec.fs#L4"><code>IEventData</code></a> represents a single raw event (and optional metadata) which hasn&rsquo;t been persisted yet</li>
+<li><a href="https://github.com/jet/FsCodec/blob/master/src/FsCodec/FsCodec.fs#L23"><code>ITimelineEvent</code></a> inherits from <code>IEventData</code> and represents a persisted single event (with optional metadata)</li>
+</ul>
+<p>To encode, there&rsquo;s <code>codec.Encode</code> - which gets you an <code>IEventData</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp">
+<span style="color:#66d9ef">let</span> event <span style="color:#f92672">=</span> ShoppingCartEvents.CartAddItem <span style="color:#f92672">{</span> sku <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ABC10&#34;</span><span style="color:#f92672">;</span> quantity <span style="color:#f92672">=</span> 1 <span style="color:#f92672">}</span>
+<span style="color:#66d9ef">let</span> eventData <span style="color:#f92672">=</span> codec<span style="color:#f92672">.</span>Encode<span style="color:#f92672">(</span>None<span style="color:#f92672">,</span> <span style="color:#66d9ef">event</span><span style="color:#f92672">)</span>
+eventData<span style="color:#f92672">.</span>Data <span style="color:#75715e">// {&#34;sku&#34;:&#34;ABC10&#34;,&#34;quantity&#34;:1}
+</span><span style="color:#75715e"></span>eventData<span style="color:#f92672">.</span>EventType <span style="color:#75715e">// CartAddItem
+</span><span style="color:#75715e"></span>
+</code></pre></div><p>The event data is serialized separately from the union case. In datastores, you save the event type (union case) out-of-band from the event data. In EventStore, there&rsquo;s <code>EventType</code> and with Kafka, you generally have the event type as part of the headers. If you however need it in-band, you can use FsCodec&rsquo;s <code>Serdes</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp">Serdes.Serialize <span style="color:#66d9ef">event</span> <span style="color:#75715e">// {&#34;Case&#34;:&#34;CartAddItem&#34;,&#34;Fields&#34;:[{&#34;sku&#34;:&#34;ABC10&#34;,&#34;quantity&#34;:1}]}
+</span></code></pre></div><p>To decode, FsCodec expects a <code>ITimelineEvent</code>. For example, to decode an event from <a href="https://www.eventstore.com">EventStoreDB</a>, we can take the <code>ResolvedEvent</code> type from the EventStore client and create a <code>ITimelineEvent</code> :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">let</span> toTimelineEvent <span style="color:#f92672">(</span>resolvedEvent<span style="color:#f92672">:</span> ResolvedEvent<span style="color:#f92672">)</span> <span style="color:#f92672">=</span>
+    <span style="color:#66d9ef">let</span> evt <span style="color:#f92672">=</span> resolvedEvent<span style="color:#f92672">.</span>Event
+    TimelineEvent.Create<span style="color:#f92672">(</span>
+        index <span style="color:#f92672">=</span> evt<span style="color:#f92672">.</span>EventNumber<span style="color:#f92672">,</span>
+        eventType <span style="color:#f92672">=</span> evt<span style="color:#f92672">.</span>EventType<span style="color:#f92672">,</span>
+        data <span style="color:#f92672">=</span> evt<span style="color:#f92672">.</span>Data<span style="color:#f92672">,</span>
+        meta <span style="color:#f92672">=</span> evt<span style="color:#f92672">.</span>Metadata<span style="color:#f92672">,</span>
+        eventId <span style="color:#f92672">=</span> evt<span style="color:#f92672">.</span>EventId<span style="color:#f92672">,</span>
+        timestamp <span style="color:#f92672">=</span>  DateTimeOffset evt<span style="color:#f92672">.</span>Created<span style="color:#f92672">)</span>
+</code></pre></div><p>and</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp">resolvedEvent <span style="color:#f92672">|&gt;</span> toTimelineEvent <span style="color:#f92672">|&gt;</span> codec<span style="color:#f92672">.</span>TryDecode <span style="color:#75715e">// ShoppingCartEvents option
+</span></code></pre></div><p>It&rsquo;s up to your implementation to decide whether you ignore un-decodable events or do something else like log them.</p>
+<h2 id="differing-contracts">Differing Contracts</h2>
+<p>While these are great for schemas we fully own, with external systems we may not be so lucky.  Sometimes, the message contract may be completely different from the inputs to our ACL.</p>
+<p>In a case where a single field in the message serves as the discriminator tag, we can use an <a href="https://github.com/jet/FsCodec/blob/master/src/FsCodec.NewtonsoftJson/UnionConverter.fs"><code>UnionConverter</code></a>. It flattens the event data and label (this is customizable) into a single JSON object.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp">Serialize <span style="color:#f92672">(</span>Greet <span style="color:#f92672">{</span> message <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hi&#34;</span><span style="color:#f92672">})</span> <span style="color:#75715e">// {&#34;case&#34;:&#34;Greet&#34;,&#34;message&#34;:&#34;hi&#34;}
+</span></code></pre></div><p>However, when the message contract diverges too far from our internal representation (a level usually behind the domain model), we need an escape hatch.</p>
+<p>That escape hatch presents itself in the form of <code>JsonIsomorphism</code>.</p>
+<p>An Isomorphism is defined as a reversible mapping between two types, <code>f : T -&gt; U</code> and <code>g : U -&gt; T</code> such that <code> f.g</code> and  <code>g.f</code> is equal to <code>id</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">JsonIsomorphism</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">&#39;</span>T<span style="color:#f92672">,</span><span style="color:#66d9ef">&#39;</span>U<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span>
+  <span style="color:#f92672">...</span>
+  <span style="color:#66d9ef">abstract</span> Pickle<span style="color:#f92672">:</span> <span style="color:#66d9ef">&#39;</span>T <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">&#39;</span>U 
+  <span style="color:#66d9ef">abstract</span> UnPickle<span style="color:#f92672">:</span> <span style="color:#66d9ef">&#39;</span>U <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">&#39;</span>T
+</code></pre></div><p><code>Pickle</code> is converting to the contract type and <code>Unpickle</code> is converting from the target type.</p>
+<p>For example, consider the type:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ConveyorAssociation</span> <span style="color:#f92672">=</span>
+<span style="color:#f92672">|</span> ConveyorId <span style="color:#66d9ef">of</span> <span style="color:#66d9ef">string</span>
+<span style="color:#f92672">|</span> NoAssociation
+</code></pre></div><p>which is used in a contract type</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#f92672">{</span> <span style="color:#f92672">...</span>
+  association <span style="color:#f92672">:</span> ConveyorAssociation option <span style="color:#f92672">}</span>
+</code></pre></div><p>but the actual JSON message contains one of:</p>
+<ul>
+<li><code>&quot;association&quot; : &quot;NONE&quot;</code> which maps to <code>Some ConveyorAssociation.NoAssociation</code></li>
+<li><code>&quot;association&quot; : &quot;ABC123&quot;</code> which maps to <code>Some (ConveyorAssociation.ConveyorId &quot;ABC123&quot;)</code></li>
+<li><code>&quot;association&quot; : null</code> which maps to <code>None</code></li>
+</ul>
+<p>This type of contract is fairly arbitrary and messy, using the string <code>&quot;None&quot;</code> as a sentinel value.</p>
+<p>The solution is to introduce  an isomorphism between <code>ConveyorAssociation option</code> &lt;=&gt; <code>string option</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ConveyorConverter</span>() <span style="color:#f92672">=</span>
+     <span style="color:#66d9ef">inherit</span> JsonIsomorphism<span style="color:#f92672">&lt;</span>ConveyorAssociation option<span style="color:#f92672">,</span> <span style="color:#66d9ef">string</span> option<span style="color:#f92672">&gt;</span>()
+     <span style="color:#66d9ef">override</span> _.<span style="color:#a6e22e">Pickle</span> v <span style="color:#f92672">=</span>
+         v <span style="color:#f92672">|&gt;</span> Option.map<span style="color:#f92672">(</span><span style="color:#66d9ef">function</span>
+             <span style="color:#f92672">|</span> NoAssociation <span style="color:#f92672">-&gt;</span> <span style="color:#e6db74">&#34;NONE&#34;</span>
+             <span style="color:#f92672">|</span> ConveyorId id <span style="color:#f92672">-&gt;</span> id<span style="color:#f92672">)</span>
+ 
+     <span style="color:#66d9ef">override</span> _.<span style="color:#a6e22e">UnPickle</span> s <span style="color:#f92672">=</span> 
+         s <span style="color:#f92672">|&gt;</span> Option.map<span style="color:#f92672">(</span><span style="color:#66d9ef">function</span>             
+			<span style="color:#f92672">|</span> <span style="color:#e6db74">&#34;NONE&#34;</span> <span style="color:#f92672">-&gt;</span> NoAssociation
+             <span style="color:#f92672">|</span> id <span style="color:#f92672">-&gt;</span> ConveyorId id<span style="color:#f92672">)</span>
+</code></pre></div><p>and annotating the record field with:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#f92672">{</span> <span style="color:#f92672">...</span>
+  <span style="color:#f92672">[&lt;</span>JsonConverter<span style="color:#f92672">(</span>typeof<span style="color:#f92672">&lt;</span>ConveyorConverter<span style="color:#f92672">&gt;)&gt;]</span>
+  association <span style="color:#f92672">:</span> ConveyorAssociation option <span style="color:#f92672">}</span>
+</code></pre></div><p>which now works like we expect it to.</p>
+<h2 id="enumerations">Enumerations</h2>
+<p>If a particular value is best represented by an enumeration, it&rsquo;s better to use a DU instead of an .NET Enum. Enums in either serialization library can take more than the defined range of values.
+However, a DU will be serialized with a case label. If the DU will never have any attached fields, 
+we can use a <code>TypeSafeEnumConverter</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#f92672">[&lt;</span>JsonConverter<span style="color:#f92672">(</span>typeof<span style="color:#f92672">&lt;</span>TypeSafeEnumConverter<span style="color:#f92672">&gt;)&gt;]</span>
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">FileSource</span> <span style="color:#f92672">=</span> 
+    <span style="color:#f92672">|</span> HTTPS 
+    <span style="color:#f92672">|</span> HTTP 
+    <span style="color:#f92672">|</span> FTP 
+    <span style="color:#f92672">|</span> SFTP
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">FileUploaded</span> <span style="color:#f92672">=</span> <span style="color:#f92672">{</span> 
+    filename<span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span>
+    size<span style="color:#f92672">:</span> <span style="color:#66d9ef">int64</span>
+    source<span style="color:#f92672">:</span> FileSource
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">let</span> event <span style="color:#f92672">=</span> 
+    <span style="color:#f92672">{</span> filename <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;test.xls&#34;</span><span style="color:#f92672">;</span> size <span style="color:#f92672">=</span> 10000L<span style="color:#f92672">;</span> source <span style="color:#f92672">=</span> SFTP <span style="color:#f92672">}</span>    
+
+Serdes.Serialize <span style="color:#66d9ef">event</span> <span style="color:#75715e">// {&#34;filename&#34;:&#34;test.xls&#34;,&#34;size&#34;:10000,&#34;source&#34;:&#34;SFTP&#34;}
+</span></code></pre></div><p>Deserializng parses it out to a DU case, however missing DU cases will thrown an exception, so it&rsquo;s difficult to version. For more flexibility, we can use an isomorphism.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">TypeSafeEnumConverterWithFallback</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">&#39;</span>T<span style="color:#f92672">&gt;(</span>fallback <span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span>
+    <span style="color:#66d9ef">inherit</span> JsonIsomorphism<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">&#39;</span>T<span style="color:#f92672">,</span> <span style="color:#66d9ef">string</span><span style="color:#f92672">&gt;</span>()
+    <span style="color:#66d9ef">let</span> fallback <span style="color:#f92672">=</span> TypeSafeEnum.parse fallback
+    <span style="color:#66d9ef">override</span> _.<span style="color:#a6e22e">Pickle</span> v <span style="color:#f92672">=</span> TypeSafeEnum.toString v
+    <span style="color:#66d9ef">override</span> _.<span style="color:#a6e22e">UnPickle</span> s <span style="color:#f92672">=</span> s <span style="color:#f92672">|&gt;</span> TypeSafeEnum.tryParse <span style="color:#f92672">|&gt;</span> Option.defaultValue fallback
+</code></pre></div><p>and</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp">    <span style="color:#f92672">...</span>
+    <span style="color:#f92672">[&lt;</span>JsonConverter<span style="color:#f92672">(</span>typeof<span style="color:#f92672">&lt;</span>TypeSafeEnumConverter<span style="color:#f92672">&gt;,</span> <span style="color:#f92672">(</span>nameof HTTP<span style="color:#f92672">))&gt;]</span>
+    source<span style="color:#f92672">:</span> FileSource
+</code></pre></div><p>This gives us much more flexibility to add cases in the future and work safely with existing applications.</p>
+<h2 id="further-reading">Further reading</h2>
+<p>Versioning events is a non-trivial problem, and is not under the scope of this post.</p>
+<ul>
+<li><a href="http://eiriktsarpalis.wordpress.com/2018/10/30/a-contract-pattern-for-schemaless-datastores/">A Contract Pattern for Schemaless DataStores</a> by Eirik Tsarpalis.</li>
+<li>The <a href="https://github.com/jet/FsCodec/blob/master/README.md">FsCodec Readme</a></li>
+<li><a href="https://blog.softwaremill.com/the-best-serialization-strategy-for-event-sourcing-9321c299632b">Serialization strategy for Event Sourcing</a> by Software Mill</li>
+</ul>
+
+                    
+                    <HR width="100%" id="EOF">
+                    <p style="color:#777;">Last modified on 2021-12-18</p>
+                    
+                </div>
+            </div>
+            
+            
+            <nav class="post-pagination">
+
+                
+                <a class="newer-posts">
+                    Next<br>No newer posts.
+                </a>
+                
+                
+                
+                <a class="older-posts" href="https://asti.dynz.net/post/fsharp-worksheet/">
+                    Previous<br>Worksheet: A new way to prototype in F#
+                </a>
+                
+            </nav>
+            <div class="post-comment-wrapper">
+                
+                <p style="opacity: 0.6" align="center">
+                    <small>Comments Disabled.</small>
+                </p>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+            </div><div id="single-column-footer">
+<br />
+
+
+
+CC by Attribution
+</div>
+            </div>    
+            <script src="https://asti.dynz.netjs/journal.js"></script>
+    </body>
+</html>

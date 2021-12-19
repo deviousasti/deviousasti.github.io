@@ -15,7 +15,7 @@
       
       <guid>https://asti.dynz.net/post/daisychain-altium/</guid>
       <description>Why a way to daisy-chain? If you wanted to daisy chain any component the conventional way, say a bunch of WS2812s on your board, you&amp;rsquo;d be making multiple instances and manually wiring them to each other.
-  Steps  Make a sub-sheet out of the components you want to daisy chain (unless it&amp;rsquo;s not in one already). Change the designator of the sheet to Repeat(name, 1, N) where N is the number of items you want.</description>
+ Steps  Make a sub-sheet out of the components you want to daisy chain (unless it&amp;rsquo;s not in one already). Change the designator of the sheet to Repeat(name, 1, N) where N is the number of items you want.</description>
     </item>
     
   </channel>

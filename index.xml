@@ -6,9 +6,181 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Fri, 04 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 18 Dec 2021 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="https://asti.dynz.net/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    
+        <item>
+        <title>Contracts for Event Sourced Systems with FsCodec</title>
+        <link>https://asti.dynz.net/post/fscodec/</link>
+        <pubDate>Sat, 18 Dec 2021 00:00:00 +0000</pubDate>
+        
+        <guid>https://asti.dynz.net/post/fscodec/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/fscodec/ -&lt;h1 id=&#34;contracts-for-event-sourced-systems-with-fscodec&#34;&gt;Contracts for Event Sourced Systems with FsCodec&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/jet/FsCodec/&#34;&gt;FsCodec&lt;/a&gt; is an &lt;em&gt;opinionated&lt;/em&gt; library for working with contracts in event sourced systems in F#. At its core, it&amp;rsquo;s a set of custom JSON serializers for two backends Newtonsoft.Json (NSJ) or System.Text.Json (STJ).&lt;/p&gt;
+&lt;p&gt;Normally a higher level system like Propulsion or Equinox will handle this for you - but if you just want contract encoding/decoding, we can directly use &lt;code&gt;FsCodec&lt;/code&gt; which is plenty high-level. This post details using it in your projects if you don&amp;rsquo;t want to take on additional dependencies.&lt;/p&gt;
+&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;Why not just use NSJ or STJ instead? For starters, it doesn&amp;rsquo;t understand F# core types like options, lists, maps et al. If you chose to add custom serializers for those types and made some reasonable choices to get a consistent, version-able output, you&amp;rsquo;d likely end up with FsCodec.&lt;/p&gt;
+&lt;h2 id=&#34;structuring-events&#34;&gt;Structuring events&lt;/h2&gt;
+&lt;p&gt;This is where the opinionated part is - if you want to structure your events in a resilient fashion, one of the more maintenance-amenable ways is to structure it as a &lt;a href=&#34;https://github.com/eiriktsarpalis/TypeShape/blob/main/src/TypeShape/Applications/UnionContract.fs&#34;&gt;union contract&lt;/a&gt;. Concisely:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;a discriminated union for each event stream&lt;/li&gt;
+&lt;li&gt;each event in the stream is a union case&lt;/li&gt;
+&lt;li&gt;all details of an event is contained in a &lt;em&gt;single&lt;/em&gt; record type&lt;/li&gt;
+&lt;li&gt;the union is marked with a &lt;code&gt;IUnionContract&lt;/code&gt; interface&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Consider this toy domain model:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;module&lt;/span&gt; ShoppingCart &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;CartAddItem&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        sku &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+        quantity&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; int
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;CartRemoveItem&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        sku &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;CartUpdateQuantity&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        sku &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+        newQuantity &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; int
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;CartClear&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        automatic &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;CartCheckout&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        oneclick &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#f92672&#34;&gt;[&amp;lt;&lt;/span&gt;RequireQualifiedAccess&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;]&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ShoppingCartEvents&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; CartAddItem &lt;span style=&#34;color:#66d9ef&#34;&gt;of&lt;/span&gt; CartAddItem
+        &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; CartRemoveItem &lt;span style=&#34;color:#66d9ef&#34;&gt;of&lt;/span&gt; CartRemoveItem
+        &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; CartUpdateQuantity &lt;span style=&#34;color:#66d9ef&#34;&gt;of&lt;/span&gt; CartUpdateQuantity
+        &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; CartClear &lt;span style=&#34;color:#66d9ef&#34;&gt;of&lt;/span&gt; CartClear
+        &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; CartCheckout &lt;span style=&#34;color:#66d9ef&#34;&gt;of&lt;/span&gt; CartCheckout
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; IUnionContract
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Each event is a union case with detail contained in a record type.&lt;/p&gt;
+&lt;h2 id=&#34;encodingdecoding&#34;&gt;Encoding/Decoding&lt;/h2&gt;
+&lt;p&gt;With an event DU, you can create a &lt;strong&gt;codec&lt;/strong&gt; to encode/decode it.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; codec &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Codec.Create&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;ShoppingCart.ShoppingCartEvents&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you add more fields in the record in the future, existing applications will ignore those fields. If you add more events in the future, they won&amp;rsquo;t be decoded by the codec and just be ignored.&lt;/p&gt;
+&lt;p&gt;Now that we have a codec, we can decode events with &lt;code&gt;TryDecode&lt;/code&gt; and encoding events with &lt;code&gt;Encode&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;FsCodec uses two core types as its event abstraction:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jet/FsCodec/blob/master/src/FsCodec/FsCodec.fs#L4&#34;&gt;&lt;code&gt;IEventData&lt;/code&gt;&lt;/a&gt; represents a single raw event (and optional metadata) which hasn&amp;rsquo;t been persisted yet&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jet/FsCodec/blob/master/src/FsCodec/FsCodec.fs#L23&#34;&gt;&lt;code&gt;ITimelineEvent&lt;/code&gt;&lt;/a&gt; inherits from &lt;code&gt;IEventData&lt;/code&gt; and represents a persisted single event (with optional metadata)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To encode, there&amp;rsquo;s &lt;code&gt;codec.Encode&lt;/code&gt; - which gets you an &lt;code&gt;IEventData&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; event &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ShoppingCartEvents.CartAddItem &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; sku &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ABC10&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; quantity &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 1 &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; eventData &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; codec&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Encode&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;None&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;event&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+eventData&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Data &lt;span style=&#34;color:#75715e&#34;&gt;// {&amp;#34;sku&amp;#34;:&amp;#34;ABC10&amp;#34;,&amp;#34;quantity&amp;#34;:1}
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;eventData&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;EventType &lt;span style=&#34;color:#75715e&#34;&gt;// CartAddItem
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The event data is serialized separately from the union case. In datastores, you save the event type (union case) out-of-band from the event data. In EventStore, there&amp;rsquo;s &lt;code&gt;EventType&lt;/code&gt; and with Kafka, you generally have the event type as part of the headers. If you however need it in-band, you can use FsCodec&amp;rsquo;s &lt;code&gt;Serdes&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;Serdes.Serialize &lt;span style=&#34;color:#66d9ef&#34;&gt;event&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;// {&amp;#34;Case&amp;#34;:&amp;#34;CartAddItem&amp;#34;,&amp;#34;Fields&amp;#34;:[{&amp;#34;sku&amp;#34;:&amp;#34;ABC10&amp;#34;,&amp;#34;quantity&amp;#34;:1}]}
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To decode, FsCodec expects a &lt;code&gt;ITimelineEvent&lt;/code&gt;. For example, to decode an event from &lt;a href=&#34;https://www.eventstore.com&#34;&gt;EventStoreDB&lt;/a&gt;, we can take the &lt;code&gt;ResolvedEvent&lt;/code&gt; type from the EventStore client and create a &lt;code&gt;ITimelineEvent&lt;/code&gt; :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; toTimelineEvent &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;resolvedEvent&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; ResolvedEvent&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; evt &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; resolvedEvent&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Event
+    TimelineEvent.Create&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;
+        index &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; evt&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;EventNumber&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+        eventType &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; evt&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;EventType&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+        data &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; evt&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Data&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+        meta &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; evt&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Metadata&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+        eventId &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; evt&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;EventId&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+        timestamp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;  DateTimeOffset evt&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Created&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;resolvedEvent &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; toTimelineEvent &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; codec&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;TryDecode &lt;span style=&#34;color:#75715e&#34;&gt;// ShoppingCartEvents option
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It&amp;rsquo;s up to your implementation to decide whether you ignore un-decodable events or do something else like log them.&lt;/p&gt;
+&lt;h2 id=&#34;differing-contracts&#34;&gt;Differing Contracts&lt;/h2&gt;
+&lt;p&gt;While these are great for schemas we fully own, with external systems we may not be so lucky.  Sometimes, the message contract may be completely different from the inputs to our ACL.&lt;/p&gt;
+&lt;p&gt;In a case where a single field in the message serves as the discriminator tag, we can use an &lt;a href=&#34;https://github.com/jet/FsCodec/blob/master/src/FsCodec.NewtonsoftJson/UnionConverter.fs&#34;&gt;&lt;code&gt;UnionConverter&lt;/code&gt;&lt;/a&gt;. It flattens the event data and label (this is customizable) into a single JSON object.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;Serialize &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Greet &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; message &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hi&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;})&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;// {&amp;#34;case&amp;#34;:&amp;#34;Greet&amp;#34;,&amp;#34;message&amp;#34;:&amp;#34;hi&amp;#34;}
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, when the message contract diverges too far from our internal representation (a level usually behind the domain model), we need an escape hatch.&lt;/p&gt;
+&lt;p&gt;That escape hatch presents itself in the form of &lt;code&gt;JsonIsomorphism&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;An Isomorphism is defined as a reversible mapping between two types, &lt;code&gt;f : T -&amp;gt; U&lt;/code&gt; and &lt;code&gt;g : U -&amp;gt; T&lt;/code&gt; such that &lt;code&gt; f.g&lt;/code&gt; and  &lt;code&gt;g.f&lt;/code&gt; is equal to &lt;code&gt;id&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;JsonIsomorphism&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt;T&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt;U&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;abstract&lt;/span&gt; Pickle&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt;T &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt;U 
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;abstract&lt;/span&gt; UnPickle&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt;U &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt;T
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;Pickle&lt;/code&gt; is converting to the contract type and &lt;code&gt;Unpickle&lt;/code&gt; is converting from the target type.&lt;/p&gt;
+&lt;p&gt;For example, consider the type:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ConveyorAssociation&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; ConveyorId &lt;span style=&#34;color:#66d9ef&#34;&gt;of&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; NoAssociation
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;which is used in a contract type&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;
+  association &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; ConveyorAssociation option &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;but the actual JSON message contains one of:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;&amp;quot;association&amp;quot; : &amp;quot;NONE&amp;quot;&lt;/code&gt; which maps to &lt;code&gt;Some ConveyorAssociation.NoAssociation&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;quot;association&amp;quot; : &amp;quot;ABC123&amp;quot;&lt;/code&gt; which maps to &lt;code&gt;Some (ConveyorAssociation.ConveyorId &amp;quot;ABC123&amp;quot;)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;quot;association&amp;quot; : null&lt;/code&gt; which maps to &lt;code&gt;None&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This type of contract is fairly arbitrary and messy, using the string &lt;code&gt;&amp;quot;None&amp;quot;&lt;/code&gt; as a sentinel value.&lt;/p&gt;
+&lt;p&gt;The solution is to introduce  an isomorphism between &lt;code&gt;ConveyorAssociation option&lt;/code&gt; &amp;lt;=&amp;gt; &lt;code&gt;string option&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ConveyorConverter&lt;/span&gt;() &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+     &lt;span style=&#34;color:#66d9ef&#34;&gt;inherit&lt;/span&gt; JsonIsomorphism&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;ConveyorAssociation option&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; option&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;()
+     &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; _.&lt;span style=&#34;color:#a6e22e&#34;&gt;Pickle&lt;/span&gt; v &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+         v &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; Option.map&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;
+             &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; NoAssociation &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;NONE&amp;#34;&lt;/span&gt;
+             &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; ConveyorId id &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; id&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+ 
+     &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; _.&lt;span style=&#34;color:#a6e22e&#34;&gt;UnPickle&lt;/span&gt; s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 
+         s &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; Option.map&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;             
+			&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;NONE&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; NoAssociation
+             &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; id &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; ConveyorId id&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and annotating the record field with:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;[&amp;lt;&lt;/span&gt;JsonConverter&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;typeof&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;ConveyorConverter&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;)&amp;gt;]&lt;/span&gt;
+  association &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; ConveyorAssociation option &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;which now works like we expect it to.&lt;/p&gt;
+&lt;h2 id=&#34;enumerations&#34;&gt;Enumerations&lt;/h2&gt;
+&lt;p&gt;If a particular value is best represented by an enumeration, it&amp;rsquo;s better to use a DU instead of an .NET Enum. Enums in either serialization library can take more than the defined range of values.
+However, a DU will be serialized with a case label. If the DU will never have any attached fields, 
+we can use a &lt;code&gt;TypeSafeEnumConverter&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&amp;lt;&lt;/span&gt;JsonConverter&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;typeof&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;TypeSafeEnumConverter&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;)&amp;gt;]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;FileSource&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 
+    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; HTTPS 
+    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; HTTP 
+    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; FTP 
+    &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; SFTP
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;FileUploaded&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; 
+    filename&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;
+    size&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int64&lt;/span&gt;
+    source&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; FileSource
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; event &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 
+    &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; filename &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;test.xls&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 10000L&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; source &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; SFTP &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;    
+
+Serdes.Serialize &lt;span style=&#34;color:#66d9ef&#34;&gt;event&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;// {&amp;#34;filename&amp;#34;:&amp;#34;test.xls&amp;#34;,&amp;#34;size&amp;#34;:10000,&amp;#34;source&amp;#34;:&amp;#34;SFTP&amp;#34;}
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Deserializng parses it out to a DU case, however missing DU cases will thrown an exception, so it&amp;rsquo;s difficult to version. For more flexibility, we can use an isomorphism.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;TypeSafeEnumConverterWithFallback&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt;T&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;(&lt;/span&gt;fallback &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;inherit&lt;/span&gt; JsonIsomorphism&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt;T&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;()
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; fallback &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; TypeSafeEnum.parse fallback
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; _.&lt;span style=&#34;color:#a6e22e&#34;&gt;Pickle&lt;/span&gt; v &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; TypeSafeEnum.toString v
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;override&lt;/span&gt; _.&lt;span style=&#34;color:#a6e22e&#34;&gt;UnPickle&lt;/span&gt; s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; s &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; TypeSafeEnum.tryParse &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; Option.defaultValue fallback
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;[&amp;lt;&lt;/span&gt;JsonConverter&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;typeof&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;TypeSafeEnumConverter&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;,&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;nameof HTTP&lt;span style=&#34;color:#f92672&#34;&gt;))&amp;gt;]&lt;/span&gt;
+    source&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; FileSource
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This gives us much more flexibility to add cases in the future and work safely with existing applications.&lt;/p&gt;
+&lt;h2 id=&#34;further-reading&#34;&gt;Further reading&lt;/h2&gt;
+&lt;p&gt;Versioning events is a non-trivial problem, and is not under the scope of this post.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://eiriktsarpalis.wordpress.com/2018/10/30/a-contract-pattern-for-schemaless-datastores/&#34;&gt;A Contract Pattern for Schemaless DataStores&lt;/a&gt; by Eirik Tsarpalis.&lt;/li&gt;
+&lt;li&gt;The &lt;a href=&#34;https://github.com/jet/FsCodec/blob/master/README.md&#34;&gt;FsCodec Readme&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.softwaremill.com/the-best-serialization-strategy-for-event-sourcing-9321c299632b&#34;&gt;Serialization strategy for Event Sourcing&lt;/a&gt; by Software Mill&lt;/li&gt;
+&lt;/ul&gt;
+- https://asti.dynz.net/post/fscodec/ - CC by Attribution</description>
+        </item>
     
     
     
@@ -19,8 +191,7 @@
         
         <guid>https://asti.dynz.net/post/fsharp-worksheet/</guid>
         <description>Asti&#39;s Notes https://asti.dynz.net/post/fsharp-worksheet/ -&lt;h1 id=&#34;f-interactive-now-with-stories&#34;&gt;F# Interactive now with Stories!&lt;/h1&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/fsi-stories.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fsi-stories.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now that I have your attention, please read on for something even more exciting!&lt;/p&gt;
@@ -28,13 +199,11 @@
 &lt;p&gt;Working with F# interactive is an exercise in selection and &lt;em&gt;Send to Interactive&lt;/em&gt;. While it gives fast feedback, there&amp;rsquo;s always the issue of making changes. Edit something and you have to manually send everything that the edit affects to FSI, which sometimes you may miss out on, and that results in strange behavior.&lt;/p&gt;
 &lt;p&gt;What if we could do better? What if we could generalize an arbitrary program into evaluating like a spreadsheet?&lt;/p&gt;
 &lt;p&gt;Could we have something like this?&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/excel.gif&#34; width=&#34;60%&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/excel.gif&#34; width=&#34;60%&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;It turns out we can!&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/excelfsharp.gif&#34; width=&#34;80%&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/excelfsharp.gif&#34; width=&#34;80%&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;h1 id=&#34;how-does-it-work&#34;&gt;How does it work?&lt;/h1&gt;
@@ -155,8 +324,7 @@ taller empty &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;singleton 1
 &lt;/table&gt;
 &lt;p&gt;Looking at the AST reveals the usage of these symbols from our nodes. For example, &lt;code&gt;empty&lt;/code&gt; contains a reference to the &lt;code&gt;Tree&lt;/code&gt; symbol. Through instances of symbol usage, for each of these nodes, we can establish links between them.&lt;/p&gt;
 &lt;p&gt;Which allows us to generate a graph like this:&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/worksheet-diag.svg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/worksheet-diag.svg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;For any given expression, it&amp;rsquo;s possible to follow the chain of calls.&lt;/p&gt;
@@ -171,8 +339,7 @@ taller empty &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;singleton 1
 &lt;p&gt;This turns out to be sufficient, instead of tracking cell mutations, which we cannot because we are generalizing for arbitrary changes. If the new cell has any dependents in the graph, they qualify for evaluation as well. And so their dependents, and so on.&lt;/p&gt;
 &lt;p&gt;For every qualified cell, we evaluate its value (i.e., run the computation and save the result). 
 There&amp;rsquo;s some additional infrastructure around the evaluator, so things work like we expect them to:&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/fsworksheet-capture.jpg&#34; width=&#34;80%&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fsworksheet-capture.jpg&#34; width=&#34;80%&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;h1 id=&#34;implementation&#34;&gt;Implementation&lt;/h1&gt;
@@ -181,13 +348,11 @@ There&amp;rsquo;s some additional infrastructure around the evaluator, so things
 &lt;p&gt;This builds and installs it as a dotnet tool. You can make it watch any script file with:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;PS&amp;gt; fsw program.fsx
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and it evaluates changes every time you save changes.&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/fswatch.gif&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fswatch.gif&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The Visual Studio plugin is in pre-release, it needs additional UX work to make it pleasant to use. You can still build the solution to try it in preview. A brief demo:&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/fsworksheet.gif&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fsworksheet.gif&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Ideas are welcome to make it more user-friendly and visual.&lt;/p&gt;
@@ -266,8 +431,8 @@ There&amp;rsquo;s some additional infrastructure around the evaluator, so things
 &lt;p&gt;This is the most common thing you&amp;rsquo;re likely to see. &lt;code&gt;foo()&lt;/code&gt; isn&amp;rsquo;t even called - if the method body is small enough, &lt;code&gt;fsc&lt;/code&gt; will easily inline it. 
 The resulting IL is equivalent to (all inlined):&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;let main argv =
-    PrintfModule.PrintFormatToStringThenFail(new PrintfFormat&amp;lt;_&amp;gt;(&amp;quot;foo&amp;quot;));
-    0
+	PrintfModule.PrintFormatToStringThenFail(new PrintfFormat&amp;lt;_&amp;gt;(&amp;quot;foo&amp;quot;));
+	0
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Inlining can be disabled with &lt;code&gt; --optimize-&lt;/code&gt;&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;fsc -g --optimize- Program.fs
@@ -312,8 +477,7 @@ The resulting IL is equivalent to (all inlined):&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;[Command(&amp;#34;echo&amp;#34;)]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; Echo(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; text) =&amp;gt; Console.WriteLine(text);
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s see how that looks like:&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/dos-demo1.gif&#34; width=&#34;100%&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/dos-demo1.gif&#34; width=&#34;100%&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Maybe add &lt;a href=&#34;https://asti.dynz.net/images/dos-demo2.jpg&#34;&gt;a bit of colour&lt;/a&gt;.&lt;/p&gt;
@@ -390,8 +554,7 @@ D:\&amp;gt;
     }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Our demo isn&amp;rsquo;t complete until we run the Windows Command Prompt inside our command prompt!&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/dos-demo3.gif&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/dos-demo3.gif&#34;/&gt;
 &lt;/figure&gt;
 
 - https://asti.dynz.net/post/recreate-dos/ - CC by Attribution</description>
@@ -508,12 +671,10 @@ Make sure that at no point is &lt;code&gt;rdimon.specs&lt;/code&gt; ever mention
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Check dissasembly of syscalls (&lt;code&gt;_write, _system, _start...&lt;/code&gt;)&lt;/p&gt;
-&lt;p&gt;&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/disas1.jpg&#34;/&gt; 
+&lt;p&gt;&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/disas1.jpg&#34;/&gt;
 &lt;/figure&gt;
 
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/disas2.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/disas2.jpg&#34;/&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;p&gt;Track down the sources of the syscalls. Try replacing &lt;em&gt;libc&lt;/em&gt; or &lt;em&gt;newlib&lt;/em&gt; with another copy.&lt;/p&gt;
@@ -644,86 +805,17 @@ Pages.zip	E65277A391BE9AFCEF046650F23AB0ECB67DE4334C449F21271068239A413F18
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;to generate &lt;code&gt;(current folder).sha2&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;The defaults are:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;Create-Verification -Path . -Filter *.*
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/powershell-verify1.gif&#34;/&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/powershell-verify1.gif&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;To verify, use:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;Create-Verification -Verify (folder.sha2) 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;-Path&lt;/code&gt; and &lt;code&gt;-Filter&lt;/code&gt; options still apply.&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/powershell-verify2.gif&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/powershell-verify2.gif&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Note that the function produces a object stream of &lt;code&gt;{ Side, File }&lt;/code&gt;, so you can still post-process the output with scripts that handle &lt;code&gt;Compare-Object&lt;/code&gt; output.&lt;/p&gt;
 - https://asti.dynz.net/post/powershell-sfv/ - CC by Attribution</description>
-        </item>
-    
-    
-    
-        <item>
-        <title>Decoding a oneof case in nanopb</title>
-        <link>https://asti.dynz.net/post/nanopb-value/</link>
-        <pubDate>Sat, 03 Aug 2019 00:00:00 +0000</pubDate>
-        
-        <guid>https://asti.dynz.net/post/nanopb-value/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/nanopb-value/ -&lt;h2 id=&#34;decoding-callbacks&#34;&gt;Decoding callbacks&lt;/h2&gt;
-&lt;p&gt;Say you have a message type with variable fields:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-protobuf&#34; data-lang=&#34;protobuf&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;message&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;KeyValue&lt;/span&gt; {&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; key     &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; value   &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;}&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This generates:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;typedef&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; _KeyValue {
-    pb_callback_t key;
-    pb_callback_t value;
-} KeyValue;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Decoding this in nanopb isn&amp;rsquo;t so bad -&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;KeyValue &lt;span style=&#34;color:#a6e22e&#34;&gt;decodeKV&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; key, &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; value)
-{
-	KeyValue kv;
-	kv.key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; readStringCallback(key);
-	kv.value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; readStringCallback(value);
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; kv;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Call &lt;code&gt;pb_decode&lt;/code&gt; and you&amp;rsquo;re done.&lt;/p&gt;
-&lt;h2 id=&#34;the-callback-and-the-union&#34;&gt;The callback and the union&lt;/h2&gt;
-&lt;p&gt;If your type happens to be inside a &lt;code&gt;oneof&lt;/code&gt; like so:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;message Request {
-	oneof type {
-		Version version = 1;
-		KeyValue setting = 2;
-	}
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;suddenly, the &lt;code&gt;KeyValue&lt;/code&gt; struct is in an union type - which itself is a field in another struct.&lt;/p&gt;
-&lt;p&gt;Now when you use &lt;code&gt;decodeKV&lt;/code&gt; try to decode &lt;code&gt;Request&lt;/code&gt; (the container message), you will find that nothing happens, and your callbacks are never called. This is because during the decode, the union type itself is initialized and so the &lt;code&gt;pb_callback&lt;/code&gt;s are set to &lt;code&gt;NULL&lt;/code&gt; - no callbacks set, no call back (pardon the alliteration).&lt;/p&gt;
-&lt;h2 id=&#34;if-you-dont-succeed-at-first-decode-again&#34;&gt;If you don&amp;rsquo;t succeed at first, decode again&lt;/h2&gt;
-&lt;p&gt;For this to work out, we need to create an environment where we decode the inner struct as a standalone message - like in our very first scenario.&lt;/p&gt;
-&lt;p&gt;First we need to figure out which was our &lt;code&gt;oneof&lt;/code&gt; case - to be more specific, the message descriptor corresponding to our &lt;code&gt;oneof&lt;/code&gt; case.&lt;/p&gt;
-&lt;p&gt;We need a type to collect our findings, so:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;typedef&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; pb_union_s
-	{
-		&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; uint32_t tag;
-		&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; pb_msgdesc_t&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; submsg_desc;
-		pb_istream_t stream;
-	} pb_union_t;	
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I&amp;rsquo;ll put in the full implementation in a gist below, but for now:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;	&lt;span style=&#34;color:#75715e&#34;&gt;//iterate and decode tag till we get our union desc 
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; pb_union_t &lt;span style=&#34;color:#a6e22e&#34;&gt;getUnionType&lt;/span&gt;(uint8_t buffer[], size_t size);
-	
-	&lt;span style=&#34;color:#75715e&#34;&gt;//actually decode our inner message
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;decodeUnion&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; message, pb_union_t&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; unionType);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;pb_union_t oneof &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; getUnionType(packet, packet_size);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;decoding&#34;&gt;Decoding&lt;/h2&gt;
-&lt;p&gt;Now we have our union message type, so - now what?
-Now you can check when &lt;code&gt;oneof.tag&lt;/code&gt; matches &lt;code&gt;Request_setting_tag&lt;/code&gt; and we have all the information we need to decode &lt;code&gt;KeyValue&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;KeyValue kv &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; decodeKV(key, value);
-decodeUnion(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;kv, oneof);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and that&amp;rsquo;s it really.&lt;/p&gt;
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/deviousasti/ced9041be0c54829a69e9cc18a39f7c4.js&#34;&gt;&lt;/script&gt;
-
-- https://asti.dynz.net/post/nanopb-value/ - CC by Attribution</description>
         </item>
     
     

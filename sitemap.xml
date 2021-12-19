@@ -1,278 +1,174 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
     <loc>https://asti.dynz.net/</loc>
-    <lastmod>2020-12-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+    <lastmod>2021-12-18T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://asti.dynz.net/categories/</loc>
-    <lastmod>2020-12-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+    <lastmod>2021-12-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://asti.dynz.net/post/fscodec/</loc>
+    <lastmod>2021-12-18T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://asti.dynz.net/categories/dev/</loc>
-    <lastmod>2020-12-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+    <lastmod>2021-12-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://asti.dynz.net/tags/eventsourcing/</loc>
+    <lastmod>2021-12-18T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://asti.dynz.net/tags/fsharp/</loc>
-    <lastmod>2020-12-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+    <lastmod>2021-12-18T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://asti.dynz.net/tags/</loc>
-    <lastmod>2020-12-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+    <lastmod>2021-12-18T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://asti.dynz.net/post/fsharp-worksheet/</loc>
     <lastmod>2020-12-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/dotnet/</loc>
     <lastmod>2020-03-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/fs-incorrect-gc/</loc>
     <lastmod>2020-03-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/optimization/</loc>
     <lastmod>2020-03-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/fsc-stacktrace/</loc>
     <lastmod>2020-03-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/recreate-dos/</loc>
     <lastmod>2020-02-18T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/types/</loc>
     <lastmod>2020-02-18T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/boost-beware/</loc>
     <lastmod>2019-12-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/circuits/</loc>
     <lastmod>2019-12-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/categories/eda/</loc>
     <lastmod>2019-12-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/arm/</loc>
     <lastmod>2019-10-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/assembly/</loc>
     <lastmod>2019-10-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/cpp/</loc>
     <lastmod>2019-10-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/categories/embedded/</loc>
     <lastmod>2019-10-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/semihosting/</loc>
     <lastmod>2019-10-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/git-config-parser/</loc>
     <lastmod>2019-09-24T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/posix-time-micro/</loc>
     <lastmod>2019-09-24T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/posix/</loc>
     <lastmod>2019-09-24T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/powershell-sfv/</loc>
     <lastmod>2019-08-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/categories/automation/</loc>
     <lastmod>2019-08-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/powershell/</loc>
     <lastmod>2019-08-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/nanopb-value/</loc>
     <lastmod>2019-08-03T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/protobuf/</loc>
     <lastmod>2019-08-03T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/git/</loc>
     <lastmod>2019-06-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/powershell-git-sync/</loc>
     <lastmod>2019-06-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/html-imports/</loc>
     <lastmod>2019-05-06T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/html/</loc>
     <lastmod>2019-05-06T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/rx-last-value/</loc>
     <lastmod>2019-05-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/rx/</loc>
     <lastmod>2019-05-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/rx-schedulers/</loc>
     <lastmod>2019-04-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/wpf-icon-font/</loc>
     <lastmod>2019-04-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/wpf/</loc>
     <lastmod>2019-04-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/xaml/</loc>
     <lastmod>2019-04-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/powershell-tasks/</loc>
     <lastmod>2019-03-22T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/altium/</loc>
     <lastmod>2019-03-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/fast-part-altium/</loc>
     <lastmod>2019-03-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/visibility-fsharp/</loc>
     <lastmod>2019-02-22T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/render-altium/</loc>
     <lastmod>2019-02-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/fusion/</loc>
     <lastmod>2019-02-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/fs-sets/</loc>
     <lastmod>2019-01-31T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/fs-generic-naming/</loc>
     <lastmod>2019-01-31T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/daisychain-altium/</loc>
     <lastmod>2018-12-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/eda/</loc>
     <lastmod>2018-12-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/bom-merge/</loc>
     <lastmod>2018-11-02T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/tools/</loc>
     <lastmod>2018-11-02T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/typescript/</loc>
     <lastmod>2018-10-02T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/tags/web/</loc>
     <lastmod>2018-10-02T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/post/ts-worker-constraints/</loc>
     <lastmod>2018-10-02T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/about/</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://asti.dynz.net/projects/</loc>
   </url>
-  
 </urlset>

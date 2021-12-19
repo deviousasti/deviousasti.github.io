@@ -28,7 +28,7 @@ T	his is optional, but highly recommended, because PDFs don&amp;rsquo;t have a f
       <description>Create a realistic model Although this should be very straightforward, and while the 3D view in Altium is very accurate, getting it out of there is an entirely different story.
 Step 1 This is, as you&amp;rsquo;d expect to export a STEP file from Altium.
 Use File &amp;gt; Export &amp;gt; STEP 3D
-  Remember to export all 3D bodies as well. But you get no traces, silkscreen or pads in a STEP file.</description>
+ Remember to export all 3D bodies as well. But you get no traces, silkscreen or pads in a STEP file.</description>
     </item>
     
     <item>
@@ -38,7 +38,7 @@ Use File &amp;gt; Export &amp;gt; STEP 3D
       
       <guid>https://asti.dynz.net/post/daisychain-altium/</guid>
       <description>Why a way to daisy-chain? If you wanted to daisy chain any component the conventional way, say a bunch of WS2812s on your board, you&amp;rsquo;d be making multiple instances and manually wiring them to each other.
-  Steps  Make a sub-sheet out of the components you want to daisy chain (unless it&amp;rsquo;s not in one already). Change the designator of the sheet to Repeat(name, 1, N) where N is the number of items you want.</description>
+ Steps  Make a sub-sheet out of the components you want to daisy chain (unless it&amp;rsquo;s not in one already). Change the designator of the sheet to Repeat(name, 1, N) where N is the number of items you want.</description>
     </item>
     
     <item>

@@ -23,11 +23,11 @@
 
 
 
-<link rel="stylesheet" href="https://asti.dynz.net/scss/journal.min.8335a975ef7e2ae409c16107534604caf6426d51ba9776b9b017b2c1d908c2bc.css" integrity="sha256-gzWpde9&#43;KuQJwWEHU0YEyvZCbVG6l3a5sBeywdkIwrw=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/journal.min.ac56748e3d2aa17f13e1b3eba75350b8d31b7594a0f2e5984d3bd99c3fcb274c.css" integrity="sha256-rFZ0jj0qoX8T4bPrp1NQuNMbdZSg8uWYTTvZnD/LJ0w=" media="screen">
 
 
 
-<link rel="stylesheet" href="https://asti.dynz.net/scss/dark-mode.min.114f186b6cd522a64502e49572cbcc70d7ead986a36668413a7e0d977ffd6fff.css" integrity="sha256-EU8Ya2zVIqZFAuSVcsvMcNfq2YajZmhBOn4Nl3/9b/8=" media="screen">
+<link rel="stylesheet" href="https://asti.dynz.net/scss/dark-mode.min.a7a37263ed873168ee6c96873085365e27b2399886d480b811952523b1cc66b1.css" integrity="sha256-p6NyY&#43;2HMWjubJaHMIU2XieyOZiG1IC4EZUlI7HMZrE=" media="screen">
 
 
 <script src="/vendor/js/vue.min.js" ></script>
@@ -597,8 +597,7 @@ CC by Attribution
             <div class="post-body-wrapper">
                 <div class="post-body">
                     <h1 id="f-interactive-now-with-stories">F# Interactive now with Stories!</h1>
-<figure>
-    <img src="/images/fsi-stories.jpg"/> 
+<figure><img src="/images/fsi-stories.jpg"/>
 </figure>
 
 <p>Now that I have your attention, please read on for something even more exciting!</p>
@@ -606,13 +605,11 @@ CC by Attribution
 <p>Working with F# interactive is an exercise in selection and <em>Send to Interactive</em>. While it gives fast feedback, there&rsquo;s always the issue of making changes. Edit something and you have to manually send everything that the edit affects to FSI, which sometimes you may miss out on, and that results in strange behavior.</p>
 <p>What if we could do better? What if we could generalize an arbitrary program into evaluating like a spreadsheet?</p>
 <p>Could we have something like this?</p>
-<figure>
-    <img src="/images/excel.gif" width="60%"/> 
+<figure><img src="/images/excel.gif" width="60%"/>
 </figure>
 
 <p>It turns out we can!</p>
-<figure>
-    <img src="/images/excelfsharp.gif" width="80%"/> 
+<figure><img src="/images/excelfsharp.gif" width="80%"/>
 </figure>
 
 <h1 id="how-does-it-work">How does it work?</h1>
@@ -733,8 +730,7 @@ taller empty <span style="color:#f92672">(</span>singleton 1<span style="color:#
 </table>
 <p>Looking at the AST reveals the usage of these symbols from our nodes. For example, <code>empty</code> contains a reference to the <code>Tree</code> symbol. Through instances of symbol usage, for each of these nodes, we can establish links between them.</p>
 <p>Which allows us to generate a graph like this:</p>
-<figure>
-    <img src="/images/worksheet-diag.svg"/> 
+<figure><img src="/images/worksheet-diag.svg"/>
 </figure>
 
 <p>For any given expression, it&rsquo;s possible to follow the chain of calls.</p>
@@ -749,8 +745,7 @@ taller empty <span style="color:#f92672">(</span>singleton 1<span style="color:#
 <p>This turns out to be sufficient, instead of tracking cell mutations, which we cannot because we are generalizing for arbitrary changes. If the new cell has any dependents in the graph, they qualify for evaluation as well. And so their dependents, and so on.</p>
 <p>For every qualified cell, we evaluate its value (i.e., run the computation and save the result). 
 There&rsquo;s some additional infrastructure around the evaluator, so things work like we expect them to:</p>
-<figure>
-    <img src="/images/fsworksheet-capture.jpg" width="80%"/> 
+<figure><img src="/images/fsworksheet-capture.jpg" width="80%"/>
 </figure>
 
 <h1 id="implementation">Implementation</h1>
@@ -759,13 +754,11 @@ There&rsquo;s some additional infrastructure around the evaluator, so things wor
 <p>This builds and installs it as a dotnet tool. You can make it watch any script file with:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">PS&gt; fsw program.fsx
 </code></pre></div><p>and it evaluates changes every time you save changes.</p>
-<figure>
-    <img src="/images/fswatch.gif"/> 
+<figure><img src="/images/fswatch.gif"/>
 </figure>
 
 <p>The Visual Studio plugin is in pre-release, it needs additional UX work to make it pleasant to use. You can still build the solution to try it in preview. A brief demo:</p>
-<figure>
-    <img src="/images/fsworksheet.gif"/> 
+<figure><img src="/images/fsworksheet.gif"/>
 </figure>
 
 <p>Ideas are welcome to make it more user-friendly and visual.</p>
@@ -781,8 +774,8 @@ There&rsquo;s some additional infrastructure around the evaluator, so things wor
             <nav class="post-pagination">
 
                 
-                <a class="newer-posts">
-                    Next<br>No newer posts.
+                <a class="newer-posts" href="https://asti.dynz.net/post/fscodec/">
+                    Next<br>Contracts for Event Sourced Systems with FsCodec
                 </a>
                 
                 

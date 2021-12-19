@@ -7,14 +7,24 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Fri, 04 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://asti.dynz.net/tags/fsharp/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 18 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://asti.dynz.net/tags/fsharp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Contracts for Event Sourced Systems with FsCodec</title>
+      <link>https://asti.dynz.net/post/fscodec/</link>
+      <pubDate>Sat, 18 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://asti.dynz.net/post/fscodec/</guid>
+      <description>Contracts for Event Sourced Systems with FsCodec FsCodec is an opinionated library for working with contracts in event sourced systems in F#. At its core, it&amp;rsquo;s a set of custom JSON serializers for two backends Newtonsoft.Json (NSJ) or System.Text.Json (STJ).
+Normally a higher level system like Propulsion or Equinox will handle this for you - but if you just want contract encoding/decoding, we can directly use FsCodec which is plenty high-level.</description>
+    </item>
+    
     <item>
       <title>Worksheet: A new way to prototype in F#</title>
       <link>https://asti.dynz.net/post/fsharp-worksheet/</link>
       <pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>https://asti.dynz.net/post/fsharp-worksheet/</guid>
-      <description>F# Interactive now with Stories!   Now that I have your attention, please read on for something even more exciting!
+      <description>F# Interactive now with Stories!  Now that I have your attention, please read on for something even more exciting!
 The case for Working with F# interactive is an exercise in selection and Send to Interactive. While it gives fast feedback, there&amp;rsquo;s always the issue of making changes. Edit something and you have to manually send everything that the edit affects to FSI, which sometimes you may miss out on, and that results in strange behavior.</description>
     </item>
     

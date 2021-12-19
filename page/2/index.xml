@@ -6,9 +6,76 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Fri, 04 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 18 Dec 2021 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="https://asti.dynz.net/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    
+        <item>
+        <title>Decoding a oneof case in nanopb</title>
+        <link>https://asti.dynz.net/post/nanopb-value/</link>
+        <pubDate>Sat, 03 Aug 2019 00:00:00 +0000</pubDate>
+        
+        <guid>https://asti.dynz.net/post/nanopb-value/</guid>
+        <description>Asti&#39;s Notes https://asti.dynz.net/post/nanopb-value/ -&lt;h2 id=&#34;decoding-callbacks&#34;&gt;Decoding callbacks&lt;/h2&gt;
+&lt;p&gt;Say you have a message type with variable fields:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-protobuf&#34; data-lang=&#34;protobuf&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;message&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;KeyValue&lt;/span&gt; {&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; key     &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; value   &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;}&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This generates:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;typedef&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; _KeyValue {
+    pb_callback_t key;
+    pb_callback_t value;
+} KeyValue;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Decoding this in nanopb isn&amp;rsquo;t so bad -&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;KeyValue &lt;span style=&#34;color:#a6e22e&#34;&gt;decodeKV&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; key, &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; value)
+{
+	KeyValue kv;
+	kv.key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; readStringCallback(key);
+	kv.value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; readStringCallback(value);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; kv;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Call &lt;code&gt;pb_decode&lt;/code&gt; and you&amp;rsquo;re done.&lt;/p&gt;
+&lt;h2 id=&#34;the-callback-and-the-union&#34;&gt;The callback and the union&lt;/h2&gt;
+&lt;p&gt;If your type happens to be inside a &lt;code&gt;oneof&lt;/code&gt; like so:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;message Request {
+	oneof type {
+		Version version = 1;
+		KeyValue setting = 2;
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;suddenly, the &lt;code&gt;KeyValue&lt;/code&gt; struct is in an union type - which itself is a field in another struct.&lt;/p&gt;
+&lt;p&gt;Now when you use &lt;code&gt;decodeKV&lt;/code&gt; try to decode &lt;code&gt;Request&lt;/code&gt; (the container message), you will find that nothing happens, and your callbacks are never called. This is because during the decode, the union type itself is initialized and so the &lt;code&gt;pb_callback&lt;/code&gt;s are set to &lt;code&gt;NULL&lt;/code&gt; - no callbacks set, no call back (pardon the alliteration).&lt;/p&gt;
+&lt;h2 id=&#34;if-you-dont-succeed-at-first-decode-again&#34;&gt;If you don&amp;rsquo;t succeed at first, decode again&lt;/h2&gt;
+&lt;p&gt;For this to work out, we need to create an environment where we decode the inner struct as a standalone message - like in our very first scenario.&lt;/p&gt;
+&lt;p&gt;First we need to figure out which was our &lt;code&gt;oneof&lt;/code&gt; case - to be more specific, the message descriptor corresponding to our &lt;code&gt;oneof&lt;/code&gt; case.&lt;/p&gt;
+&lt;p&gt;We need a type to collect our findings, so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;typedef&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; pb_union_s
+	{
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; uint32_t tag;
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; pb_msgdesc_t&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; submsg_desc;
+		pb_istream_t stream;
+	} pb_union_t;	
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I&amp;rsquo;ll put in the full implementation in a gist below, but for now:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;	&lt;span style=&#34;color:#75715e&#34;&gt;//iterate and decode tag till we get our union desc 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; pb_union_t &lt;span style=&#34;color:#a6e22e&#34;&gt;getUnionType&lt;/span&gt;(uint8_t buffer[], size_t size);
+	
+	&lt;span style=&#34;color:#75715e&#34;&gt;//actually decode our inner message
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;decodeUnion&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; message, pb_union_t&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; unionType);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;pb_union_t oneof &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; getUnionType(packet, packet_size);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;decoding&#34;&gt;Decoding&lt;/h2&gt;
+&lt;p&gt;Now we have our union message type, so - now what?
+Now you can check when &lt;code&gt;oneof.tag&lt;/code&gt; matches &lt;code&gt;Request_setting_tag&lt;/code&gt; and we have all the information we need to decode &lt;code&gt;KeyValue&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;KeyValue kv &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; decodeKV(key, value);
+decodeUnion(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;kv, oneof);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and that&amp;rsquo;s it really.&lt;/p&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/deviousasti/ced9041be0c54829a69e9cc18a39f7c4.js&#34;&gt;&lt;/script&gt;
+
+- https://asti.dynz.net/post/nanopb-value/ - CC by Attribution</description>
+        </item>
     
     
     
@@ -342,13 +409,11 @@ Still don&amp;rsquo;t arbitrarily use it for everything - &lt;code&gt;Immediate&
 &lt;p&gt;Extract the included &lt;code&gt;ttf&lt;/code&gt; file from the archive. You can also download it &lt;a href=&#34;https://asti.dynz.net/fonts/MaterialIcons-Regular.ttf&#34; title=&#34;Download MaterialIcons-Regular.ttf from here&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;step-2&#34;&gt;Step 2&lt;/h2&gt;
 &lt;p&gt;Add to your project under any subfolder. Here I&amp;rsquo;m calling it &lt;code&gt;/Fonts&lt;/code&gt;.&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/wpf-add-font1.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/wpf-add-font1.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;In the file properties, set the build action to &lt;code&gt;Resource&lt;/code&gt;, and Copy to &lt;code&gt;Copy if newer&lt;/code&gt;.&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/wpf-add-font2.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/wpf-add-font2.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;step-3&#34;&gt;Step 3&lt;/h2&gt;
@@ -369,14 +434,12 @@ Still don&amp;rsquo;t arbitrarily use it for everything - &lt;code&gt;Immediate&
 &lt;p&gt;Use it any where by setting &lt;code&gt;FontFamily&lt;/code&gt;, and the &lt;code&gt;Content&lt;/code&gt;.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;FontFamily=&amp;quot;{StaticResource IconFont}&amp;quot; Content=&amp;quot;icon_name&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Pick any icon from the set.&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/wpf-add-font3.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/wpf-add-font3.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Example:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-xaml&#34; data-lang=&#34;xaml&#34;&gt;&amp;lt;Button FontFamily=&amp;quot;{StaticResource IconFont}&amp;quot; Foreground=&amp;quot;Red&amp;quot;&amp;gt;favorite&amp;lt;/Button&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/wpf-add-font4.jpg&#34;/&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/wpf-add-font4.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;And that&amp;rsquo;s it!&lt;/p&gt;
@@ -448,13 +511,11 @@ $stackTrace = $event.Message
 &lt;p&gt;I&amp;rsquo;ll be using the &lt;a href=&#34;http://www.ti.com/lit/ds/symlink/tpa3137d2.pdf&#34;&gt;TPA3137D2&lt;/a&gt; (6-W Inductor Free Stereo (BTL) Class-D Audio Amplifier) as an example here.&lt;/p&gt;
 &lt;h3 id=&#34;step-2&#34;&gt;Step 2&lt;/h3&gt;
 &lt;p&gt;Copy the pin function table to a spreadsheet.&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step2.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step2.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Split out the rows for the common pins, and extra numbers for thermal pads:&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step21.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step21.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;If you want pin direction, change the IO column to one of &lt;code&gt;Input&lt;/code&gt;, &lt;code&gt;Output&lt;/code&gt; or &lt;code&gt;Power&lt;/code&gt;.&lt;/p&gt;
@@ -462,20 +523,17 @@ $stackTrace = $event.Message
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;step-3&#34;&gt;Step 3&lt;/h3&gt;
 &lt;p&gt;With a schematic library open, open &lt;strong&gt;Tools &amp;gt; Symbol Wizard&lt;/strong&gt;
 Copy the entire sheet from the spreadsheet, and &lt;em&gt;Smart Paste&lt;/em&gt; (&lt;code&gt;Ctrl + Shift + V&lt;/code&gt;) into the Wizard&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step3.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step3.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Select the corresponding column for Display Name, Designator, Electrical Type (optional), and Description&lt;/p&gt;
 &lt;p&gt;Click &lt;code&gt;Paste&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Since this is a dual in-line Package (SSOP-28), I will choose the layout style to be dual in-line (see below)&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step31.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step31.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Hit &lt;code&gt;Place&lt;/code&gt;. And that&amp;rsquo;s it. The final result should look like this:
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step4.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step4.jpg&#34;/&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;p&gt;Each pin should have the correct electrical type and the description.&lt;/p&gt;
@@ -582,28 +640,24 @@ If cross-language compatibility is important to you, use &lt;code&gt;member&lt;/
 &lt;h2 id=&#34;step-1&#34;&gt;Step 1&lt;/h2&gt;
 &lt;p&gt;This is, as you&amp;rsquo;d expect to export a STEP file from Altium.&lt;/p&gt;
 &lt;p&gt;Use &lt;code&gt;File &amp;gt; Export &amp;gt; STEP 3D&lt;/code&gt;&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/render-altium1.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium1.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Remember to export all 3D bodies as well. But you get no traces, silkscreen or pads in a STEP file.&lt;/p&gt;
 &lt;p&gt;So on to the next step.&lt;/p&gt;
 &lt;h2 id=&#34;step-2&#34;&gt;Step 2&lt;/h2&gt;
 &lt;p&gt;Open the STEP file in Fusion 360 (or Keyshot - the process is similar)&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/render-altium2.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium2.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Make sure the main solids are free from errors, and there&amp;rsquo;s no z-fighting.&lt;/p&gt;
 &lt;h2 id=&#34;step-3&#34;&gt;Step 3&lt;/h2&gt;
 &lt;p&gt;In Altium, open &lt;code&gt;Page Setup&lt;/code&gt; and &lt;code&gt;Print Properties&lt;/code&gt;.&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/render-altium31.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium31.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Right click any item and select &lt;code&gt;Preferences&lt;/code&gt;&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/render-altium32.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium32.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;ul&gt;
@@ -612,20 +666,17 @@ If cross-language compatibility is important to you, use &lt;code&gt;member&lt;/
 &lt;li&gt;Set the Top Solder colour to black or a darker colour&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Remove the other layers, and set up a composite image in this order:&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/render-altium33.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium33.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Print as a PDF. Convert to PNG or TIF.&lt;/p&gt;
 &lt;h2 id=&#34;step-4&#34;&gt;Step 4&lt;/h2&gt;
 &lt;p&gt;Import the image into Fusion 360 as a decal:&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/render-altium4.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium4.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Select the top face. Make sure &lt;code&gt;Chain Faces&lt;/code&gt; is unchecked.&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/render-altium41.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium41.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Move the decal into position.&lt;/p&gt;
@@ -633,68 +684,15 @@ If cross-language compatibility is important to you, use &lt;code&gt;member&lt;/
 &lt;p&gt;Open the Appearance tab, and map more accurate to the existing materials.&lt;/p&gt;
 &lt;p&gt;You can do this by selecting a material, selecting all instances of it, and dragging a new material.&lt;/p&gt;
 &lt;p&gt;Here I&amp;rsquo;m adding a polished gold material for the castellations.&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/render-altium51.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium51.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now set up some soft lighting , a solid environment color, and hit Render!&lt;/p&gt;
-&lt;figure&gt;
-    &lt;img src=&#34;https://asti.dynz.net/images/render-altium5.jpg&#34;/&gt; 
+&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium5.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;And you should have something like this.&lt;/p&gt;
 - https://asti.dynz.net/post/render-altium/ - CC by Attribution</description>
-        </item>
-    
-    
-    
-        <item>
-        <title>A purely functional definition of Sets</title>
-        <link>https://asti.dynz.net/post/fs-sets/</link>
-        <pubDate>Thu, 31 Jan 2019 00:00:00 +0000</pubDate>
-        
-        <guid>https://asti.dynz.net/post/fs-sets/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/fs-sets/ -&lt;p&gt;What would a defintion of classic sets in F# look like. These would just be composed of functions, without any underlying data types.&lt;/p&gt;
-&lt;p&gt;The simplesy defintion of a &lt;code&gt;Set&lt;/code&gt; is a boundary - everything inside it belongs to the set, everything outside it does not. We can define that membership using a simple function type.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-ocaml&#34; data-lang=&#34;ocaml&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt;a &lt;span style=&#34;color:#a6e22e&#34;&gt;Set&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt;a &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;true&lt;/code&gt; for a value that belongs to the set and &lt;code&gt;false&lt;/code&gt; otherwise.&lt;/p&gt;
-&lt;p&gt;For example. the set of natural numbers is:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; nat x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; 0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;contains&#34;&gt;contains&lt;/h2&gt;
-&lt;p&gt;Contains just calls our function, but constrains its value to &lt;code&gt;bool&lt;/code&gt;- which will help out type inference down the line.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; contains value set &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; set value
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;empty&#34;&gt;empty&lt;/h2&gt;
-&lt;p&gt;A set that contains nothing could never return &lt;code&gt;true&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; empty &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fun&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;_&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;universal&#34;&gt;universal&lt;/h2&gt;
-&lt;p&gt;A universal set is a set which contains all objects, including itself. 
-For now, our definition does not care about Russel&amp;rsquo;s paradox.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; universal &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fun&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;_&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;zip&#34;&gt;zip&lt;/h2&gt;
-&lt;p&gt;A zip combines two sets with a combinator function.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; zip set1 set2 fn &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fun&lt;/span&gt; v &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; fn &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;set1 &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; contains v&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;set2 &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; contains v&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;union&#34;&gt;union&lt;/h2&gt;
-&lt;p&gt;A set union combines the elements of both sets. We can express this with &lt;code&gt;zip&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; union set1 set2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; zip set1 set2 &lt;span style=&#34;color:#f92672&#34;&gt;(||)&lt;/span&gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;intersect&#34;&gt;intersect&lt;/h2&gt;
-&lt;p&gt;An intersection of two sets only has members which belong in both the sets, or, ANDing.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; intersect set1 set2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; zip set1 set2 &lt;span style=&#34;color:#f92672&#34;&gt;(&amp;amp;&amp;amp;)&lt;/span&gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;filter&#34;&gt;filter&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; filter fn set1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; zip set1 fn &lt;span style=&#34;color:#f92672&#34;&gt;(&amp;amp;&amp;amp;)&lt;/span&gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and moving on to constructing sets.&lt;/p&gt;
-&lt;h2 id=&#34;singleton&#34;&gt;singleton&lt;/h2&gt;
-&lt;p&gt;A singleton set has only one element.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; singleton value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fun&lt;/span&gt; v &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;oflist&#34;&gt;ofList&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; ofList &lt;span style=&#34;color:#66d9ef&#34;&gt;list&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fun&lt;/span&gt; v &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;list&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; List.contains v
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;tests&#34;&gt;Tests&lt;/h1&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;1 &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.singleton &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.contains 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;1 &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.singleton &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.contains 0 &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;not&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;([&lt;/span&gt;1&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 2&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 3&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.ofList &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.contains 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;([&lt;/span&gt;1&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 2&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 3&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.ofList &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.union &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;FSet.singleton 4&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.contains 4&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;([&lt;/span&gt;1&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 2&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 3&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.ofList &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.intersect &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;FSet.singleton 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.contains 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;([&lt;/span&gt;1&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 2&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; 3&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.ofList &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.intersect &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;FSet.singleton 4&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; FSet.contains 4 &lt;span style=&#34;color:#f92672&#34;&gt;|&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;not&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- https://asti.dynz.net/post/fs-sets/ - CC by Attribution</description>
         </item>
     
     
