@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>posix on Asti&#39;s Notes</title>
-    <link>https://asti.dynz.net/tags/posix/</link>
+    <link>/tags/posix/</link>
     <description>Recent content in posix on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Tue, 24 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://asti.dynz.net/tags/posix/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 24 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="/tags/posix/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Ain&#39;t nobody got time for that</title>
-      <link>https://asti.dynz.net/post/posix-time-micro/</link>
+      <link>/post/posix-time-micro/</link>
       <pubDate>Tue, 24 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/posix-time-micro/</guid>
+      <guid>/post/posix-time-micro/</guid>
       <description>1&amp;gt; ------------------- Memory utilization report -------------------1&amp;gt; Used FLASH: 23KB out of 64KB (36%) [+10K]1&amp;gt; Used SRAM: 6244 bytes out of 8192 bytes (76%) [+1688]</description>
     </item>
     

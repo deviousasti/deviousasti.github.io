@@ -2,38 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>fsharp on Asti&#39;s Notes</title>
-    <link>https://asti.dynz.net/tags/fsharp/</link>
+    <link>/tags/fsharp/</link>
     <description>Recent content in fsharp on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Sat, 18 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://asti.dynz.net/tags/fsharp/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 18 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/fsharp/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Contracts for Event Sourced Systems with FsCodec</title>
-      <link>https://asti.dynz.net/post/fscodec/</link>
+      <link>/post/fscodec/</link>
       <pubDate>Sat, 18 Dec 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/fscodec/</guid>
+      <guid>/post/fscodec/</guid>
       <description>Contracts for Event Sourced Systems with FsCodec FsCodec is an opinionated library for working with contracts in event sourced systems in F#. At its core, it&amp;rsquo;s a set of custom JSON serializers for two backends Newtonsoft.Json (NSJ) or System.Text.Json (STJ).
 Normally a higher level system like Propulsion or Equinox will handle this for you - but if you just want contract encoding/decoding, we can directly use FsCodec which is plenty high-level.</description>
     </item>
     
     <item>
       <title>Worksheet: A new way to prototype in F#</title>
-      <link>https://asti.dynz.net/post/fsharp-worksheet/</link>
+      <link>/post/fsharp-worksheet/</link>
       <pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/fsharp-worksheet/</guid>
+      <guid>/post/fsharp-worksheet/</guid>
       <description>F# Interactive now with Stories!  Now that I have your attention, please read on for something even more exciting!
 The case for Working with F# interactive is an exercise in selection and Send to Interactive. While it gives fast feedback, there&amp;rsquo;s always the issue of making changes. Edit something and you have to manually send everything that the edit affects to FSI, which sometimes you may miss out on, and that results in strange behavior.</description>
     </item>
     
     <item>
       <title>Invalid GC results in F# tests</title>
-      <link>https://asti.dynz.net/post/fs-incorrect-gc/</link>
+      <link>/post/fs-incorrect-gc/</link>
       <pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/fs-incorrect-gc/</guid>
+      <guid>/post/fs-incorrect-gc/</guid>
       <description>When running tests which check if something is GC&amp;rsquo;d, it might fail.
 The test Consider the following test:
 [&amp;lt;TestMethod&amp;gt;] member _.TestGC() = let mutable obj = new Object() let weak = new WeakReference(obj); GC.Collect() Assert.IsTrue(obj &amp;lt;&amp;gt; null) Assert.IsTrue(weak.IsAlive) obj &amp;lt;- null GC.Collect() Assert.IsTrue((obj = null)) Assert.IsTrue(not weak.IsAlive) This will fail in DEBUG.
@@ -43,10 +43,10 @@ let list1 = [1; 2; 3] let list2 = [1; 2; 3] assert (list1 = list2) This elaborat
     
     <item>
       <title>Incorrect stack traces in F#</title>
-      <link>https://asti.dynz.net/post/fsc-stacktrace/</link>
+      <link>/post/fsc-stacktrace/</link>
       <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/fsc-stacktrace/</guid>
+      <guid>/post/fsc-stacktrace/</guid>
       <description>Consider the following simple program:
 let foo () = failwithf &amp;#34;foo&amp;#34; [&amp;lt;EntryPoint&amp;gt;] let main argv = foo () 0 Pretty straightforward. But depending on the circumstances, you may never see that foo in the stack trace.
 Unhandled Exception: System.Exception: fooat Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1639.Invoke(String message)at Program.main(String[] argv) in Program.fs:line 13And the reason for that is optimizations. For fsc, optimizations are turned on by default.
@@ -55,10 +55,10 @@ Inlining This is the most common thing you&amp;rsquo;re likely to see.</descript
     
     <item>
       <title>A git-config parser</title>
-      <link>https://asti.dynz.net/post/git-config-parser/</link>
+      <link>/post/git-config-parser/</link>
       <pubDate>Tue, 24 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/git-config-parser/</guid>
+      <guid>/post/git-config-parser/</guid>
       <description>Reading .git/config is the fastest way of getting info on a repository and its dependencies.
 The Spec Let&amp;rsquo;s start by going through the spec from https://git-scm.com/docs/git-config#_syntax
 An example config:
@@ -69,20 +69,20 @@ An example config:
     
     <item>
       <title>An Html Imports Bundler</title>
-      <link>https://asti.dynz.net/post/html-imports/</link>
+      <link>/post/html-imports/</link>
       <pubDate>Mon, 06 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/html-imports/</guid>
+      <guid>/post/html-imports/</guid>
       <description>Once upon a time HTML imports was marketed as #include for the web and the best thing ever invented. And it was a great idea.
  HTML Imports is a way to include HTML documents in other HTML documents. You&amp;rsquo;re not limited to markup either. An import can also include CSS, JavaScript, or anything else an .html file can contain. In other words, this makes imports a fantastic tool for loading related HTML/CSS/JS</description>
     </item>
     
     <item>
       <title>Getting the last value from an Observable when it fails</title>
-      <link>https://asti.dynz.net/post/rx-last-value/</link>
+      <link>/post/rx-last-value/</link>
       <pubDate>Sun, 05 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/rx-last-value/</guid>
+      <guid>/post/rx-last-value/</guid>
       <description>The Rx Contract The Rx contract is:
 OnNext* (OnError(e)|OnCompleted)+Unfortunately, an OnError signals the pipeline to be torn down immediately - throwing away that last, possibly useful result.
 The problem Let&amp;rsquo;s have a simple source which produces:
@@ -92,10 +92,10 @@ source .</description>
     
     <item>
       <title>Visibility in F#</title>
-      <link>https://asti.dynz.net/post/visibility-fsharp/</link>
+      <link>/post/visibility-fsharp/</link>
       <pubDate>Fri, 22 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/visibility-fsharp/</guid>
+      <guid>/post/visibility-fsharp/</guid>
       <description>let vs. member assignments What&amp;rsquo;s the difference between writing let in a type vs. writing member?
 For starters, there&amp;rsquo;s not a huge difference.
 type Test () = let mutable lastTime = DateTime.MinValue is equivalent to:
@@ -106,10 +106,10 @@ type Test () = let firstTime = DateTime.MinValue always stays in the scope of th
     
     <item>
       <title>A purely functional definition of Sets</title>
-      <link>https://asti.dynz.net/post/fs-sets/</link>
+      <link>/post/fs-sets/</link>
       <pubDate>Thu, 31 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/fs-sets/</guid>
+      <guid>/post/fs-sets/</guid>
       <description>What would a defintion of classic sets in F# look like. These would just be composed of functions, without any underlying data types.
 The simplesy defintion of a Set is a boundary - everything inside it belongs to the set, everything outside it does not. We can define that membership using a simple function type.
 type &amp;#39;a Set = &amp;#39;a -&amp;gt; bool true for a value that belongs to the set and false otherwise.</description>
@@ -117,10 +117,10 @@ type &amp;#39;a Set = &amp;#39;a -&amp;gt; bool true for a value that belongs to
     
     <item>
       <title>Naming of generic parameters in F#</title>
-      <link>https://asti.dynz.net/post/fs-generic-naming/</link>
+      <link>/post/fs-generic-naming/</link>
       <pubDate>Thu, 31 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/fs-generic-naming/</guid>
+      <guid>/post/fs-generic-naming/</guid>
       <description>F# would like to name the first inferred parameter &#39;a, then &#39;b, &#39;c and so on. If it&amp;rsquo;s in use, it will be suffixed with 0..n. Let&amp;rsquo;s look at an example:
 let fn a b c d e f g h = () //a:&#39;a -&amp;gt; b:&#39;b -&amp;gt; c:&#39;c -&amp;gt; d:&#39;d -&amp;gt; e:&#39;e -&amp;gt; f:&#39;f -&amp;gt; g:&#39;g -&amp;gt; h:&#39;h -&amp;gt; unit So if you constrain a to something, it&amp;rsquo;ll start naming from the next unconstrained parameter - b onwards.</description>
     </item>

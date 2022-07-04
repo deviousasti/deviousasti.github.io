@@ -1,24 +1,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Asti&#39;s Notes</title>
-    <link>https://asti.dynz.net/</link>
+    <link>/</link>
     <description>Recent content on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
     <lastBuildDate>Sat, 18 Dec 2021 00:00:00 +0000</lastBuildDate>
     
-        <atom:link href="https://asti.dynz.net/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     
         <item>
         <title>Decoding a oneof case in nanopb</title>
-        <link>https://asti.dynz.net/post/nanopb-value/</link>
+        <link>/post/nanopb-value/</link>
         <pubDate>Sat, 03 Aug 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/nanopb-value/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/nanopb-value/ -&lt;h2 id=&#34;decoding-callbacks&#34;&gt;Decoding callbacks&lt;/h2&gt;
+        <guid>/post/nanopb-value/</guid>
+        <description>Asti&#39;s Notes /post/nanopb-value/ -&lt;h2 id=&#34;decoding-callbacks&#34;&gt;Decoding callbacks&lt;/h2&gt;
 &lt;p&gt;Say you have a message type with variable fields:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-protobuf&#34; data-lang=&#34;protobuf&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;message&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;KeyValue&lt;/span&gt; {&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; key     &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
@@ -74,18 +74,18 @@ decodeUnion(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;kv, 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and that&amp;rsquo;s it really.&lt;/p&gt;
 &lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/deviousasti/ced9041be0c54829a69e9cc18a39f7c4.js&#34;&gt;&lt;/script&gt;
 
-- https://asti.dynz.net/post/nanopb-value/ - CC by Attribution</description>
+- /post/nanopb-value/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Sync git modules to .gitmodules</title>
-        <link>https://asti.dynz.net/post/powershell-git-sync/</link>
+        <link>/post/powershell-git-sync/</link>
         <pubDate>Mon, 17 Jun 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/powershell-git-sync/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/powershell-git-sync/ -&lt;h2 id=&#34;gitmodules-is-not-git-submodules&#34;&gt;.gitmodules is not git submodules&lt;/h2&gt;
+        <guid>/post/powershell-git-sync/</guid>
+        <description>Asti&#39;s Notes /post/powershell-git-sync/ -&lt;h2 id=&#34;gitmodules-is-not-git-submodules&#34;&gt;.gitmodules is not git submodules&lt;/h2&gt;
 &lt;p&gt;A  &lt;code&gt;.gitmodules&lt;/code&gt; file is sort of indicative - it&amp;rsquo;s not what actually is being tracked by Git.
 When you start a new project, and you have to include a bunch of submodules, you may think of starting off by copying and editing a &lt;code&gt;.gitmodules&lt;/code&gt; file with all the submodules you want, but that literally does nothing.&lt;/p&gt;
 &lt;p&gt;You&amp;rsquo;ll find out that you have to &lt;code&gt;git submodule add&lt;/code&gt; everything by hand.
@@ -139,18 +139,18 @@ Even if we redirect &lt;code&gt;stderr&lt;/code&gt;, the &lt;code&gt;stderr&lt;/
 &lt;h2 id=&#34;usage&#34;&gt;Usage:&lt;/h2&gt;
 &lt;p&gt;cd to path with &lt;code&gt;.gitmodules&lt;/code&gt;&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Sync-Submodules
-&lt;/code&gt;&lt;/pre&gt;- https://asti.dynz.net/post/powershell-git-sync/ - CC by Attribution</description>
+&lt;/code&gt;&lt;/pre&gt;- /post/powershell-git-sync/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>An Html Imports Bundler</title>
-        <link>https://asti.dynz.net/post/html-imports/</link>
+        <link>/post/html-imports/</link>
         <pubDate>Mon, 06 May 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/html-imports/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/html-imports/ -&lt;p&gt;Once upon a time HTML imports was marketed as #include for the web and the best thing ever invented.
+        <guid>/post/html-imports/</guid>
+        <description>Asti&#39;s Notes /post/html-imports/ -&lt;p&gt;Once upon a time HTML imports was marketed as #include for the web and the best thing ever invented.
 And it was a great idea.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;HTML Imports is a way to include HTML documents in other HTML documents. You&amp;rsquo;re not limited to markup either. An import can also include CSS, JavaScript, or anything else an .html file can contain. In other words, this makes imports a fantastic tool for loading related HTML/CSS/JS&lt;/p&gt;
@@ -258,18 +258,18 @@ Additionally, we must rewrite &lt;code&gt;script&lt;/code&gt; and &lt;code&gt;st
 &lt;p&gt;Here&amp;rsquo;s the full source. The main bits are in &lt;code&gt;Program.fs&lt;/code&gt;, the &lt;code&gt;Html.fs&lt;/code&gt; is just a small wrapper to make &lt;code&gt;AgilityPack&lt;/code&gt; more like &lt;code&gt;FSharp.Data&lt;/code&gt;.&lt;/p&gt;
 &lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/deviousasti/b63f98b66401676511f00148ae38ce8f.js&#34;&gt;&lt;/script&gt;
 
-- https://asti.dynz.net/post/html-imports/ - CC by Attribution</description>
+- /post/html-imports/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Getting the last value from an Observable when it fails</title>
-        <link>https://asti.dynz.net/post/rx-last-value/</link>
+        <link>/post/rx-last-value/</link>
         <pubDate>Sun, 05 May 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/rx-last-value/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/rx-last-value/ -&lt;h2 id=&#34;the-rx-contract&#34;&gt;The Rx Contract&lt;/h2&gt;
+        <guid>/post/rx-last-value/</guid>
+        <description>Asti&#39;s Notes /post/rx-last-value/ -&lt;h2 id=&#34;the-rx-contract&#34;&gt;The Rx Contract&lt;/h2&gt;
 &lt;p&gt;The Rx contract is:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;OnNext* (OnError(e)|OnCompleted)+
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Unfortunately, an &lt;code&gt;OnError&lt;/code&gt; signals the pipeline to be torn down immediately - throwing away that last, possibly useful result.&lt;/p&gt;
@@ -312,18 +312,18 @@ OnNext(9),OnNext(10),OnError(System.Exception)
 5,6,7,8
 9,10
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The same solution works for &lt;code&gt;ToArray&lt;/code&gt;.&lt;/p&gt;
-- https://asti.dynz.net/post/rx-last-value/ - CC by Attribution</description>
+- /post/rx-last-value/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>The various Schedulers in Rx</title>
-        <link>https://asti.dynz.net/post/rx-schedulers/</link>
+        <link>/post/rx-schedulers/</link>
         <pubDate>Fri, 19 Apr 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/rx-schedulers/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/rx-schedulers/ -&lt;h2 id=&#34;schedulers-in-rx&#34;&gt;Schedulers in Rx&lt;/h2&gt;
+        <guid>/post/rx-schedulers/</guid>
+        <description>Asti&#39;s Notes /post/rx-schedulers/ -&lt;h2 id=&#34;schedulers-in-rx&#34;&gt;Schedulers in Rx&lt;/h2&gt;
 &lt;p&gt;Schedulers abstract away concurrency from operators.
 A scheduler decides what order &amp;ldquo;thunks&amp;rdquo; (a unit of work) execute in, and how time &lt;em&gt;flows&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;There are a number of scheduler implementations for doing work on diverse models of concurrency.
@@ -389,31 +389,31 @@ Still don&amp;rsquo;t arbitrarily use it for everything - &lt;code&gt;Immediate&
 &lt;code&gt;Scheduler.Default&lt;/code&gt; returns the singleton instance of this.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;DefaultScheduler Default =&amp;gt; DefaultScheduler.Instance;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;As before, prefer &lt;code&gt;TaskPoolScheduler&lt;/code&gt;.&lt;/p&gt;
-- https://asti.dynz.net/post/rx-schedulers/ - CC by Attribution</description>
+- /post/rx-schedulers/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Material Icons in WPF</title>
-        <link>https://asti.dynz.net/post/wpf-icon-font/</link>
+        <link>/post/wpf-icon-font/</link>
         <pubDate>Tue, 16 Apr 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/wpf-icon-font/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/wpf-icon-font/ -&lt;h2 id=&#34;icon--fonts-with-ligatures&#34;&gt;Icon  Fonts with ligatures&lt;/h2&gt;
+        <guid>/post/wpf-icon-font/</guid>
+        <description>Asti&#39;s Notes /post/wpf-icon-font/ -&lt;h2 id=&#34;icon--fonts-with-ligatures&#34;&gt;Icon  Fonts with ligatures&lt;/h2&gt;
 &lt;p&gt;The key is using icon fonts with &lt;a href=&#34;https://en.wikipedia.org/wiki/Orthographic_ligature&#34; title=&#34;Orthographic ligature&#34;&gt;ligatures&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;This makes usage incredibly easy because you can directly use a sensible &lt;em&gt;name&lt;/em&gt; instead of adding an extra resource for indirection of Unicode characters.&lt;/p&gt;
 &lt;h2 id=&#34;step--1&#34;&gt;Step  1&lt;/h2&gt;
 &lt;p&gt;Download the icon font from &lt;a href=&#34;https://material.io/resources/icons/&#34;&gt;https://material.io/resources/icons/&lt;/a&gt; (or another resource)&lt;/p&gt;
 &lt;p&gt;WPF supports both True Type Fonts (TTF) and Open Type Fonts (OTF).&lt;/p&gt;
-&lt;p&gt;Extract the included &lt;code&gt;ttf&lt;/code&gt; file from the archive. You can also download it &lt;a href=&#34;https://asti.dynz.net/fonts/MaterialIcons-Regular.ttf&#34; title=&#34;Download MaterialIcons-Regular.ttf from here&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Extract the included &lt;code&gt;ttf&lt;/code&gt; file from the archive. You can also download it &lt;a href=&#34;/fonts/MaterialIcons-Regular.ttf&#34; title=&#34;Download MaterialIcons-Regular.ttf from here&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;step-2&#34;&gt;Step 2&lt;/h2&gt;
 &lt;p&gt;Add to your project under any subfolder. Here I&amp;rsquo;m calling it &lt;code&gt;/Fonts&lt;/code&gt;.&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/wpf-add-font1.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/wpf-add-font1.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;In the file properties, set the build action to &lt;code&gt;Resource&lt;/code&gt;, and Copy to &lt;code&gt;Copy if newer&lt;/code&gt;.&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/wpf-add-font2.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/wpf-add-font2.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;h2 id=&#34;step-3&#34;&gt;Step 3&lt;/h2&gt;
@@ -434,27 +434,27 @@ Still don&amp;rsquo;t arbitrarily use it for everything - &lt;code&gt;Immediate&
 &lt;p&gt;Use it any where by setting &lt;code&gt;FontFamily&lt;/code&gt;, and the &lt;code&gt;Content&lt;/code&gt;.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;FontFamily=&amp;quot;{StaticResource IconFont}&amp;quot; Content=&amp;quot;icon_name&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Pick any icon from the set.&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/wpf-add-font3.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/wpf-add-font3.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Example:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-xaml&#34; data-lang=&#34;xaml&#34;&gt;&amp;lt;Button FontFamily=&amp;quot;{StaticResource IconFont}&amp;quot; Foreground=&amp;quot;Red&amp;quot;&amp;gt;favorite&amp;lt;/Button&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/wpf-add-font4.jpg&#34;/&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src=&#34;/images/wpf-add-font4.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;And that&amp;rsquo;s it!&lt;/p&gt;
-- https://asti.dynz.net/post/wpf-icon-font/ - CC by Attribution</description>
+- /post/wpf-icon-font/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Run a PowerShell script for every .NET application crash</title>
-        <link>https://asti.dynz.net/post/powershell-tasks/</link>
+        <link>/post/powershell-tasks/</link>
         <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/powershell-tasks/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/powershell-tasks/ -&lt;p&gt;How do you run a script for every application crash without attaching the debugger or some complicated mess? It&amp;rsquo;s easy enough to write a simple script which checks for the life of the process.&lt;/p&gt;
+        <guid>/post/powershell-tasks/</guid>
+        <description>Asti&#39;s Notes /post/powershell-tasks/ -&lt;p&gt;How do you run a script for every application crash without attaching the debugger or some complicated mess? It&amp;rsquo;s easy enough to write a simple script which checks for the life of the process.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt;($(ps taskmgr*) &lt;span style=&#34;color:#f92672&#34;&gt;-ne&lt;/span&gt; $null) 
 {
   sleep 1  
@@ -493,29 +493,29 @@ $stackTrace = $event.Message
     $stackTrace &amp;gt; trace.txt
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above example will just log the stack-trace to &lt;code&gt;trace.txt&lt;/code&gt; every time an application crashes. Of course, you can take any action, such as even mailing you when there&amp;rsquo;s a crash with &lt;code&gt;Send-MailMessage&lt;/code&gt;.&lt;/p&gt;
-- https://asti.dynz.net/post/powershell-tasks/ - CC by Attribution</description>
+- /post/powershell-tasks/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Datasheet to symbol</title>
-        <link>https://asti.dynz.net/post/fast-part-altium/</link>
+        <link>/post/fast-part-altium/</link>
         <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/fast-part-altium/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/fast-part-altium/ -&lt;p&gt;Don&amp;rsquo;t want to spend 20 minutes copy-pasting bits and pieces of the datasheet into a schematic symbol? This is for you.&lt;/p&gt;
+        <guid>/post/fast-part-altium/</guid>
+        <description>Asti&#39;s Notes /post/fast-part-altium/ -&lt;p&gt;Don&amp;rsquo;t want to spend 20 minutes copy-pasting bits and pieces of the datasheet into a schematic symbol? This is for you.&lt;/p&gt;
 &lt;h3 id=&#34;step-1&#34;&gt;Step 1&lt;/h3&gt;
-&lt;p&gt;Open the datasheet PDF in a word processor. &lt;a href=&#34;https://asti.dynz.net/images/fastsymbol-step1.jpg&#34;&gt;See image&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Open the datasheet PDF in a word processor. &lt;a href=&#34;/images/fastsymbol-step1.jpg&#34;&gt;See image&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;T	his is optional, but highly recommended, because PDFs don&amp;rsquo;t have a flowing layout, and it is important that we have flow in this situation. If you&amp;rsquo;re using a web datasheet, you can skip this step. You could also use something like &lt;a href=&#34;https://tabula.technology&#34;&gt;Tabula&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;ll be using the &lt;a href=&#34;http://www.ti.com/lit/ds/symlink/tpa3137d2.pdf&#34;&gt;TPA3137D2&lt;/a&gt; (6-W Inductor Free Stereo (BTL) Class-D Audio Amplifier) as an example here.&lt;/p&gt;
 &lt;h3 id=&#34;step-2&#34;&gt;Step 2&lt;/h3&gt;
 &lt;p&gt;Copy the pin function table to a spreadsheet.&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step2.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/fastsymbol-step2.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Split out the rows for the common pins, and extra numbers for thermal pads:&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step21.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/fastsymbol-step21.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;If you want pin direction, change the IO column to one of &lt;code&gt;Input&lt;/code&gt;, &lt;code&gt;Output&lt;/code&gt; or &lt;code&gt;Power&lt;/code&gt;.&lt;/p&gt;
@@ -523,32 +523,32 @@ $stackTrace = $event.Message
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;step-3&#34;&gt;Step 3&lt;/h3&gt;
 &lt;p&gt;With a schematic library open, open &lt;strong&gt;Tools &amp;gt; Symbol Wizard&lt;/strong&gt;
 Copy the entire sheet from the spreadsheet, and &lt;em&gt;Smart Paste&lt;/em&gt; (&lt;code&gt;Ctrl + Shift + V&lt;/code&gt;) into the Wizard&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step3.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/fastsymbol-step3.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Select the corresponding column for Display Name, Designator, Electrical Type (optional), and Description&lt;/p&gt;
 &lt;p&gt;Click &lt;code&gt;Paste&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Since this is a dual in-line Package (SSOP-28), I will choose the layout style to be dual in-line (see below)&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step31.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/fastsymbol-step31.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Hit &lt;code&gt;Place&lt;/code&gt;. And that&amp;rsquo;s it. The final result should look like this:
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fastsymbol-step4.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/fastsymbol-step4.jpg&#34;/&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;p&gt;Each pin should have the correct electrical type and the description.&lt;/p&gt;
-- https://asti.dynz.net/post/fast-part-altium/ - CC by Attribution</description>
+- /post/fast-part-altium/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Visibility in F#</title>
-        <link>https://asti.dynz.net/post/visibility-fsharp/</link>
+        <link>/post/visibility-fsharp/</link>
         <pubDate>Fri, 22 Feb 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/visibility-fsharp/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/visibility-fsharp/ -&lt;h2 id=&#34;let-vs-member-assignments&#34;&gt;let vs. member assignments&lt;/h2&gt;
+        <guid>/post/visibility-fsharp/</guid>
+        <description>Asti&#39;s Notes /post/visibility-fsharp/ -&lt;h2 id=&#34;let-vs-member-assignments&#34;&gt;let vs. member assignments&lt;/h2&gt;
 &lt;p&gt;What&amp;rsquo;s the difference between writing &lt;code&gt;let&lt;/code&gt; in a type vs. writing &lt;code&gt;member&lt;/code&gt;?&lt;/p&gt;
 &lt;p&gt;For starters, there&amp;rsquo;s not a huge difference.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Test&lt;/span&gt; () &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
@@ -624,40 +624,40 @@ If cross-language compatibility is important to you, use &lt;code&gt;member&lt;/
     &lt;span style=&#34;color:#66d9ef&#34;&gt;member&lt;/span&gt; this.&lt;span style=&#34;color:#a6e22e&#34;&gt;isValidDate&lt;/span&gt; () &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 
     	this&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;getFirst() &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; DateTime.MinValue &lt;span style=&#34;color:#75715e&#34;&gt;//getFirst isn&amp;#39;t declared yet
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;member&lt;/span&gt; this.&lt;span style=&#34;color:#a6e22e&#34;&gt;getFirst&lt;/span&gt;() &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; firstTime
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- https://asti.dynz.net/post/visibility-fsharp/ - CC by Attribution</description>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- /post/visibility-fsharp/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Create high quality renders of your Altium boards</title>
-        <link>https://asti.dynz.net/post/render-altium/</link>
+        <link>/post/render-altium/</link>
         <pubDate>Tue, 19 Feb 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/render-altium/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/render-altium/ -&lt;h2 id=&#34;create-a-realistic-model&#34;&gt;Create a realistic model&lt;/h2&gt;
+        <guid>/post/render-altium/</guid>
+        <description>Asti&#39;s Notes /post/render-altium/ -&lt;h2 id=&#34;create-a-realistic-model&#34;&gt;Create a realistic model&lt;/h2&gt;
 &lt;p&gt;Although this should be very straightforward, and while the 3D view in Altium is very accurate, getting it out of there is an entirely different story.&lt;/p&gt;
 &lt;h2 id=&#34;step-1&#34;&gt;Step 1&lt;/h2&gt;
 &lt;p&gt;This is, as you&amp;rsquo;d expect to export a STEP file from Altium.&lt;/p&gt;
 &lt;p&gt;Use &lt;code&gt;File &amp;gt; Export &amp;gt; STEP 3D&lt;/code&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium1.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/render-altium1.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Remember to export all 3D bodies as well. But you get no traces, silkscreen or pads in a STEP file.&lt;/p&gt;
 &lt;p&gt;So on to the next step.&lt;/p&gt;
 &lt;h2 id=&#34;step-2&#34;&gt;Step 2&lt;/h2&gt;
 &lt;p&gt;Open the STEP file in Fusion 360 (or Keyshot - the process is similar)&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium2.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/render-altium2.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Make sure the main solids are free from errors, and there&amp;rsquo;s no z-fighting.&lt;/p&gt;
 &lt;h2 id=&#34;step-3&#34;&gt;Step 3&lt;/h2&gt;
 &lt;p&gt;In Altium, open &lt;code&gt;Page Setup&lt;/code&gt; and &lt;code&gt;Print Properties&lt;/code&gt;.&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium31.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/render-altium31.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Right click any item and select &lt;code&gt;Preferences&lt;/code&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium32.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/render-altium32.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;ul&gt;
@@ -666,17 +666,17 @@ If cross-language compatibility is important to you, use &lt;code&gt;member&lt;/
 &lt;li&gt;Set the Top Solder colour to black or a darker colour&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Remove the other layers, and set up a composite image in this order:&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium33.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/render-altium33.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Print as a PDF. Convert to PNG or TIF.&lt;/p&gt;
 &lt;h2 id=&#34;step-4&#34;&gt;Step 4&lt;/h2&gt;
 &lt;p&gt;Import the image into Fusion 360 as a decal:&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium4.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/render-altium4.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Select the top face. Make sure &lt;code&gt;Chain Faces&lt;/code&gt; is unchecked.&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium41.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/render-altium41.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Move the decal into position.&lt;/p&gt;
@@ -684,15 +684,15 @@ If cross-language compatibility is important to you, use &lt;code&gt;member&lt;/
 &lt;p&gt;Open the Appearance tab, and map more accurate to the existing materials.&lt;/p&gt;
 &lt;p&gt;You can do this by selecting a material, selecting all instances of it, and dragging a new material.&lt;/p&gt;
 &lt;p&gt;Here I&amp;rsquo;m adding a polished gold material for the castellations.&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium51.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/render-altium51.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now set up some soft lighting , a solid environment color, and hit Render!&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/render-altium5.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/render-altium5.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;And you should have something like this.&lt;/p&gt;
-- https://asti.dynz.net/post/render-altium/ - CC by Attribution</description>
+- /post/render-altium/ - CC by Attribution</description>
         </item>
     
     

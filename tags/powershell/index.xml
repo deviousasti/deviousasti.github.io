@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>powershell on Asti&#39;s Notes</title>
-    <link>https://asti.dynz.net/tags/powershell/</link>
+    <link>/tags/powershell/</link>
     <description>Recent content in powershell on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Sun, 11 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://asti.dynz.net/tags/powershell/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 11 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="/tags/powershell/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>A better SFV</title>
-      <link>https://asti.dynz.net/post/powershell-sfv/</link>
+      <link>/post/powershell-sfv/</link>
       <pubDate>Sun, 11 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/powershell-sfv/</guid>
+      <guid>/post/powershell-sfv/</guid>
       <description>File hashes SFV used CRC for file checksums - which were fast to compute, but trivial to generate collisions for. We should probably move on to something like SHA256.
 This is already in PowerShell:
 Get-FileHash -Algorithm SHA256 Nicer Outputs Pipe a list of files, sort by name, hash them and format the output into a table.
@@ -22,20 +22,20 @@ $Table = Get-ChildItem -Path $Path | Sort-Object -Property Name | Get-FileHash -
     
     <item>
       <title>Sync git modules to .gitmodules</title>
-      <link>https://asti.dynz.net/post/powershell-git-sync/</link>
+      <link>/post/powershell-git-sync/</link>
       <pubDate>Mon, 17 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/powershell-git-sync/</guid>
+      <guid>/post/powershell-git-sync/</guid>
       <description>.gitmodules is not git submodules A .gitmodules file is sort of indicative - it&amp;rsquo;s not what actually is being tracked by Git. When you start a new project, and you have to include a bunch of submodules, you may think of starting off by copying and editing a .gitmodules file with all the submodules you want, but that literally does nothing.
 You&amp;rsquo;ll find out that you have to git submodule add everything by hand.</description>
     </item>
     
     <item>
       <title>Run a PowerShell script for every .NET application crash</title>
-      <link>https://asti.dynz.net/post/powershell-tasks/</link>
+      <link>/post/powershell-tasks/</link>
       <pubDate>Fri, 22 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/powershell-tasks/</guid>
+      <guid>/post/powershell-tasks/</guid>
       <description>How do you run a script for every application crash without attaching the debugger or some complicated mess? It&amp;rsquo;s easy enough to write a simple script which checks for the life of the process.
 while($(ps taskmgr*) -ne $null) { sleep 1 } echo &amp;#34;It&amp;#39;s dead, Jim!&amp;#34; But that doesn&amp;rsquo;t give us the stack-trace, plus this script has to have a longer life-time than the process you&amp;rsquo;re monitoring.
 Enter The Event Log An application crash with an unhandled exception always writes to the Application event log.</description>

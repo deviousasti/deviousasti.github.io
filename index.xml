@@ -1,24 +1,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Asti&#39;s Notes</title>
-    <link>https://asti.dynz.net/</link>
+    <link>/</link>
     <description>Recent content on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
     <lastBuildDate>Sat, 18 Dec 2021 00:00:00 +0000</lastBuildDate>
     
-        <atom:link href="https://asti.dynz.net/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     
         <item>
         <title>Contracts for Event Sourced Systems with FsCodec</title>
-        <link>https://asti.dynz.net/post/fscodec/</link>
+        <link>/post/fscodec/</link>
         <pubDate>Sat, 18 Dec 2021 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/fscodec/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/fscodec/ -&lt;h1 id=&#34;contracts-for-event-sourced-systems-with-fscodec&#34;&gt;Contracts for Event Sourced Systems with FsCodec&lt;/h1&gt;
+        <guid>/post/fscodec/</guid>
+        <description>Asti&#39;s Notes /post/fscodec/ -&lt;h1 id=&#34;contracts-for-event-sourced-systems-with-fscodec&#34;&gt;Contracts for Event Sourced Systems with FsCodec&lt;/h1&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/jet/FsCodec/&#34;&gt;FsCodec&lt;/a&gt; is an &lt;em&gt;opinionated&lt;/em&gt; library for working with contracts in event sourced systems in F#. At its core, it&amp;rsquo;s a set of custom JSON serializers for two backends Newtonsoft.Json (NSJ) or System.Text.Json (STJ).&lt;/p&gt;
 &lt;p&gt;Normally a higher level system like Propulsion or Equinox will handle this for you - but if you just want contract encoding/decoding, we can directly use &lt;code&gt;FsCodec&lt;/code&gt; which is plenty high-level. This post details using it in your projects if you don&amp;rsquo;t want to take on additional dependencies.&lt;/p&gt;
 &lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
@@ -179,19 +179,19 @@ Serdes.Serialize &lt;span style=&#34;color:#66d9ef&#34;&gt;event&lt;/span&gt; &l
 &lt;li&gt;The &lt;a href=&#34;https://github.com/jet/FsCodec/blob/master/README.md&#34;&gt;FsCodec Readme&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.softwaremill.com/the-best-serialization-strategy-for-event-sourcing-9321c299632b&#34;&gt;Serialization strategy for Event Sourcing&lt;/a&gt; by Software Mill&lt;/li&gt;
 &lt;/ul&gt;
-- https://asti.dynz.net/post/fscodec/ - CC by Attribution</description>
+- /post/fscodec/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Worksheet: A new way to prototype in F#</title>
-        <link>https://asti.dynz.net/post/fsharp-worksheet/</link>
+        <link>/post/fsharp-worksheet/</link>
         <pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/fsharp-worksheet/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/fsharp-worksheet/ -&lt;h1 id=&#34;f-interactive-now-with-stories&#34;&gt;F# Interactive now with Stories!&lt;/h1&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fsi-stories.jpg&#34;/&gt;
+        <guid>/post/fsharp-worksheet/</guid>
+        <description>Asti&#39;s Notes /post/fsharp-worksheet/ -&lt;h1 id=&#34;f-interactive-now-with-stories&#34;&gt;F# Interactive now with Stories!&lt;/h1&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/fsi-stories.jpg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now that I have your attention, please read on for something even more exciting!&lt;/p&gt;
@@ -199,11 +199,11 @@ Serdes.Serialize &lt;span style=&#34;color:#66d9ef&#34;&gt;event&lt;/span&gt; &l
 &lt;p&gt;Working with F# interactive is an exercise in selection and &lt;em&gt;Send to Interactive&lt;/em&gt;. While it gives fast feedback, there&amp;rsquo;s always the issue of making changes. Edit something and you have to manually send everything that the edit affects to FSI, which sometimes you may miss out on, and that results in strange behavior.&lt;/p&gt;
 &lt;p&gt;What if we could do better? What if we could generalize an arbitrary program into evaluating like a spreadsheet?&lt;/p&gt;
 &lt;p&gt;Could we have something like this?&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/excel.gif&#34; width=&#34;60%&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/excel.gif&#34; width=&#34;60%&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;It turns out we can!&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/excelfsharp.gif&#34; width=&#34;80%&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/excelfsharp.gif&#34; width=&#34;80%&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;h1 id=&#34;how-does-it-work&#34;&gt;How does it work?&lt;/h1&gt;
@@ -324,7 +324,7 @@ taller empty &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;singleton 1
 &lt;/table&gt;
 &lt;p&gt;Looking at the AST reveals the usage of these symbols from our nodes. For example, &lt;code&gt;empty&lt;/code&gt; contains a reference to the &lt;code&gt;Tree&lt;/code&gt; symbol. Through instances of symbol usage, for each of these nodes, we can establish links between them.&lt;/p&gt;
 &lt;p&gt;Which allows us to generate a graph like this:&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/worksheet-diag.svg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/worksheet-diag.svg&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;For any given expression, it&amp;rsquo;s possible to follow the chain of calls.&lt;/p&gt;
@@ -339,7 +339,7 @@ taller empty &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;singleton 1
 &lt;p&gt;This turns out to be sufficient, instead of tracking cell mutations, which we cannot because we are generalizing for arbitrary changes. If the new cell has any dependents in the graph, they qualify for evaluation as well. And so their dependents, and so on.&lt;/p&gt;
 &lt;p&gt;For every qualified cell, we evaluate its value (i.e., run the computation and save the result). 
 There&amp;rsquo;s some additional infrastructure around the evaluator, so things work like we expect them to:&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fsworksheet-capture.jpg&#34; width=&#34;80%&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/fsworksheet-capture.jpg&#34; width=&#34;80%&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;h1 id=&#34;implementation&#34;&gt;Implementation&lt;/h1&gt;
@@ -348,26 +348,26 @@ There&amp;rsquo;s some additional infrastructure around the evaluator, so things
 &lt;p&gt;This builds and installs it as a dotnet tool. You can make it watch any script file with:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;PS&amp;gt; fsw program.fsx
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and it evaluates changes every time you save changes.&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fswatch.gif&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/fswatch.gif&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The Visual Studio plugin is in pre-release, it needs additional UX work to make it pleasant to use. You can still build the solution to try it in preview. A brief demo:&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/fsworksheet.gif&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/fsworksheet.gif&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Ideas are welcome to make it more user-friendly and visual.&lt;/p&gt;
-- https://asti.dynz.net/post/fsharp-worksheet/ - CC by Attribution</description>
+- /post/fsharp-worksheet/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Invalid GC results in F# tests</title>
-        <link>https://asti.dynz.net/post/fs-incorrect-gc/</link>
+        <link>/post/fs-incorrect-gc/</link>
         <pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/fs-incorrect-gc/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/fs-incorrect-gc/ -&lt;p&gt;When running tests which check if something is GC&amp;rsquo;d, it might fail.&lt;/p&gt;
+        <guid>/post/fs-incorrect-gc/</guid>
+        <description>Asti&#39;s Notes /post/fs-incorrect-gc/ -&lt;p&gt;When running tests which check if something is GC&amp;rsquo;d, it might fail.&lt;/p&gt;
 &lt;h2 id=&#34;the-test&#34;&gt;The test&lt;/h2&gt;
 &lt;p&gt;Consider the following test:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&amp;lt;&lt;/span&gt;TestMethod&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;]&lt;/span&gt;
@@ -403,18 +403,18 @@ There&amp;rsquo;s some additional infrastructure around the evaluator, so things
 &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; isNull &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;obj&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While this usually isn&amp;rsquo;t a problem, &lt;code&gt;obj&#39;&lt;/code&gt; will end up holding a reference to the original object, so it won&amp;rsquo;t be collected until it goes out of scope - which is only when the method exits.&lt;/p&gt;
 &lt;p&gt;The rewriting won&amp;rsquo;t happen for &lt;code&gt;RELEASE&lt;/code&gt; mode, so the test should pass. But any effects related to the lifetime of objects in memory would exist in &lt;code&gt;DEBUG&lt;/code&gt;.&lt;/p&gt;
-- https://asti.dynz.net/post/fs-incorrect-gc/ - CC by Attribution</description>
+- /post/fs-incorrect-gc/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Incorrect stack traces in F#</title>
-        <link>https://asti.dynz.net/post/fsc-stacktrace/</link>
+        <link>/post/fsc-stacktrace/</link>
         <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/fsc-stacktrace/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/fsc-stacktrace/ -&lt;p&gt;Consider the following simple program:&lt;/p&gt;
+        <guid>/post/fsc-stacktrace/</guid>
+        <description>Asti&#39;s Notes /post/fsc-stacktrace/ -&lt;p&gt;Consider the following simple program:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fsharp&#34; data-lang=&#34;fsharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; foo () &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
     failwithf &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;foo&amp;#34;&lt;/span&gt;
 
@@ -451,18 +451,18 @@ The resulting IL is equivalent to (all inlined):&lt;/p&gt;
    at Program.foo[a]() in Program.fs:line 4
    at Program.main(String[] argv) in Program.fs:line 13
 &lt;/code&gt;&lt;/pre&gt;
-- https://asti.dynz.net/post/fsc-stacktrace/ - CC by Attribution</description>
+- /post/fsc-stacktrace/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>A DOS-like shell in .Net</title>
-        <link>https://asti.dynz.net/post/recreate-dos/</link>
+        <link>/post/recreate-dos/</link>
         <pubDate>Tue, 18 Feb 2020 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/recreate-dos/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/recreate-dos/ -&lt;h2 id=&#34;setup&#34;&gt;Setup&lt;/h2&gt;
+        <guid>/post/recreate-dos/</guid>
+        <description>Asti&#39;s Notes /post/recreate-dos/ -&lt;h2 id=&#34;setup&#34;&gt;Setup&lt;/h2&gt;
 &lt;p&gt;Add a reference to &lt;a href=&#34;https://github.com/deviousasti/netshell&#34;&gt;NetShell&lt;/a&gt;, create a new &lt;code&gt;DOS.cs&lt;/code&gt; file. The main file just calls NetShell&amp;rsquo;s &lt;code&gt;RpcShell&lt;/code&gt; with an instance of &lt;code&gt;DOS&lt;/code&gt;.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; Main(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;[] args)
 {
@@ -477,10 +477,10 @@ The resulting IL is equivalent to (all inlined):&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;[Command(&amp;#34;echo&amp;#34;)]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; Echo(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; text) =&amp;gt; Console.WriteLine(text);
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s see how that looks like:&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/dos-demo1.gif&#34; width=&#34;100%&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/dos-demo1.gif&#34; width=&#34;100%&#34;/&gt;
 &lt;/figure&gt;
 
-&lt;p&gt;Maybe add &lt;a href=&#34;https://asti.dynz.net/images/dos-demo2.jpg&#34;&gt;a bit of colour&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Maybe add &lt;a href=&#34;/images/dos-demo2.jpg&#34;&gt;a bit of colour&lt;/a&gt;.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-csharp&#34; data-lang=&#34;csharp&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;[Command(&amp;#34;echo&amp;#34;)]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; Echo(&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt; text, ConsoleColor color = ConsoleColor.White)
 {
@@ -554,21 +554,21 @@ D:\&amp;gt;
     }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Our demo isn&amp;rsquo;t complete until we run the Windows Command Prompt inside our command prompt!&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/dos-demo3.gif&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/dos-demo3.gif&#34;/&gt;
 &lt;/figure&gt;
 
-- https://asti.dynz.net/post/recreate-dos/ - CC by Attribution</description>
+- /post/recreate-dos/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Boost beware</title>
-        <link>https://asti.dynz.net/post/boost-beware/</link>
+        <link>/post/boost-beware/</link>
         <pubDate>Sat, 21 Dec 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/boost-beware/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/boost-beware/ -&lt;p&gt;There are a lot of new small-form factor, low part count boost converters being released for battery boost applications. These typically switch at high frequencies to reduce component sizes.&lt;/p&gt;
+        <guid>/post/boost-beware/</guid>
+        <description>Asti&#39;s Notes /post/boost-beware/ -&lt;p&gt;There are a lot of new small-form factor, low part count boost converters being released for battery boost applications. These typically switch at high frequencies to reduce component sizes.&lt;/p&gt;
 &lt;h2 id=&#34;the-symptoms&#34;&gt;The Symptoms&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Devices sometimes brownout with no pattern&lt;/li&gt;
@@ -611,18 +611,18 @@ use of only ceramic capacitors&lt;/p&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;p&gt;Trust nothing, measure.&lt;/p&gt;
-- https://asti.dynz.net/post/boost-beware/ - CC by Attribution</description>
+- /post/boost-beware/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>How to get rid of Semihosting</title>
-        <link>https://asti.dynz.net/post/semihosting/</link>
+        <link>/post/semihosting/</link>
         <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/semihosting/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/semihosting/ -&lt;p&gt;&amp;hellip;&lt;em&gt;or&lt;/em&gt; why my application stops when disconnected from the debugger.&lt;/p&gt;
+        <guid>/post/semihosting/</guid>
+        <description>Asti&#39;s Notes /post/semihosting/ -&lt;p&gt;&amp;hellip;&lt;em&gt;or&lt;/em&gt; why my application stops when disconnected from the debugger.&lt;/p&gt;
 &lt;p&gt;As you can tell from the image, I&amp;rsquo;ve been bitten badly by semihosting before.&lt;/p&gt;
 &lt;h2 id=&#34;what-is-arm-semihosting&#34;&gt;What is ARM Semihosting?&lt;/h2&gt;
 &lt;p&gt;Semihosting is a mechanism that enables code running on an ARM target to communicate and use the Input/Output facilities on a host computer running a debugger.&lt;/p&gt;
@@ -671,10 +671,10 @@ Make sure that at no point is &lt;code&gt;rdimon.specs&lt;/code&gt; ever mention
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Check dissasembly of syscalls (&lt;code&gt;_write, _system, _start...&lt;/code&gt;)&lt;/p&gt;
-&lt;p&gt;&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/disas1.jpg&#34;/&gt;
+&lt;p&gt;&lt;figure&gt;&lt;img src=&#34;/images/disas1.jpg&#34;/&gt;
 &lt;/figure&gt;
 
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/disas2.jpg&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/disas2.jpg&#34;/&gt;
 &lt;/figure&gt;
 &lt;/p&gt;
 &lt;p&gt;Track down the sources of the syscalls. Try replacing &lt;em&gt;libc&lt;/em&gt; or &lt;em&gt;newlib&lt;/em&gt; with another copy.&lt;/p&gt;
@@ -690,18 +690,18 @@ Make sure that at no point is &lt;code&gt;rdimon.specs&lt;/code&gt; ever mention
 &lt;p&gt;If all else fails, toss everything in the fire and start over&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-- https://asti.dynz.net/post/semihosting/ - CC by Attribution</description>
+- /post/semihosting/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>A git-config parser</title>
-        <link>https://asti.dynz.net/post/git-config-parser/</link>
+        <link>/post/git-config-parser/</link>
         <pubDate>Tue, 24 Sep 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/git-config-parser/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/git-config-parser/ -&lt;p&gt;Reading &lt;code&gt;.git/config&lt;/code&gt; is the fastest way of getting info on a repository and its dependencies.&lt;/p&gt;
+        <guid>/post/git-config-parser/</guid>
+        <description>Asti&#39;s Notes /post/git-config-parser/ -&lt;p&gt;Reading &lt;code&gt;.git/config&lt;/code&gt; is the fastest way of getting info on a repository and its dependencies.&lt;/p&gt;
 &lt;h2 id=&#34;the-spec&#34;&gt;The Spec&lt;/h2&gt;
 &lt;p&gt;Let&amp;rsquo;s start by going through the spec from &lt;a href=&#34;https://git-scm.com/docs/git-config#_syntax&#34;&gt;https://git-scm.com/docs/git-config#_syntax&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;An example config:&lt;/p&gt;
@@ -747,32 +747,32 @@ Make sure that at no point is &lt;code&gt;rdimon.specs&lt;/code&gt; ever mention
 &lt;p&gt;Here&amp;rsquo;s the whole implementation:&lt;/p&gt;
 &lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/deviousasti/48a75b7624ea1c180e3148d63bf3dfae.js&#34;&gt;&lt;/script&gt;
 
-- https://asti.dynz.net/post/git-config-parser/ - CC by Attribution</description>
+- /post/git-config-parser/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>Ain&#39;t nobody got time for that</title>
-        <link>https://asti.dynz.net/post/posix-time-micro/</link>
+        <link>/post/posix-time-micro/</link>
         <pubDate>Tue, 24 Sep 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/posix-time-micro/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/posix-time-micro/ -&lt;pre&gt;&lt;code&gt;1&amp;gt;  ------------------- Memory utilization report -------------------
+        <guid>/post/posix-time-micro/</guid>
+        <description>Asti&#39;s Notes /post/posix-time-micro/ -&lt;pre&gt;&lt;code&gt;1&amp;gt;  ------------------- Memory utilization report -------------------
 1&amp;gt;  Used FLASH: 23KB out of 64KB (36%) [+10K]
 1&amp;gt;  Used SRAM: 6244 bytes out of 8192 bytes (76%) [+1688]
-&lt;/code&gt;&lt;/pre&gt;- https://asti.dynz.net/post/posix-time-micro/ - CC by Attribution</description>
+&lt;/code&gt;&lt;/pre&gt;- /post/posix-time-micro/ - CC by Attribution</description>
         </item>
     
     
     
         <item>
         <title>A better SFV</title>
-        <link>https://asti.dynz.net/post/powershell-sfv/</link>
+        <link>/post/powershell-sfv/</link>
         <pubDate>Sun, 11 Aug 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://asti.dynz.net/post/powershell-sfv/</guid>
-        <description>Asti&#39;s Notes https://asti.dynz.net/post/powershell-sfv/ -&lt;h2 id=&#34;file-hashes&#34;&gt;File hashes&lt;/h2&gt;
+        <guid>/post/powershell-sfv/</guid>
+        <description>Asti&#39;s Notes /post/powershell-sfv/ -&lt;h2 id=&#34;file-hashes&#34;&gt;File hashes&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Simple_file_verification&#34;&gt;SFV&lt;/a&gt; used CRC for file checksums - which were fast to compute, but trivial to generate collisions for. We should probably move on to something like &lt;strong&gt;SHA256&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;This is already in PowerShell:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;Get-FileHash -Algorithm SHA256 
@@ -805,17 +805,17 @@ Pages.zip	E65277A391BE9AFCEF046650F23AB0ECB67DE4334C449F21271068239A413F18
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;to generate &lt;code&gt;(current folder).sha2&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;The defaults are:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;Create-Verification -Path . -Filter *.*
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/powershell-verify1.gif&#34;/&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src=&#34;/images/powershell-verify1.gif&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;To verify, use:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;Create-Verification -Verify (folder.sha2) 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;-Path&lt;/code&gt; and &lt;code&gt;-Filter&lt;/code&gt; options still apply.&lt;/p&gt;
-&lt;figure&gt;&lt;img src=&#34;https://asti.dynz.net/images/powershell-verify2.gif&#34;/&gt;
+&lt;figure&gt;&lt;img src=&#34;/images/powershell-verify2.gif&#34;/&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Note that the function produces a object stream of &lt;code&gt;{ Side, File }&lt;/code&gt;, so you can still post-process the output with scripts that handle &lt;code&gt;Compare-Object&lt;/code&gt; output.&lt;/p&gt;
-- https://asti.dynz.net/post/powershell-sfv/ - CC by Attribution</description>
+- /post/powershell-sfv/ - CC by Attribution</description>
         </item>
     
     

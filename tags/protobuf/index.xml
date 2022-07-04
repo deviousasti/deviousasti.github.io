@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>protobuf on Asti&#39;s Notes</title>
-    <link>https://asti.dynz.net/tags/protobuf/</link>
+    <link>/tags/protobuf/</link>
     <description>Recent content in protobuf on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Sat, 03 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://asti.dynz.net/tags/protobuf/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 03 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="/tags/protobuf/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Decoding a oneof case in nanopb</title>
-      <link>https://asti.dynz.net/post/nanopb-value/</link>
+      <link>/post/nanopb-value/</link>
       <pubDate>Sat, 03 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/nanopb-value/</guid>
+      <guid>/post/nanopb-value/</guid>
       <description>Decoding callbacks Say you have a message type with variable fields:
 message KeyValue { string key = 1; string value = 2;}This generates:
 typedef struct _KeyValue { pb_callback_t key; pb_callback_t value; } KeyValue; Decoding this in nanopb isn&amp;rsquo;t so bad -

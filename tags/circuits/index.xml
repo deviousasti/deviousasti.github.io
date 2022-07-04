@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>circuits on Asti&#39;s Notes</title>
-    <link>https://asti.dynz.net/tags/circuits/</link>
+    <link>/tags/circuits/</link>
     <description>Recent content in circuits on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Sat, 21 Dec 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://asti.dynz.net/tags/circuits/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 21 Dec 2019 00:00:00 +0000</lastBuildDate><atom:link href="/tags/circuits/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Boost beware</title>
-      <link>https://asti.dynz.net/post/boost-beware/</link>
+      <link>/post/boost-beware/</link>
       <pubDate>Sat, 21 Dec 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/boost-beware/</guid>
+      <guid>/post/boost-beware/</guid>
       <description>There are a lot of new small-form factor, low part count boost converters being released for battery boost applications. These typically switch at high frequencies to reduce component sizes.
 The Symptoms  Devices sometimes brownout with no pattern Heisenbugs Weird disconnections and readings  Possible Causes   Long path between output caps and output pin - these could act as parasitic inductances, causing output spikes when load changes
   High impedance path between IC ground and output ground - this should be obvious, but is most often overlooked because of layout constraints</description>

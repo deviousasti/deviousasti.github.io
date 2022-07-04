@@ -2,216 +2,216 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Asti&#39;s Notes</title>
-    <link>https://asti.dynz.net/tags/</link>
+    <link>/tags/</link>
     <description>Recent content in Tags on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Sat, 18 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://asti.dynz.net/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 18 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>eventsourcing</title>
-      <link>https://asti.dynz.net/tags/eventsourcing/</link>
+      <link>/tags/eventsourcing/</link>
       <pubDate>Sat, 18 Dec 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/eventsourcing/</guid>
+      <guid>/tags/eventsourcing/</guid>
       <description></description>
     </item>
     
     <item>
       <title>fsharp</title>
-      <link>https://asti.dynz.net/tags/fsharp/</link>
+      <link>/tags/fsharp/</link>
       <pubDate>Sat, 18 Dec 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/fsharp/</guid>
+      <guid>/tags/fsharp/</guid>
       <description></description>
     </item>
     
     <item>
       <title>dotnet</title>
-      <link>https://asti.dynz.net/tags/dotnet/</link>
+      <link>/tags/dotnet/</link>
       <pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/dotnet/</guid>
+      <guid>/tags/dotnet/</guid>
       <description></description>
     </item>
     
     <item>
       <title>optimization</title>
-      <link>https://asti.dynz.net/tags/optimization/</link>
+      <link>/tags/optimization/</link>
       <pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/optimization/</guid>
+      <guid>/tags/optimization/</guid>
       <description></description>
     </item>
     
     <item>
       <title>types</title>
-      <link>https://asti.dynz.net/tags/types/</link>
+      <link>/tags/types/</link>
       <pubDate>Tue, 18 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/types/</guid>
+      <guid>/tags/types/</guid>
       <description></description>
     </item>
     
     <item>
       <title>circuits</title>
-      <link>https://asti.dynz.net/tags/circuits/</link>
+      <link>/tags/circuits/</link>
       <pubDate>Sat, 21 Dec 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/circuits/</guid>
+      <guid>/tags/circuits/</guid>
       <description></description>
     </item>
     
     <item>
       <title>arm</title>
-      <link>https://asti.dynz.net/tags/arm/</link>
+      <link>/tags/arm/</link>
       <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/arm/</guid>
+      <guid>/tags/arm/</guid>
       <description></description>
     </item>
     
     <item>
       <title>assembly</title>
-      <link>https://asti.dynz.net/tags/assembly/</link>
+      <link>/tags/assembly/</link>
       <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/assembly/</guid>
+      <guid>/tags/assembly/</guid>
       <description></description>
     </item>
     
     <item>
       <title>cpp</title>
-      <link>https://asti.dynz.net/tags/cpp/</link>
+      <link>/tags/cpp/</link>
       <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/cpp/</guid>
+      <guid>/tags/cpp/</guid>
       <description></description>
     </item>
     
     <item>
       <title>posix</title>
-      <link>https://asti.dynz.net/tags/posix/</link>
+      <link>/tags/posix/</link>
       <pubDate>Tue, 24 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/posix/</guid>
+      <guid>/tags/posix/</guid>
       <description></description>
     </item>
     
     <item>
       <title>powershell</title>
-      <link>https://asti.dynz.net/tags/powershell/</link>
+      <link>/tags/powershell/</link>
       <pubDate>Sun, 11 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/powershell/</guid>
+      <guid>/tags/powershell/</guid>
       <description></description>
     </item>
     
     <item>
       <title>protobuf</title>
-      <link>https://asti.dynz.net/tags/protobuf/</link>
+      <link>/tags/protobuf/</link>
       <pubDate>Sat, 03 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/protobuf/</guid>
+      <guid>/tags/protobuf/</guid>
       <description></description>
     </item>
     
     <item>
       <title>git</title>
-      <link>https://asti.dynz.net/tags/git/</link>
+      <link>/tags/git/</link>
       <pubDate>Mon, 17 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/git/</guid>
+      <guid>/tags/git/</guid>
       <description></description>
     </item>
     
     <item>
       <title>html</title>
-      <link>https://asti.dynz.net/tags/html/</link>
+      <link>/tags/html/</link>
       <pubDate>Mon, 06 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/html/</guid>
+      <guid>/tags/html/</guid>
       <description></description>
     </item>
     
     <item>
       <title>rx</title>
-      <link>https://asti.dynz.net/tags/rx/</link>
+      <link>/tags/rx/</link>
       <pubDate>Sun, 05 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/rx/</guid>
+      <guid>/tags/rx/</guid>
       <description></description>
     </item>
     
     <item>
       <title>wpf</title>
-      <link>https://asti.dynz.net/tags/wpf/</link>
+      <link>/tags/wpf/</link>
       <pubDate>Tue, 16 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/wpf/</guid>
+      <guid>/tags/wpf/</guid>
       <description></description>
     </item>
     
     <item>
       <title>xaml</title>
-      <link>https://asti.dynz.net/tags/xaml/</link>
+      <link>/tags/xaml/</link>
       <pubDate>Tue, 16 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/xaml/</guid>
+      <guid>/tags/xaml/</guid>
       <description></description>
     </item>
     
     <item>
       <title>altium</title>
-      <link>https://asti.dynz.net/tags/altium/</link>
+      <link>/tags/altium/</link>
       <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/altium/</guid>
+      <guid>/tags/altium/</guid>
       <description></description>
     </item>
     
     <item>
       <title>fusion</title>
-      <link>https://asti.dynz.net/tags/fusion/</link>
+      <link>/tags/fusion/</link>
       <pubDate>Tue, 19 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/fusion/</guid>
+      <guid>/tags/fusion/</guid>
       <description></description>
     </item>
     
     <item>
       <title>eda</title>
-      <link>https://asti.dynz.net/tags/eda/</link>
+      <link>/tags/eda/</link>
       <pubDate>Fri, 21 Dec 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/eda/</guid>
+      <guid>/tags/eda/</guid>
       <description></description>
     </item>
     
     <item>
       <title>tools</title>
-      <link>https://asti.dynz.net/tags/tools/</link>
+      <link>/tags/tools/</link>
       <pubDate>Fri, 02 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/tools/</guid>
+      <guid>/tags/tools/</guid>
       <description></description>
     </item>
     
     <item>
       <title>typescript</title>
-      <link>https://asti.dynz.net/tags/typescript/</link>
+      <link>/tags/typescript/</link>
       <pubDate>Tue, 02 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/typescript/</guid>
+      <guid>/tags/typescript/</guid>
       <description></description>
     </item>
     
     <item>
       <title>web</title>
-      <link>https://asti.dynz.net/tags/web/</link>
+      <link>/tags/web/</link>
       <pubDate>Tue, 02 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/tags/web/</guid>
+      <guid>/tags/web/</guid>
       <description></description>
     </item>
     

@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>rx on Asti&#39;s Notes</title>
-    <link>https://asti.dynz.net/tags/rx/</link>
+    <link>/tags/rx/</link>
     <description>Recent content in rx on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Sun, 05 May 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://asti.dynz.net/tags/rx/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 05 May 2019 00:00:00 +0000</lastBuildDate><atom:link href="/tags/rx/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Getting the last value from an Observable when it fails</title>
-      <link>https://asti.dynz.net/post/rx-last-value/</link>
+      <link>/post/rx-last-value/</link>
       <pubDate>Sun, 05 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/rx-last-value/</guid>
+      <guid>/post/rx-last-value/</guid>
       <description>The Rx Contract The Rx contract is:
 OnNext* (OnError(e)|OnCompleted)+Unfortunately, an OnError signals the pipeline to be torn down immediately - throwing away that last, possibly useful result.
 The problem Let&amp;rsquo;s have a simple source which produces:
@@ -23,10 +23,10 @@ source .</description>
     
     <item>
       <title>The various Schedulers in Rx</title>
-      <link>https://asti.dynz.net/post/rx-schedulers/</link>
+      <link>/post/rx-schedulers/</link>
       <pubDate>Fri, 19 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/rx-schedulers/</guid>
+      <guid>/post/rx-schedulers/</guid>
       <description>Schedulers in Rx Schedulers abstract away concurrency from operators. A scheduler decides what order &amp;ldquo;thunks&amp;rdquo; (a unit of work) execute in, and how time flows.
 There are a number of scheduler implementations for doing work on diverse models of concurrency. Rx is very preferential to single-threadedness, and opposed to being multi-threaded out of the box.
 Most of the time, you don&amp;rsquo;t need to worry about it, and you can go with the reasonable defaults.</description>

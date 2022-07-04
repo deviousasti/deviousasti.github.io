@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>dotnet on Asti&#39;s Notes</title>
-    <link>https://asti.dynz.net/tags/dotnet/</link>
+    <link>/tags/dotnet/</link>
     <description>Recent content in dotnet on Asti&#39;s Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>CC by Attribution</copyright>
-    <lastBuildDate>Mon, 30 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://asti.dynz.net/tags/dotnet/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 30 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/dotnet/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Invalid GC results in F# tests</title>
-      <link>https://asti.dynz.net/post/fs-incorrect-gc/</link>
+      <link>/post/fs-incorrect-gc/</link>
       <pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/fs-incorrect-gc/</guid>
+      <guid>/post/fs-incorrect-gc/</guid>
       <description>When running tests which check if something is GC&amp;rsquo;d, it might fail.
 The test Consider the following test:
 [&amp;lt;TestMethod&amp;gt;] member _.TestGC() = let mutable obj = new Object() let weak = new WeakReference(obj); GC.Collect() Assert.IsTrue(obj &amp;lt;&amp;gt; null) Assert.IsTrue(weak.IsAlive) obj &amp;lt;- null GC.Collect() Assert.IsTrue((obj = null)) Assert.IsTrue(not weak.IsAlive) This will fail in DEBUG.
@@ -23,10 +23,10 @@ let list1 = [1; 2; 3] let list2 = [1; 2; 3] assert (list1 = list2) This elaborat
     
     <item>
       <title>Incorrect stack traces in F#</title>
-      <link>https://asti.dynz.net/post/fsc-stacktrace/</link>
+      <link>/post/fsc-stacktrace/</link>
       <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/fsc-stacktrace/</guid>
+      <guid>/post/fsc-stacktrace/</guid>
       <description>Consider the following simple program:
 let foo () = failwithf &amp;#34;foo&amp;#34; [&amp;lt;EntryPoint&amp;gt;] let main argv = foo () 0 Pretty straightforward. But depending on the circumstances, you may never see that foo in the stack trace.
 Unhandled Exception: System.Exception: fooat Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1639.Invoke(String message)at Program.main(String[] argv) in Program.fs:line 13And the reason for that is optimizations. For fsc, optimizations are turned on by default.
@@ -35,10 +35,10 @@ Inlining This is the most common thing you&amp;rsquo;re likely to see.</descript
     
     <item>
       <title>A DOS-like shell in .Net</title>
-      <link>https://asti.dynz.net/post/recreate-dos/</link>
+      <link>/post/recreate-dos/</link>
       <pubDate>Tue, 18 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/recreate-dos/</guid>
+      <guid>/post/recreate-dos/</guid>
       <description>Setup Add a reference to NetShell, create a new DOS.cs file. The main file just calls NetShell&amp;rsquo;s RpcShell with an instance of DOS.
 static int Main(string[] args) { var shell = new RpcShell(new DOS()) { Prompt = Environment.CurrentDirectory, FlagPrefix = &amp;#34;/&amp;#34; }; return shell.Run(); } With that out of the way, let&amp;rsquo;s implement the first command.
 echo This is trivial. Add a Command attribute with the (optional) name and help-text.</description>
@@ -46,10 +46,10 @@ echo This is trivial. Add a Command attribute with the (optional) name and help-
     
     <item>
       <title>A git-config parser</title>
-      <link>https://asti.dynz.net/post/git-config-parser/</link>
+      <link>/post/git-config-parser/</link>
       <pubDate>Tue, 24 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/git-config-parser/</guid>
+      <guid>/post/git-config-parser/</guid>
       <description>Reading .git/config is the fastest way of getting info on a repository and its dependencies.
 The Spec Let&amp;rsquo;s start by going through the spec from https://git-scm.com/docs/git-config#_syntax
 An example config:
@@ -60,10 +60,10 @@ An example config:
     
     <item>
       <title>Getting the last value from an Observable when it fails</title>
-      <link>https://asti.dynz.net/post/rx-last-value/</link>
+      <link>/post/rx-last-value/</link>
       <pubDate>Sun, 05 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/rx-last-value/</guid>
+      <guid>/post/rx-last-value/</guid>
       <description>The Rx Contract The Rx contract is:
 OnNext* (OnError(e)|OnCompleted)+Unfortunately, an OnError signals the pipeline to be torn down immediately - throwing away that last, possibly useful result.
 The problem Let&amp;rsquo;s have a simple source which produces:
@@ -73,10 +73,10 @@ source .</description>
     
     <item>
       <title>The various Schedulers in Rx</title>
-      <link>https://asti.dynz.net/post/rx-schedulers/</link>
+      <link>/post/rx-schedulers/</link>
       <pubDate>Fri, 19 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/rx-schedulers/</guid>
+      <guid>/post/rx-schedulers/</guid>
       <description>Schedulers in Rx Schedulers abstract away concurrency from operators. A scheduler decides what order &amp;ldquo;thunks&amp;rdquo; (a unit of work) execute in, and how time flows.
 There are a number of scheduler implementations for doing work on diverse models of concurrency. Rx is very preferential to single-threadedness, and opposed to being multi-threaded out of the box.
 Most of the time, you don&amp;rsquo;t need to worry about it, and you can go with the reasonable defaults.</description>
@@ -84,10 +84,10 @@ Most of the time, you don&amp;rsquo;t need to worry about it, and you can go wit
     
     <item>
       <title>Material Icons in WPF</title>
-      <link>https://asti.dynz.net/post/wpf-icon-font/</link>
+      <link>/post/wpf-icon-font/</link>
       <pubDate>Tue, 16 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/wpf-icon-font/</guid>
+      <guid>/post/wpf-icon-font/</guid>
       <description>Icon Fonts with ligatures The key is using icon fonts with ligatures.
 This makes usage incredibly easy because you can directly use a sensible name instead of adding an extra resource for indirection of Unicode characters.
 Step 1 Download the icon font from https://material.io/resources/icons/ (or another resource)
@@ -97,10 +97,10 @@ Extract the included ttf file from the archive. You can also download it here.</
     
     <item>
       <title>Visibility in F#</title>
-      <link>https://asti.dynz.net/post/visibility-fsharp/</link>
+      <link>/post/visibility-fsharp/</link>
       <pubDate>Fri, 22 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://asti.dynz.net/post/visibility-fsharp/</guid>
+      <guid>/post/visibility-fsharp/</guid>
       <description>let vs. member assignments What&amp;rsquo;s the difference between writing let in a type vs. writing member?
 For starters, there&amp;rsquo;s not a huge difference.
 type Test () = let mutable lastTime = DateTime.MinValue is equivalent to:
